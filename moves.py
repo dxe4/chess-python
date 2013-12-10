@@ -18,7 +18,7 @@ def move(f):
     return wrapper
 
 
-def check_range(x:int) -> bool:
+def check_range(x:tuple) -> bool:
     return x[0] >= 0 and x[1] >= 0 and x[0] < 8 and x[1] < 8
 
 
