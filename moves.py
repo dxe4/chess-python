@@ -66,8 +66,8 @@ def _filter_line(f):
         slope = _slope(start, end)
         line = _line(slope, end)
         diff = _diff_points(start, end)
-        return {i for i in moves if line(*i) and _diff_points(start, i) == diff and i <= end}
-
+        end_point_check = lambda i,end:i<=end if diff[0] == -1 or diff[1] == -1 else  lambda i,end:i>=end
+        return {i for i in moves if line(*i) and _diff_points(start, i) == diff and end_point_check(i,end)}
     return wrapper
 
 
