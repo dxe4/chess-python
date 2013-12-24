@@ -45,9 +45,12 @@ def bishop(start:tuple, end:tuple, board:dict):
     return _bishop(*start)
 
 
-def pawn(start:tuple, end:tuple, board:dict, player_pos:str) -> set:
-    result = set()
-    return {()}
+def pawn(start:tuple, end:tuple, board:dict, player_pos:str, player_down:str) -> set:
+    #TODO en passant move
+    rule = (1, 1) if player_pos == player_down else (7, -1)
+    moves = {(start[0], start[1] + rule[1])}
+    if start[1] == rule[0]: moves.add((start[0], start[1] + rule[1]*2))
+    return {i for i in moves if check_range(i)} - {start}
 
 
 def _king(x:int, y:int) -> set:
@@ -57,8 +60,9 @@ def _king(x:int, y:int) -> set:
 print(bishop((3, 3), (5, 5), {}))
 print(rook((0, 0), (7, 0), {}))
 
-
-
+print(pawn((1,1),(2,2),{},"w","w"))
+print(pawn((1,7),(1,6),{},"w","b"))
+print(pawn((1,7),(1,6),{},"w","w"))
 #0y [0, 1, 2, 3, 4, 5, 6, 7]x
 #1y [0, 1, 2, 3, 4, 5, 6, 7]x
 #2y [0, 1, 2, 3, 4, 5, 6, 7]x
