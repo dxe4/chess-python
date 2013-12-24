@@ -3,6 +3,12 @@ from itertools import chain
 from functools import wraps
 from math import fabs
 
+"""
+The plan is to cache all possible moves ignoring board state,
+so on runtime you can get a set and check the state of the board (will save time in case of AI)
+"""
+
+
 def check_range(x:tuple, min=0, max=8) -> bool:
     return min <= x[0] < max and min <= x[1] < max
 
@@ -14,14 +20,16 @@ def _slope(start:tuple, end:tuple):
 def _line(slope:int, end:tuple):
     return lambda x, y: y - end[1] == slope * (x - end[0])
 
-def _safe_divide(a,b):
+
+def _safe_divide(a, b):
     if b == 0: return 0
-    return a/b
+    return a / b
+
 
 def _diff_points(start:tuple, end:tuple):
-    x=start[0] - end[0]
-    y=start[1] - end[1]
-    return _safe_divide(x,fabs(x)),_safe_divide(y,fabs(y))
+    x = start[0] - end[0]
+    y = start[1] - end[1]
+    return _safe_divide(x, fabs(x)), _safe_divide(y, fabs(y))
 
 
 def _move(f):
@@ -54,11 +62,11 @@ def _filter_line(f):
     @wraps(f)
     def wrapper(*args, **kwargs):
         moves = f(*args, **kwargs)
-        start,end = args[0], args[1]
-        slope = _slope(start,end)
+        start, end = args[0], args[1]
+        slope = _slope(start, end)
         line = _line(slope, end)
-        diff = _diff_points(start,end)
-        return {i for i in moves if line(*i) and _diff_points(start,i)==diff and i <= end}
+        diff = _diff_points(start, end)
+        return {i for i in moves if line(*i) and _diff_points(start, i) == diff and i <= end}
 
     return wrapper
 
