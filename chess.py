@@ -31,8 +31,8 @@ def create_board(player_down="w"):
 
     return board
 
-global player_down_position
-player_down_position = "w"
+global player_down
+player_down = "w"
 
-print(create_board(player_down=player_down_position))
+print(create_board(player_down=player_down))
 
