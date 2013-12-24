@@ -10,7 +10,7 @@ def create_board(player_down="w"):
         if player_down == "w":
             return "w" if index > 3 else "b"
         else:
-            return "w" if index < 3 else "b"
+            return "b" if index > 3 else "w"
 
     def get_row(row:int):
         return filter(lambda x: x[1] == row, board.keys()),color_picker(row)
@@ -31,6 +31,8 @@ def create_board(player_down="w"):
 
     return board
 
+global player_down_position
+player_down_position = "w"
 
-print(create_board(player_down="w"))
+print(create_board(player_down=player_down_position))
 
