@@ -132,9 +132,9 @@ class Knight(Piece):
     @_move
     def find(self, x:int, y:int) -> set:
         moves = chain(product([x - 1, x + 1], [y - 2, y + 2]), product([x - 2, x + 2], [y - 1, y + 1]))
-        return {(x, y) for x, y in moves}
+        return set(moves)
 
-    def knight(self, end:tuple, board:dict) -> tuple:
+    def move(self, end:tuple, board:dict) -> tuple:
         return self.find(*self.position)
 
 
@@ -197,6 +197,10 @@ _ = queen.move((7,0),{})
 print(_)
 
 _ = queen.move((5,5),{})
+print(_)
+
+knight = Knight("w",(0,0))
+_ = knight.move((2,1),{})
 print(_)
 #pawn = Pawn("w")
 #
