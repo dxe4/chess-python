@@ -41,9 +41,15 @@ def _safe_divide(a:int , b: int)->int:
     return a / b
 
 
-def _diff_points(start:tuple, end:tuple):
+def _diff_points(start:tuple, end:tuple) -> tuple:
+    """
+        Calculate a tuple to identify how we move.
+        For (3,3),(5,5) will return (-1,-1) identifying that both x and y increase
+        (3, 3) (0, 0) will return  (1, 1) identifying that both x and y decrease
+    """
     x = start[0] - end[0]
     y = start[1] - end[1]
+    print(start,end,_safe_divide(x, fabs(x)), _safe_divide(y, fabs(y)))
     return _safe_divide(x, fabs(x)), _safe_divide(y, fabs(y))
 
 
