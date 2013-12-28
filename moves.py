@@ -49,11 +49,11 @@ def _diff_points(start:tuple, end:tuple) -> tuple:
     """
     x = start[0] - end[0]
     y = start[1] - end[1]
-    print(start,end,_safe_divide(x, fabs(x)), _safe_divide(y, fabs(y)))
     return _safe_divide(x, fabs(x)), _safe_divide(y, fabs(y))
 
 
 def _move(f):
+    #TODO may not be needed
     @wraps(f)
     def wrapper(*args, **kwargs):
         moves = f(*args, **kwargs)
@@ -63,6 +63,7 @@ def _move(f):
 
 
 def _filter_line(f):
+    #TODO documentat since this is a confusing part
     @wraps(f)
     def wrapper(*args, **kwargs):
         moves = f(*args, **kwargs)
@@ -150,7 +151,7 @@ class King(Piece):
 
 class Queen(Piece):
     def find(self, x:int, y:int):
-        print("q")
+        pass
 
     def move(self, x:int, y:int):
         pass
