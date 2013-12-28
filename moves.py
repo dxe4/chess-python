@@ -140,14 +140,16 @@ class Knight(Piece):
 
 class Pawn(Piece):
     def find(self, x:int, y:int):
-        pass
+        y_initial,y_add= (1, 1) if self.color == player_down else (6, -1)
+        moves = {(x, y + y_add)}
+        if y == y_initial:#first position can move two
+            moves.add((x, y + y_add * 2))
+        return {move for move in moves if check_range(move)} - {(x,y)}
 
     def move(self, end:tuple, board:dict) -> set:
         #TODO en passant move
-        rule = (1, 1) if self.color == player_down else (7, -1)
-        moves = {(self.position[0], self.position[1] + rule[1])}
-        if self.position[1] == rule[0]: moves.add((self.position[0], self.position[1] + rule[1] * 2))
-        return {move for move in moves if check_range(move)} - {self.position}
+        return self.find(*self.position[0])
+
 
 
 class King(Piece):
