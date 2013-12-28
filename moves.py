@@ -162,7 +162,7 @@ class Queen(Piece):
     def find(self, x:int, y:int):
         pass
 
-    def move(self, x:int, y:int):
+    def move(self, end:tuple, board:dict):
         pass
 
 
