@@ -161,11 +161,23 @@ class King(Piece):
 
 
 class Queen(Piece):
-    def find(self, x:int, y:int):
-        pass
 
+    def __init__(self,color:str, position:tuple):
+        super(Queen,self).__init__(color,position)
+        self._rook = Rook(color,position)
+        self._bishop = Bishop(color,position)
+
+    def _update_position(self,position):
+        self.position = position
+        self._rook.position = position
+        self._bishop.position = position
+
+    def find(self, x:int, y:int):
+        return self._bishop.find(x,y).union(self._rook.find(x,y))
+
+    @_filter_line
     def move(self, end:tuple, board:dict):
-        pass
+        return self.find(*self.position)
 
 
 bishop = Bishop("w", (3, 3))
@@ -178,6 +190,13 @@ print(_)
 
 rook = Rook("w", (7, 0))
 _ = rook.move((0, 0), {})
+print(_)
+
+queen = Queen("w",(0,0))
+_ = queen.move((7,0),{})
+print(_)
+
+_ = queen.move((5,5),{})
 print(_)
 #pawn = Pawn("w")
 #
