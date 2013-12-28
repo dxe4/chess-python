@@ -2,6 +2,8 @@ from itertools import product
 from itertools import chain
 from functools import wraps
 from math import fabs
+from abc import ABCMeta
+from abc import abstractmethod
 
 """
 The plan is to cache all possible moves ignoring board state,
@@ -41,28 +43,11 @@ def _move(f):
     return wrapper
 
 
-@_move
-def _knight(x:int, y:int) -> set:
-    moves = chain(product([x - 1, x + 1], [y - 2, y + 2]), product([x - 2, x + 2], [y - 1, y + 1]))
-    return {(x, y) for x, y in moves}
-
-
-@_move
-def _rook(x:int, y:int) -> set:
-    return {(x, i) for i in range(0, 8)}.union({(i, y) for i in range(0, 8)})
-
-
-@_move
-def _bishop(x:int, y:int) -> set:
-    possible = lambda k: [(x + k, y + k), (x + k, y - k), (x - k, y + k), (x - k, y - k)]
-    return {j for i in range(1, 8) for j in possible(i)}
-
-
 def _filter_line(f):
     @wraps(f)
     def wrapper(*args, **kwargs):
         moves = f(*args, **kwargs)
-        start, end = args[0], args[1]
+        start, end = args[0].position, args[1]
         slope = _slope(start, end)
         line = _line(slope, end)
         diff = _diff_points(start, end)
@@ -72,40 +57,99 @@ def _filter_line(f):
     return wrapper
 
 
-def knight(start:tuple, end:tuple, board:dict) -> tuple:
-    return _knight(*start)
+class Piece(object):
+    __metaclass__ = ABCMeta
+
+    def __init__(self, color:str, position:tuple):
+        self.color = color
+        self.position = position
+
+    @abstractmethod
+    def find(self, x:int, y:int): pass
+
+    @abstractmethod
+    def move(self, end:tuple, board:dict): pass
 
 
-@_filter_line
-def rook(start:tuple, end:tuple, board:dict) -> tuple:
-    moves = _rook(*start)
-    return moves
+class Rook(Piece):
+    @_move
+    def find(self, x:int, y:int) -> set:
+        return {(x, i) for i in range(0, 8)}.union({(i, y) for i in range(0, 8)})
+
+    @_filter_line
+    def move(self, end:tuple, board:dict) -> tuple:
+        moves = self.find(*self.position)
+        return moves
 
 
-@_filter_line
-def bishop(start:tuple, end:tuple, board:dict):
-    return _bishop(*start)
+class Bishop(Piece):
+    @_move
+    def find(self, x:int, y:int) -> set:
+        possible = lambda k: [(x + k, y + k), (x + k, y - k), (x - k, y + k), (x - k, y - k)]
+        return {j for i in range(1, 8) for j in possible(i)}
+
+    @_filter_line
+    def move(self, end:tuple, board:dict):
+        return self.find(*self.position)
 
 
-def pawn(start:tuple, end:tuple, board:dict, player_pos:str, player_down:str) -> set:
-    #TODO en passant move
-    rule = (1, 1) if player_pos == player_down else (7, -1)
-    moves = {(start[0], start[1] + rule[1])}
-    if start[1] == rule[0]: moves.add((start[0], start[1] + rule[1] * 2))
-    return {i for i in moves if check_range(i)} - {start}
+class Knight(Piece):
+    @_move
+    def find(self, x:int, y:int) -> set:
+        moves = chain(product([x - 1, x + 1], [y - 2, y + 2]), product([x - 2, x + 2], [y - 1, y + 1]))
+        return {(x, y) for x, y in moves}
+
+    def knight(self, end:tuple, board:dict) -> tuple:
+        return self.find(*self.position)
 
 
-def _king(x:int, y:int) -> set:
-    pass
+class Pawn(Piece):
+    def find(self, x:int, y:int):
+        pass
+
+    def move(self, end:tuple, board:dict) -> set:
+        player_down = "w"
+        #TODO en passant move
+        rule = (1, 1) if self.color == player_down else (7, -1)
+        moves = {(self.position[0], self.position[1] + rule[1])}
+        if self.position[1] == rule[0]: moves.add((self.position[0], self.position[1] + rule[1] * 2))
+        return {i for i in moves if check_range(i)} - {self.position}
 
 
-print(bishop((3, 3), (5, 5), {}))
-print(rook((0, 0), (7, 0), {}))
-print(rook((7, 0), (0, 0), {}))
+class King(Piece):
+    def find(self, x:int, y:int) -> set:
+        return set(product([x - 1, x + 1, x], [y + 1, y - 1, y])) - {(x, y)}
 
-print(pawn((1, 1), (2, 2), {}, "w", "w"))
-print(pawn((1, 7), (1, 6), {}, "w", "b"))
-print(pawn((1, 7), (1, 6), {}, "w", "w"))
+    def move(self, end:tuple, board:dict):
+        return self.find(*self.position)
+
+
+class Queen(Piece):
+    def find(self, x:int, y:int):
+        print("q")
+
+    def move(self, x:int, y:int):
+        pass
+
+
+bishop = Bishop("w", (3, 3))
+_ = bishop.move((5, 5), {})
+print(_)
+
+rook = Rook("w", (0, 0))
+_ = rook.move((7, 0), {})
+print(_)
+
+rook = Rook("w", (7, 0))
+_ = rook.move((0, 0), {})
+print(_)
+#pawn = Pawn("w")
+#
+#print(pawn((1, 1), (2, 2), {}, "w", "w"))
+#print(pawn((1, 7), (1, 6), {}, "w", "b"))
+#print(pawn((1, 7), (1, 6), {}, "w", "w"))
+
+#_king(5, 5)
 #0y [0, 1, 2, 3, 4, 5, 6, 7]x
 #1y [0, 1, 2, 3, 4, 5, 6, 7]x
 #2y [0, 1, 2, 3, 4, 5, 6, 7]x
@@ -114,8 +158,6 @@ print(pawn((1, 7), (1, 6), {}, "w", "w"))
 #5y [0, 1, 2, 3, 4, 5, 6, 7]x
 #6y [0, 1, 2, 3, 4, 5, 6, 7]x
 #7y [0, 1, 2, 3, 4, 5, 6, 7]x
-
-
 
 
 
