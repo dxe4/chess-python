@@ -20,15 +20,14 @@ def create_board(player_down:str="W"):
         return filter(lambda x: x[1] == row, board.keys()), color_picker(row)
 
     def add_pawns(row:int):
-        keys, color = get_row(row)
-        for i in keys:
+        positions, color = get_row(row)
+        for i in positions:
             board[i] = Pawn(color, i)
 
     def add_other(row:int):
-        keys, color = get_row(row)
-        keys = sorted(keys, key=lambda x: x[0])
+        positions, color = get_row(row)
         pieces = [Rook, Knight, Bishop, Queen, King, Bishop, Knight, Rook]
-        for count, i in enumerate(keys):
+        for count, i in enumerate(positions):
             board[i] = pieces[count](color, i)
 
     add_pawns(1)
