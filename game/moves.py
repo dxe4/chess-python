@@ -1,10 +1,9 @@
-from itertools import product
-from itertools import chain
+from . import player_down
+from itertools import product,chain
 from functools import wraps
 from math import fabs
-from abc import ABCMeta
-from abc import abstractmethod
-from . import player_down
+from abc import ABCMeta,abstractmethod
+
 
 """
 The plan is to cache all possible moves ignoring board state,
