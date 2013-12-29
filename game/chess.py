@@ -43,14 +43,14 @@ def create_board(player_down="W"):
 def print_board(board:OrderedDict):
     """
        0               1               2               3               4               5               6               7
-    0  Rook b          Knight b        Bishop b        Queen b         King b          Bishop b        Knight b        Rook b
-    1  Pawn b          Pawn b          Pawn b          Pawn b          Pawn b          Pawn b          Pawn b          Pawn b
+    0  W Rook          W Knight        W Bishop        W Queen         W King          W Bishop        W Knight        W Rook
+    1  W Pawn          W Pawn          W Pawn          W Pawn          W Pawn          W Pawn          W Pawn          W Pawn
     2
     3
     4
     5
-    6  Pawn w          Pawn w          Pawn w          Pawn w          Pawn w          Pawn w          Pawn w          Pawn w
-    7  Rook w          Knight w        Bishop w        Queen w         King w          Bishop w        Knight w        Rook w
+    6  B Pawn          B Pawn          B Pawn          B Pawn          B Pawn          B Pawn          B Pawn          B Pawn
+    7  B Rook          B Knight        B Bishop        B Queen         B King          B Bishop        B Knight        B Rook
     """
     spaces_count = 15
     spaces = spaces_count * " "
