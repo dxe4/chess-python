@@ -21,13 +21,15 @@ def create_board(player_down="W"):
 
     def add_pawns(row):
         keys, color = get_row(row)
-        for i in keys: board[i] = Pawn(color, i)
+        for i in keys:
+            board[i] = Pawn(color, i)
 
     def add_other(row):
         keys, color = get_row(row)
         keys = sorted(keys, key=lambda x: x[0])
         pieces = [Rook, Knight, Bishop, Queen, King, Bishop, Knight, Rook]
-        for count, i in enumerate(keys): board[i] = pieces[count](color, i)
+        for count, i in enumerate(keys):
+            board[i] = pieces[count](color, i)
 
     add_pawns(1)
     add_pawns(6)
@@ -49,19 +51,20 @@ def print_board(board:OrderedDict):
     5
     6  Pawn w          Pawn w          Pawn w          Pawn w          Pawn w          Pawn w          Pawn w          Pawn w
     7  Rook w          Knight w        Bishop w        Queen w         King w          Bishop w        Knight w        Rook w
-    @param board:
     """
     spaces_count = 15
     spaces = spaces_count * " "
     #top row numbers (x)
     print("  ", spaces.join(map(str, range(0, 8))))
-    for k, v in board.items():
-        to_print = repr(v) if v else ""
-        if k[0] == 0:#start of row print y
-            print("%i  " % k[1], end="")
-        print(to_print + " " * (spaces_count + 1 - len(to_print)), end="")#magic
-        if k[0] == 7:#end of row print new line
-            print()
+    for position, piece in board.items():
+        to_print = repr(piece) if piece else ""
+        #start of row print y
+        if position[0] == 0: print("%i  " % position[1], end="")
+        #magic
+        print(to_print + " " * (spaces_count + 1 - len(to_print)), end="")
+        #end of row print new line
+        if position[0] == 7: print()
+
 
 
 
