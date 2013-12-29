@@ -4,7 +4,7 @@ from functools import wraps
 from math import fabs
 from abc import ABCMeta
 from abc import abstractmethod
-from chess import player_down
+from . import player_down
 
 """
 The plan is to cache all possible moves ignoring board state,
@@ -182,29 +182,6 @@ class Queen(Piece):
     def move(self, end:tuple, board:dict):
         return self.find(*self.position)
 
-
-bishop = Bishop("w", (3, 3))
-_ = bishop.move((5, 5), {})
-print(_)
-
-rook = Rook("w", (0, 0))
-_ = rook.move((7, 0), {})
-print(_)
-
-rook = Rook("w", (7, 0))
-_ = rook.move((0, 0), {})
-print(_)
-
-queen = Queen("w", (0, 0))
-_ = queen.move((7, 0), {})
-print(_)
-
-_ = queen.move((5, 5), {})
-print(_)
-
-knight = Knight("w", (0, 0))
-_ = knight.move((2, 1), {})
-print(_)
 #pawn = Pawn("w")
 #
 #print(pawn((1, 1), (2, 2), {}, "w", "w"))
