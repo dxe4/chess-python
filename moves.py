@@ -112,7 +112,7 @@ class Rook(Piece):
         return {(x, i) for i in range(0, 8)}.union({(i, y) for i in range(0, 8)})
 
     @_filter_line
-    def move(self, end:tuple, board:dict) -> tuple:
+    def move(self, end:tuple, board:dict):
         moves = self.find(*self.position)
         return moves
 
@@ -134,19 +134,19 @@ class Knight(Piece):
         moves = chain(product([x - 1, x + 1], [y - 2, y + 2]), product([x - 2, x + 2], [y - 1, y + 1]))
         return set(moves)
 
-    def move(self, end:tuple, board:dict) -> tuple:
+    def move(self, end:tuple, board:dict):
         return self.find(*self.position)
 
 
 class Pawn(Piece):
-    def find(self, x:int, y:int):
+    def find(self, x:int, y:int) -> set:
         y_initial,y_add= (1, 1) if self.color == player_down else (6, -1)
         moves = {(x, y + y_add)}
         if y == y_initial:#first position can move two
             moves.add((x, y + y_add * 2))
         return {move for move in moves if check_range(move)} - {(x,y)}
 
-    def move(self, end:tuple, board:dict) -> set:
+    def move(self, end:tuple, board:dict):
         #TODO en passant move
         return self.find(*self.position[0])
 
