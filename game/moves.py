@@ -1,8 +1,8 @@
 from . import player_down
-from itertools import product,chain
+from itertools import product, chain
 from functools import wraps
 from math import fabs
-from abc import ABCMeta,abstractmethod
+from abc import ABCMeta, abstractmethod
 
 
 """
@@ -79,7 +79,7 @@ def _filter_line(f):
     def wrapper(*args, **kwargs):
         moves = f(*args, **kwargs)
         start, end = args[0].position, args[1]
-        in_line = _line(end,start=start)
+        in_line = _line(end, start=start)
         diff = _diff_points(start, end)
         end_point_check = \
             lambda move, end: move <= end if diff[0] == -1 or diff[1] == -1 else  lambda move, end: move >= end
@@ -104,7 +104,7 @@ class Piece(object):
     def move(self, end:tuple, board:dict): pass
 
     def __repr__(self):
-        return "%s %s " % (type(self).__name__, self.color)
+        return "%s %s " % (self.color, type(self).__name__,)
 
     def __str__(self):
         return "%s %s" % (repr(self), str(self.position))
