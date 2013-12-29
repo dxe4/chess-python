@@ -63,8 +63,19 @@ def _diff_points(start:tuple, end:tuple) -> tuple:
     return _safe_divide(x, fabs(x)), _safe_divide(y, fabs(y))
 
 
+def _end_point_check(diff:tuple) -> callable:
+    """
+        Return lambda to check the endpoint. If moving down the move must be >= than end point else <= than endpoint
+    @param diff: Difference of points as produced by _diff_points
+    @return: lambda to check if endpoint is in range
+    """
+    if -1 in (diff[0], diff[1]):
+        return lambda move, end: move <= end
+    else:
+        return lambda move, end: move >= end
+
+
 def _move(f):
-    #TODO may not be needed
     @wraps(f)
     def wrapper(*args, **kwargs):
         moves = f(*args, **kwargs)
@@ -74,18 +85,25 @@ def _move(f):
 
 
 def _filter_line(f):
-    #TODO documentat since this is a confusing part
+    """
+       Wraps move functions from piece.
+       Gets all the possible moves and checks if they are on the same line.
+       Then it removes all points not in range (bigger than end).
+       Works for rook and bishop
+    @param f:
+    @return:
+    """
+
     @wraps(f)
     def wrapper(*args, **kwargs):
         moves = f(*args, **kwargs)
         start, end = args[0].position, args[1]
         in_line = _line(end, start=start)
         diff = _diff_points(start, end)
-        end_point_check = \
-            lambda move, end: move <= end if diff[0] == -1 or diff[1] == -1 else  lambda move, end: move >= end
-        return \
-            {move for move in moves if
-             in_line(*move) and _diff_points(start, move) == diff and end_point_check(move, end)}
+        end_point_check = _end_point_check(diff)
+        return {move for move in moves
+                if in_line(*move) and _diff_points(start, move) == diff and end_point_check(move, end)
+        }
 
     return wrapper
 
