@@ -1,10 +1,5 @@
 from itertools import product
-from .moves import Rook,Bishop,Pawn,Queen,King,Knight
-
-#r rook, k knight, b bishop, q queen, k king
-
-from . import player_down
-
+from . import Rook,Bishop,Pawn,Queen,King,Knight
 
 def create_board(player_down="w"):
     board = {i: None for i in product(range(0, 8), range(0, 8))}
@@ -18,25 +13,21 @@ def create_board(player_down="w"):
     def get_row(row:int):
         return filter(lambda x: x[1] == row, board.keys()), color_picker(row)
 
-    def add_pawns(keys, color:str):
+    def add_pawns(row):
+        keys,color = get_row(row)
+        for i in keys:board[i] = Pawn(color, i)
 
-        for i in keys:
-            print(i)
-            board[i] = (color, "p")
-
-    def add_other(keys, color:str):
+    def add_other(row):
+        keys,color = get_row(row)
         keys = sorted(keys, key=lambda x: x[0])
-        pieces = ["r", "k", "b", "q", "k", "b", "k", "r"]
-        for count, i in enumerate(keys): board[i] = (color, pieces[count])
+        pieces = [Rook, Knight, Bishop, Queen, King, Bishop, Knight, Rook]
+        for count, i in enumerate(keys): board[i] = pieces[count](color,i)
 
-    add_pawns(*get_row(1))
-    add_pawns(*get_row(6))
+    add_pawns(1)
+    add_pawns(6)
 
-    add_other(*get_row(0))
-    add_other(*get_row(7))
+    add_other(0)
+    add_other(7)
 
     return board
-
-
-print(create_board(player_down=player_down))
 
