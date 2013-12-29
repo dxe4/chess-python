@@ -11,7 +11,7 @@ so on runtime you can get a set and check the state of the board (will save time
 """
 
 
-def check_range(move:tuple, min=0, max=8) -> bool:
+def _check_range(move:tuple, min=0, max=8) -> bool:
     """
         Check if a point is within a range. The default range is 0,8.
     @param move: The move to check
@@ -75,11 +75,11 @@ def _end_point_check(diff:tuple) -> callable:
         return lambda move, end: move >= end
 
 
-def _move(f):
+def _clean_moves(f):
     @wraps(f)
     def wrapper(*args, **kwargs):
         moves = f(*args, **kwargs)
-        return {move for move in moves if check_range(move)} - {args}
+        return {move for move in moves if _check_range(move)} - {args}
 
     return wrapper
 
@@ -129,7 +129,7 @@ class Piece(object):
 
 
 class Rook(Piece):
-    @_move
+    @_clean_moves
     def find(self, x:int, y:int) -> set:
         return {(x, i) for i in range(0, 8)}.union({(i, y) for i in range(0, 8)})
 
@@ -140,7 +140,7 @@ class Rook(Piece):
 
 
 class Bishop(Piece):
-    @_move
+    @_clean_moves
     def find(self, x:int, y:int) -> set:
         possible = lambda k: [(x + k, y + k), (x + k, y - k), (x - k, y + k), (x - k, y - k)]
         return {j for i in range(1, 8) for j in possible(i)}
@@ -151,7 +151,7 @@ class Bishop(Piece):
 
 
 class Knight(Piece):
-    @_move
+    @_clean_moves
     def find(self, x:int, y:int) -> set:
         moves = chain(product([x - 1, x + 1], [y - 2, y + 2]), product([x - 2, x + 2], [y - 1, y + 1]))
         return set(moves)
@@ -161,21 +161,22 @@ class Knight(Piece):
 
 
 class Pawn(Piece):
+    @_clean_moves
     def find(self, x:int, y:int) -> set:
         y_initial, y_add = (1, 1) if self.color == player_down else (6, -1)
         moves = {(x, y + y_add)}
         if y == y_initial:#first position can move two
             moves.add((x, y + y_add * 2))
-        return {move for move in moves if check_range(move)} - {(x, y)}
+        return moves
 
     def move(self, end:tuple, board:dict):
-        #TODO en passant move
         return self.find(*self.position[0])
 
 
 class King(Piece):
+    @_clean_moves
     def find(self, x:int, y:int) -> set:
-        return set(product([x - 1, x + 1, x], [y + 1, y - 1, y])) - {(x, y)}
+        return product([x - 1, x + 1, x], [y + 1, y - 1, y])
 
     def move(self, end:tuple, board:dict):
         return self.find(*self.position)
