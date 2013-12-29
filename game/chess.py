@@ -5,6 +5,7 @@ from operator import itemgetter
 
 
 def create_board(player_down="W"):
+    #TODO probably need a class later on
     board = {i: None for i in product(range(0, 8), range(0, 8))}
     #sort but give priority to x instead of y using ((1 + x[0][1]) * 100))
     board = OrderedDict(sorted(board.items(), key=lambda x: x[0][0] + ((1 + x[0][1]) * 100)))
