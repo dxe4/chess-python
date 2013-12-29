@@ -4,7 +4,7 @@ from collections import OrderedDict
 from operator import itemgetter
 
 
-def create_board(player_down="W"):
+def create_board(player_down:str="W"):
     #TODO probably need a class later on
     board = {i: None for i in product(range(0, 8), range(0, 8))}
     #sort but give priority to x instead of y using ((1 + x[0][1]) * 100))
@@ -19,12 +19,12 @@ def create_board(player_down="W"):
     def get_row(row:int):
         return filter(lambda x: x[1] == row, board.keys()), color_picker(row)
 
-    def add_pawns(row):
+    def add_pawns(row:int):
         keys, color = get_row(row)
         for i in keys:
             board[i] = Pawn(color, i)
 
-    def add_other(row):
+    def add_other(row:int):
         keys, color = get_row(row)
         keys = sorted(keys, key=lambda x: x[0])
         pieces = [Rook, Knight, Bishop, Queen, King, Bishop, Knight, Rook]
