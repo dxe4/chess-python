@@ -1,4 +1,14 @@
 from .moves import Rook,Bishop,Pawn,Queen,King,Knight
+import unittest
+
+class TestThis(unittest.TestCase):
+
+    def setUp(self):pass
+    def test_this(self):pass
+
+def test():
+    unittest.main()
+
 
 bishop = Bishop("w", (3, 3))
 _ = bishop.move((5, 5), {})
