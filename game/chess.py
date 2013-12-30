@@ -16,14 +16,16 @@ class Board(OrderedDict):
 
 
     def color_picker(self, index:int):
-        if self.player_down == "W":
+        if self.player_down is "W":
             return "W" if index > 3 else "B"
-        else:
+        elif self.player_down is "B":
             return "B" if index > 3 else "W"
+        else:
+            raise TypeError("player down must be W or B")
 
 
     def get_row(self, row:int):
-        return filter(lambda x: x[1] == row, self.keys()), self.color_picker(row)
+        return filter(lambda x: x[1] is row, self.keys()), self.color_picker(row)
 
 
     def add_pawns(self, row:int):
