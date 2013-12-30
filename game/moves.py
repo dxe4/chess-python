@@ -117,7 +117,7 @@ def _filter_line(f):
     return wrapper
 
 
-def check_blocks(f):
+def _check_blocks(f):
     @wraps(f)
     def wrapper(*args, **kwargs):
         moves = f(*args, **kwargs)
@@ -132,7 +132,7 @@ def check_blocks(f):
     return wrapper
 
 
-def check_move_found(f):
+def _check_move_found(f):
     @wraps(f)
     def wrapper(*args, **kwargs):
         moves = f(*args, **kwargs)
@@ -171,8 +171,8 @@ class Rook(Piece):
     def find(self, x:int, y:int) -> set:
         return {(x, i) for i in range(0, 8)}.union({(i, y) for i in range(0, 8)})
 
-    @check_move_found
-    @check_blocks
+    @_check_move_found
+    @_check_blocks
     @_filter_line
     def move(self, end:tuple, board:dict):
         moves = self.find(*self.position)
@@ -186,8 +186,8 @@ class Bishop(Piece):
         return {j for i in range(1, 8) for j in possible(i)}
 
 
-    @check_move_found
-    @check_blocks
+    @_check_move_found
+    @_check_blocks
     @_filter_line
     def move(self, end:tuple, board:dict):
         return self.find(*self.position)
@@ -199,7 +199,7 @@ class Knight(Piece):
         moves = chain(product([x - 1, x + 1], [y - 2, y + 2]), product([x - 2, x + 2], [y - 1, y + 1]))
         return set(moves)
 
-    @check_move_found
+    @_check_move_found
     def move(self, end:tuple, board:dict):
         return self.find(*self.position)
 
@@ -216,8 +216,8 @@ class Pawn(Piece):
             moves.add((x, y + self.y_add * 2))
         return moves
 
-    @check_blocks
-    @check_move_found
+    @_check_blocks
+    @_check_move_found
     def move(self, end:tuple, board:dict):
         return self.find(*self.position[0])
 
@@ -227,7 +227,7 @@ class King(Piece):
     def find(self, x:int, y:int) -> set:
         return product([x - 1, x + 1, x], [y + 1, y - 1, y])
 
-    @check_move_found
+    @_check_move_found
     def move(self, end:tuple, board:dict):
         return self.find(*self.position)
 
