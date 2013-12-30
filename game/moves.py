@@ -120,12 +120,10 @@ def _filter_line(f):
 def check_blocks(f):
     @wraps(f)
     def wrapper(*args, **kwargs):
-        print("blocks")
         moves = f(*args, **kwargs)
         if not moves: return False
         piece, end, board = args[0], args[1], args[2]
         #check if no items block the way
-        print(piece, moves)
         if len({i for i in moves if board[i] == None}) is not (len(moves) - 1):
             return False
         else:
@@ -137,7 +135,6 @@ def check_blocks(f):
 def check_move_found(f):
     @wraps(f)
     def wrapper(*args, **kwargs):
-        print("move found")
         moves = f(*args, **kwargs)
         piece, end, board = args[0], args[1], args[2]
         item_at_end = board[end]
