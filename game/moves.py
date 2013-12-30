@@ -205,12 +205,15 @@ class Knight(Piece):
 
 
 class Pawn(Piece):
+    def __init__(self, color:str, position:tuple):
+        super(Pawn, self).__init__(color, position)
+        self.y_initial, self.y_add = (1, 1) if self.color == game.player_down else (6, -1)
+
     @_clean_moves
     def find(self, x:int, y:int) -> set:
-        y_initial, y_add = (1, 1) if self.color == game.player_down else (6, -1)
-        moves = {(x, y + y_add)}
-        if y == y_initial:#first position can move two
-            moves.add((x, y + y_add * 2))
+        moves = {(x, y + self.y_add)}
+        if y == self.y_initial:#first position can move two
+            moves.add((x, y + self.y_add * 2))
         return moves
 
     @check_blocks
@@ -247,11 +250,11 @@ class Queen(Piece):
     def move(self, end:tuple, board:dict):
         return self.find(*self.position)
 
-#0y [0, 1, 2, 3, 4, 5, 6, 7]x
-#1y [0, 1, 2, 3, 4, 5, 6, 7]x
-#2y [0, 1, 2, 3, 4, 5, 6, 7]x
-#3y [0, 1, 2, 3, 4, 5, 6, 7]x
-#4y [0, 1, 2, 3, 4, 5, 6, 7]x
-#5y [0, 1, 2, 3, 4, 5, 6, 7]x
-#6y [0, 1, 2, 3, 4, 5, 6, 7]x
-#7y [0, 1, 2, 3, 4, 5, 6, 7]x
+        #0y [0, 1, 2, 3, 4, 5, 6, 7]x
+        #1y [0, 1, 2, 3, 4, 5, 6, 7]x
+        #2y [0, 1, 2, 3, 4, 5, 6, 7]x
+        #3y [0, 1, 2, 3, 4, 5, 6, 7]x
+        #4y [0, 1, 2, 3, 4, 5, 6, 7]x
+        #5y [0, 1, 2, 3, 4, 5, 6, 7]x
+        #6y [0, 1, 2, 3, 4, 5, 6, 7]x
+        #7y [0, 1, 2, 3, 4, 5, 6, 7]x
