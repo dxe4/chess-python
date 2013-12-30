@@ -96,12 +96,18 @@ def _filter_line(f):
     @wraps(f)
     def wrapper(*args, **kwargs):
         moves = f(*args, **kwargs)
+        #get start/end points from object
         start, end = args[0].position, args[1]
+        #get the line formula as a callable
         in_line = _line(end, start=start)
+        #calculate the diff of start and end
         diff = _diff_points(start, end)
-        end_point_check = _end_point_check(diff)
+        #make sure the point is bigger than start and smaller than end
+        #start 3,3 end 5,5 -> 2,2 is not bigger than start 6,6 is not bigger than end
+        start_check = lambda _move: _diff_points(start, _move) == diff
+        end_check = _end_point_check(diff)
         return {move for move in moves
-                if in_line(*move) and _diff_points(start, move) == diff and end_point_check(move, end)
+                if in_line(*move) and start_check(move) and end_check(move, end)
         }
 
     return wrapper
