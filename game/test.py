@@ -47,6 +47,10 @@ class TestInitialMoves(unittest.TestCase):
         assert not self.white_rook.move((7,0),self.board)
         assert not self.white_rook.move((0,7),self.board)
 
+        assert not self.white_knight_2.move((0, 0), self.board)
+        assert not self.white_knight.move((3, 1), self.board)
+
+
 if __name__ == '__main__':
     unittest.main()
 
