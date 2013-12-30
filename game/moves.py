@@ -1,8 +1,8 @@
-from . import player_down
 from itertools import product, chain
 from functools import wraps
 from math import fabs
 from abc import ABCMeta, abstractmethod
+import game
 
 
 """
@@ -37,7 +37,7 @@ def _line(end:tuple, slope:int=None, start:tuple=None) -> callable:
     @return: lambda expression representing the line
     """
 
-    if (slope, start) == (None, None):
+    if (slope, start) == ("vertical", None):
         raise TypeError("_line takes either a slope(int) or a start(tuple)")
     if start:
         slope = _slope(start, end)
@@ -207,7 +207,7 @@ class Knight(Piece):
 class Pawn(Piece):
     @_clean_moves
     def find(self, x:int, y:int) -> set:
-        y_initial, y_add = (1, 1) if self.color == player_down else (6, -1)
+        y_initial, y_add = (1, 1) if self.color == game.player_down else (6, -1)
         moves = {(x, y + y_add)}
         if y == y_initial:#first position can move two
             moves.add((x, y + y_add * 2))

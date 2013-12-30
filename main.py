@@ -1,7 +1,7 @@
 from game import chess
-from game import player_down
+import game
 
-board = chess.Board(player_down=player_down)
+board = chess.Board(player_down=game.player_down)
 print(board)
 
 

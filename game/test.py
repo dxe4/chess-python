@@ -1,11 +1,12 @@
 from game.moves import Rook, Bishop, Pawn, Queen, King, Knight
 import unittest
 from game.chess import Board
+import game
 
 class TestInitialMoves(unittest.TestCase):
     def setUp(self):
-        self.board = Board(player_down="W")
 
+        self.board = Board(player_down=game.player_down)
         self.black_knight = self.board[1, 7]
         self.black_knight_2 = self.board[6, 7]
 
