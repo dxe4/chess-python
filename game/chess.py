@@ -17,8 +17,8 @@ class Board(OrderedDict):
 
         self.turn = "W"
 
-    def move(self,start,end):
-        pass
+    def move(self, start:tuple, end:tuple):
+        print(self[start].check_move(end,self))
 
     def _color_picker(self, index:int):
         if self.player_down is "W":
@@ -62,7 +62,7 @@ class Board(OrderedDict):
         spaces = spaces_count * " "
         to_join = []
         #top row numbers (x)
-        to_join.extend(["  ",spaces.join(map(str, range(0, 8))),"\n"])
+        to_join.extend(["  ", spaces.join(map(str, range(0, 8))), "\n"])
         for position, piece in self.items():
             to_print = repr(piece) if piece else ""
             #start of row print y
@@ -72,7 +72,7 @@ class Board(OrderedDict):
             to_join.append(" " * (spaces_count + 1 - len(to_print)))
             #end of row print new line
             if position[0] == 7: to_join.append("\n")
-        return  "".join(to_join)
+        return "".join(to_join)
 
 
 

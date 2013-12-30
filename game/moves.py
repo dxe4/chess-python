@@ -152,7 +152,7 @@ class Piece(object):
     def find(self, x:int, y:int): pass
 
     @abstractmethod
-    def move(self, end:tuple, board:OrderedDict): pass
+    def check_move(self, end:tuple, board:OrderedDict): pass
 
     def __repr__(self):
         return "%s %s " % (self.color, type(self).__name__,)
@@ -169,7 +169,7 @@ class Rook(Piece):
     @_check_move_found
     @_check_blocks
     @_filter_line
-    def move(self, end:tuple, board:OrderedDict):
+    def check_move(self, end:tuple, board:OrderedDict):
         return self.find(*self.position)
 
 
@@ -183,7 +183,7 @@ class Bishop(Piece):
     @_check_move_found
     @_check_blocks
     @_filter_line
-    def move(self, end:tuple, board:OrderedDict):
+    def check_move(self, end:tuple, board:OrderedDict):
         return self.find(*self.position)
 
 
@@ -194,7 +194,7 @@ class Knight(Piece):
         return set(moves)
 
     @_check_move_found
-    def move(self, end:tuple, board:OrderedDict):
+    def check_move(self, end:tuple, board:OrderedDict):
         return self.find(*self.position)
 
 
@@ -213,7 +213,7 @@ class Pawn(Piece):
 
     @_check_blocks
     @_check_move_found
-    def move(self, end:tuple, board:OrderedDict):
+    def check_move(self, end:tuple, board:OrderedDict):
         return self.find(*self.position)
 
 
@@ -223,7 +223,7 @@ class King(Piece):
         return product([x - 1, x + 1, x], [y + 1, y - 1, y])
 
     @_check_move_found
-    def move(self, end:tuple, board:OrderedDict):
+    def check_move(self, end:tuple, board:OrderedDict):
         return self.find(*self.position)
 
 
@@ -242,7 +242,7 @@ class Queen(Piece):
         return self._bishop.find(x, y).union(self._rook.find(x, y))
 
     @_filter_line
-    def move(self, end:tuple, board:OrderedDict):
+    def check_move(self, end:tuple, board:OrderedDict):
         return self.find(*self.position)
 
         #0y [0, 1, 2, 3, 4, 5, 6, 7]x

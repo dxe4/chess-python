@@ -29,26 +29,26 @@ class TestInitialMoves(unittest.TestCase):
 
     def test_possible_moves_knights(self):
         #black knight
-        assert self.black_knight.move((0, 5), self.board)
-        assert self.black_knight.move((2, 5), self.board)
+        assert self.black_knight.check_move((0, 5), self.board)
+        assert self.black_knight.check_move((2, 5), self.board)
 
-        assert self.black_knight_2.move((7, 5), self.board)
-        assert self.black_knight_2.move((5, 5), self.board)
+        assert self.black_knight_2.check_move((7, 5), self.board)
+        assert self.black_knight_2.check_move((5, 5), self.board)
 
         #white knight
-        assert self.white_knight.move((0, 2), self.board)
-        assert self.white_knight_2.move((7, 2), self.board)
+        assert self.white_knight.check_move((0, 2), self.board)
+        assert self.white_knight_2.check_move((7, 2), self.board)
 
-        assert self.white_knight.move((2, 2), self.board)
-        assert self.white_knight_2.move((5, 2), self.board)
+        assert self.white_knight.check_move((2, 2), self.board)
+        assert self.white_knight_2.check_move((5, 2), self.board)
 
     def test_impossible_moves(self):
-        assert not self.white_rook.move((5,5),self.board)
-        assert not self.white_rook.move((7,0),self.board)
-        assert not self.white_rook.move((0,7),self.board)
+        assert not self.white_rook.check_move((5,5),self.board)
+        assert not self.white_rook.check_move((7,0),self.board)
+        assert not self.white_rook.check_move((0,7),self.board)
 
-        assert not self.white_knight_2.move((0, 0), self.board)
-        assert not self.white_knight.move((3, 1), self.board)
+        assert not self.white_knight_2.check_move((0, 0), self.board)
+        assert not self.white_knight.check_move((3, 1), self.board)
 
 
 if __name__ == '__main__':
