@@ -10,13 +10,17 @@ class Board(OrderedDict):
         self.update(sorted(board.items(), key=lambda x: x[0][0] + ((1 + x[0][1]) * 100)))
 
         self.player_down = player_down
-        self.add_pawns(1)
-        self.add_pawns(6)
-        self.add_other(0)
-        self.add_other(7)
+        self._add_pawns(1)
+        self._add_pawns(6)
+        self._add_other(0)
+        self._add_other(7)
 
+        self.turn = "W"
 
-    def color_picker(self, index:int):
+    def move(self,start,end):
+        pass
+
+    def _color_picker(self, index:int):
         if self.player_down is "W":
             return "W" if index > 3 else "B"
         elif self.player_down is "B":
@@ -25,18 +29,18 @@ class Board(OrderedDict):
             raise TypeError("player down must be W or B")
 
 
-    def get_row(self, row:int):
-        return filter(lambda x: x[1] is row, self.keys()), self.color_picker(row)
+    def _get_row(self, row:int):
+        return filter(lambda x: x[1] is row, self.keys()), self._color_picker(row)
 
 
-    def add_pawns(self, row:int):
-        positions, color = self.get_row(row)
+    def _add_pawns(self, row:int):
+        positions, color = self._get_row(row)
         for i in positions:
             self[i] = Pawn(color, i)
 
 
-    def add_other(self, row:int):
-        positions, color = self.get_row(row)
+    def _add_other(self, row:int):
+        positions, color = self._get_row(row)
         pieces = [Rook, Knight, Bishop, Queen, King, Bishop, Knight, Rook]
         for count, i in enumerate(positions):
             self[i] = pieces[count](color, i)
