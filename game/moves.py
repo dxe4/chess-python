@@ -247,13 +247,6 @@ class Queen(Piece):
     def move(self, end:tuple, board:dict):
         return self.find(*self.position)
 
-#pawn = Pawn("w")
-#
-#print(pawn((1, 1), (2, 2), {}, "w", "w"))
-#print(pawn((1, 7), (1, 6), {}, "w", "b"))
-#print(pawn((1, 7), (1, 6), {}, "w", "w"))
-
-#_king(5, 5)
 #0y [0, 1, 2, 3, 4, 5, 6, 7]x
 #1y [0, 1, 2, 3, 4, 5, 6, 7]x
 #2y [0, 1, 2, 3, 4, 5, 6, 7]x
