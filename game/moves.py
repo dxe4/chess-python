@@ -169,8 +169,7 @@ class Rook(Piece):
     @_check_blocks
     @_filter_line
     def move(self, end:tuple, board:dict):
-        moves = self.find(*self.position)
-        return moves
+        return self.find(*self.position)
 
 
 class Bishop(Piece):
@@ -205,6 +204,7 @@ class Pawn(Piece):
 
     @_clean_moves
     def find(self, x:int, y:int) -> set:
+        #TODO en passant
         moves = {(x, y + self.y_add)}
         if y == self.y_initial:#first position can move two
             moves.add((x, y + self.y_add * 2))
