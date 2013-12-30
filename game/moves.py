@@ -5,12 +5,6 @@ from abc import ABCMeta, abstractmethod
 import game
 
 
-"""
-The plan is to cache all possible moves ignoring board state,
-so on runtime you can get a set and check the state of the board (will save time in case of AI)
-"""
-
-
 def _check_range(move:tuple, min=0, max=8) -> bool:
     """
         Check if a point is within a range. The default range is 0,8.
