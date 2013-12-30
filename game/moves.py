@@ -27,7 +27,7 @@ def _slope(start:tuple, end:tuple) -> int:
         For the math formula of the line.
     @return: slope int
     """
-    return _safe_divide(start[1] - end[1], start[0] - end[0], default=None)
+    return _safe_divide(start[1] - end[1], start[0] - end[0], default="vertical")
 
 
 def _line(end:tuple, slope:int=None, start:tuple=None) -> callable:
@@ -41,7 +41,7 @@ def _line(end:tuple, slope:int=None, start:tuple=None) -> callable:
         raise TypeError("_line takes either a slope(int) or a start(tuple)")
     if start:
         slope = _slope(start, end)
-    if slope is None:#vertical line
+    if slope is "vertical":#vertical line
         return lambda x, y: x == end[0]
     return lambda x, y: y - end[1] == slope * (x - end[0])
 
