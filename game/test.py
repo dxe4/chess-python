@@ -3,9 +3,10 @@ import unittest
 from game.chess import Board
 import game
 
-class TestCheckMove(unittest.TestCase):
-    def setUp(self):
 
+class TestCheckMove(unittest.TestCase):
+
+    def setUp(self):
         self.board = Board(player_down=game.player_down)
         self.black_knight = self.board[1, 7]
         self.black_knight_2 = self.board[6, 7]
@@ -13,8 +14,8 @@ class TestCheckMove(unittest.TestCase):
         self.white_knight = self.board[1, 0]
         self.white_knight_2 = self.board[6, 0]
 
-        self.white_rook = self.board[0,0]
-        self.white_rook_2 = self.board[7,0]
+        self.white_rook = self.board[0, 0]
+        self.white_rook_2 = self.board[7, 0]
 
     def test_board_init(self):
         assert isinstance(self.white_rook, Rook)
@@ -28,14 +29,14 @@ class TestCheckMove(unittest.TestCase):
         assert self.black_knight_2.color is "B"
 
     def test_possible_moves_knights(self):
-        #black knight
+        # black knight
         assert self.black_knight.check_move((0, 5), self.board)
         assert self.black_knight.check_move((2, 5), self.board)
 
         assert self.black_knight_2.check_move((7, 5), self.board)
         assert self.black_knight_2.check_move((5, 5), self.board)
 
-        #white knight
+        # white knight
         assert self.white_knight.check_move((0, 2), self.board)
         assert self.white_knight_2.check_move((7, 2), self.board)
 
@@ -43,9 +44,9 @@ class TestCheckMove(unittest.TestCase):
         assert self.white_knight_2.check_move((5, 2), self.board)
 
     def test_impossible_moves(self):
-        assert not self.white_rook.check_move((5,5),self.board)
-        assert not self.white_rook.check_move((7,0),self.board)
-        assert not self.white_rook.check_move((0,7),self.board)
+        assert not self.white_rook.check_move((5, 5), self.board)
+        assert not self.white_rook.check_move((7, 0), self.board)
+        assert not self.white_rook.check_move((0, 7), self.board)
 
         assert not self.white_knight_2.check_move((0, 0), self.board)
         assert not self.white_knight.check_move((3, 1), self.board)
@@ -53,5 +54,3 @@ class TestCheckMove(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
-
-
