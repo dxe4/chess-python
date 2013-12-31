@@ -108,7 +108,7 @@ def _filter_line(f):
         end_check = _end_point_check(diff)
         moves = {move for move in moves
                  if in_line(*move) and start_check(move) and end_check(move, end)
-        }
+                 }
         return moves
 
     return wrapper
