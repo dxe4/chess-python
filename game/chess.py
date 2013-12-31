@@ -17,8 +17,12 @@ class Board(OrderedDict):
 
         self.turn = "W"
 
-    def move(self, start:tuple, end:tuple):
-        print(self[start].check_move(end,self))
+    def move(self, start:tuple, end:tuple, player:str):
+        if player is not self.turn: raise Exception("Its not your turn. Given %s expected %s" % (player, self.turn))
+        piece = self[start]
+        if not piece.check_move(end, self): return False
+        piece.move(end, self)
+
 
     def _color_picker(self, index:int):
         if self.player_down is "W":

@@ -119,7 +119,7 @@ def _check_blocks(f):
         if not moves: return False
         piece, end, board = args[0], args[1], args[2]
         #check if no items block the way
-        if len({i for i in moves if board[i] == None}) not in (len(moves),len(moves)-1):
+        if len({i for i in moves if board[i] == None}) not in (len(moves), len(moves) - 1):
             return False
         else:
             return moves
@@ -148,14 +148,22 @@ class Piece(object):
         self.color = color
         self.position = position
 
+    def move(self, end:tuple, board:OrderedDict):
+        board[self.position] = None
+        self.position = end
+        board[end] = self
+
     @abstractmethod
     def find(self, x:int, y:int): pass
+
 
     @abstractmethod
     def check_move(self, end:tuple, board:OrderedDict): pass
 
+
     def __repr__(self):
         return "%s %s " % (self.color, type(self).__name__,)
+
 
     def __str__(self):
         return "%s %s" % (repr(self), str(self.position))
