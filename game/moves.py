@@ -10,8 +10,8 @@ def _check_range(move: tuple, min_=0, max_=8) -> bool:
     """
         Check if a point is within a range. The default range is 0,8.
     @param move: The move to check
-    @param min: Minimum allowed value of the point (included)
-    @param max: Maximum allowed value of the point (excluded)
+    @param min_: Minimum allowed value of the point (included)
+    @param max_: Maximum allowed value of the point (excluded)
     @return: True if in range else False
     """
     return min_ <= move[0] < max_ and min_ <= move[1] < max_
@@ -108,7 +108,7 @@ def _filter_line(f):
         end_check = _end_point_check(diff)
         moves = {move for move in moves
                  if in_line(*move) and start_check(move) and end_check(move, end)
-                 }
+        }
         return moves
 
     return wrapper
