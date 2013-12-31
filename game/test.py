@@ -3,7 +3,7 @@ import unittest
 from game.chess import Board
 import game
 
-class TestInitialMoves(unittest.TestCase):
+class TestCheckMove(unittest.TestCase):
     def setUp(self):
 
         self.board = Board(player_down=game.player_down)
