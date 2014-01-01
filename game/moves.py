@@ -121,7 +121,7 @@ def _check_blocks(f):
     @wraps(f)
     def wrapper(*args, **kwargs):
         moves = f(*args, **kwargs)
-        piece, end, board = args[0], args[1], args[2]
+        piece, end, board = args
         item_at_end = board[end]
         # all-ready invalid
         if not moves or end not in moves:
