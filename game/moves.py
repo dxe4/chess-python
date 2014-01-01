@@ -88,8 +88,6 @@ def _filter_line(f):
        Gets all the possible moves and checks if they are on the same line.
        Then it removes all points not in range (bigger than end).
        Works for rook and bishop
-    @param f:
-    @return:
     """
 
     @wraps(f)
@@ -115,34 +113,26 @@ def _filter_line(f):
 
 
 def _check_blocks(f):
-    @wraps(f)
-    def wrapper(*args, **kwargs):
-        moves = f(*args, **kwargs)
-        if not moves:
-            return False
-        piece, end, board = args[0], args[1], args[2]
-        # check if no items block the way
-        if len({i for i in moves if board[i] is None}) not in (len(moves), len(moves) - 1):
-            return False
-        else:
-            return moves
+    """
+        Check if there's any pieces blocking the way to move.
+        Also check if the end square is empty or has enemy piece
+    """
 
-    return wrapper
-
-
-def _check_move_found(f):
     @wraps(f)
     def wrapper(*args, **kwargs):
         moves = f(*args, **kwargs)
         piece, end, board = args[0], args[1], args[2]
         item_at_end = board[end]
-        if not moves:
+        # all-ready invalid
+        if not moves or end not in moves:
             return False
-        if end not in moves:
-            return False
-        if item_at_end is not None and piece.color is item_at_end.color:
-            return False
-        return moves
+        # check if no items block the way. last square can have an item from opposite team
+        blocked = len({i for i in moves if board[i] is None}) not in (len(moves), len(moves) - 1)
+        last_item_invalid = item_at_end is not None and piece.color is item_at_end.color
+        # Knight and king don't need blocked validation
+        if (piece.__class__ in (Knight, King) and not last_item_invalid) \
+                or not (blocked or last_item_invalid):
+            return moves
 
     return wrapper
 
@@ -180,7 +170,6 @@ class Rook(Piece):
     def find(self, x: int, y: int) -> set:
         return {(x, i) for i in range(0, 8)}.union({(i, y) for i in range(0, 8)})
 
-    @_check_move_found
     @_check_blocks
     @_filter_line
     def check_move(self, end: tuple, board: OrderedDict):
@@ -195,7 +184,6 @@ class Bishop(Piece):
             (x + k, y + k), (x + k, y - k), (x - k, y + k), (x - k, y - k)]
         return {j for i in range(1, 8) for j in possible(i)}
 
-    @_check_move_found
     @_check_blocks
     @_filter_line
     def check_move(self, end: tuple, board: OrderedDict):
@@ -210,7 +198,7 @@ class Knight(Piece):
                       product([x - 2, x + 2], [y - 1, y + 1]))
         return set(moves)
 
-    @_check_move_found
+    @_check_blocks
     def check_move(self, end: tuple, board: OrderedDict):
         return self.find(*self.position)
 
@@ -230,7 +218,6 @@ class Pawn(Piece):
         return moves
 
     @_check_blocks
-    @_check_move_found
     def check_move(self, end: tuple, board: OrderedDict):
         return self.find(*self.position)
 
@@ -241,7 +228,7 @@ class King(Piece):
     def find(self, x: int, y: int) -> set:
         return product([x - 1, x + 1, x], [y + 1, y - 1, y])
 
-    @_check_move_found
+    @_check_blocks
     def check_move(self, end: tuple, board: OrderedDict):
         return self.find(*self.position)
 
