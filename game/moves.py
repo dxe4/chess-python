@@ -144,11 +144,6 @@ class Piece(object):
         self.color = color
         self.position = position
 
-    def move(self, end: tuple, board: OrderedDict):
-        board[self.position] = None
-        self.position = end
-        board[end] = self
-
     @abstractmethod
     def find(self, x: int, y: int):
         pass

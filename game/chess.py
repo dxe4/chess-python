@@ -1,6 +1,7 @@
 from itertools import product
-from . import Rook, Bishop, Pawn, Queen, King, Knight
+from . import Rook, Bishop, Pawn, Queen, King, Knight, Piece
 from collections import OrderedDict
+from copy import deepcopy
 
 
 class Board(OrderedDict):
@@ -16,15 +17,8 @@ class Board(OrderedDict):
         self._add_other(0)
         self._add_other(7)
 
+        self.killed = []
         self.turn = "W"
-
-    def move(self, start: tuple, end: tuple, player: str):
-        if player is not self.turn:
-            raise Exception("Its not your turn. Given %s expected %s" % (player, self.turn))
-        piece = self[start]
-        if not piece.check_move(end, self):
-            return False
-        piece.move(end, self)
 
     def _color_picker(self, index: int):
         if self.player_down is "W":
@@ -66,3 +60,47 @@ class Board(OrderedDict):
             if position[0] == 7:
                 to_join.append("\n")
         return "".join(to_join)
+
+
+class Move:
+
+    def __init__(self, piece: Piece, end: tuple):
+        self.piece = deepcopy(piece)
+        self.start = piece.position
+        self.end = end
+        self.killed = None
+
+    def exec(self, board: Board):
+        board[self.piece.position] = None
+        self.piece.position = self.end
+        if board[self.end]:
+            self.killed = board[self.end]
+            board.killed.append(self.killed)
+        board[self.end] = self.piece
+
+    def undo(self):
+        # TODO implement me
+        raise NotImplementedError()
+
+    def __repr__(self):
+        return "%s -> moved from: %s killed: %s" % (self.piece, self.start, self.killed)
+
+
+class GameEngine:
+
+    def __init__(self, board: Board):
+        self.board = board
+        self.moves = []
+
+    def _move(self, piece: Piece, end: tuple):
+        move = Move(piece, end)
+        move.exec(self.board)
+        self.moves.append(move)
+
+    def move(self, start: tuple, end: tuple, player: str):
+        if player is not self.board.turn:
+            raise Exception("Its not your turn. Given %s expected %s" % (player, self.turn))
+        piece = self.board[start]
+        if not piece.check_move(end, self.board):
+            return False
+        self._move(piece, end)
