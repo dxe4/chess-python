@@ -1,0 +1,1 @@
+autopep8 -i -r --ignore=E501 ../chess
