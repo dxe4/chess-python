@@ -130,8 +130,8 @@ def _check_blocks(f):
         blocked = len({i for i in moves if board[i] is None}) not in (len(moves), len(moves) - 1)
         last_item_invalid = item_at_end is not None and piece.color is item_at_end.color
         # Knight and king don't need blocked validation
-        if (piece.__class__ in (Knight, King) and not last_item_invalid) \
-                or not (blocked or last_item_invalid):
+        if not (blocked or last_item_invalid) or \
+                (piece.__class__ in (Knight, King) and not last_item_invalid):
             return moves
 
     return wrapper
