@@ -101,6 +101,6 @@ class GameEngine:
         if player is not self.board.turn:
             raise Exception("Its not your turn. Given %s expected %s" % (player, self.turn))
         piece = self.board[start]
-        if not piece.check_move(end, self.board):
-            return False
-        self._move(piece, end)
+        if piece.check_move(end, self.board):
+            self._move(piece, end)
+            return True
