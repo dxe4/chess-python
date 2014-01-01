@@ -153,7 +153,7 @@ class Piece(object):
         pass
 
     def __repr__(self):
-        return "%s %s " % (self.color, type(self).__name__,)
+        return "%s %s" % (self.color, type(self).__name__,)
 
     def __str__(self):
         return "%s %s" % (repr(self), str(self.position))
