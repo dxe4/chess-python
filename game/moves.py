@@ -163,6 +163,9 @@ class Piece(object):
     def check_move(self, end: tuple, board: OrderedDict):
         pass
 
+    def update_position(self, position):
+        self.position = position
+
     def __repr__(self):
         return "%s %s" % (self.color, type(self).__name__,)
 
@@ -246,7 +249,7 @@ class Queen(Piece):
         self._rook = Rook(color, position)
         self._bishop = Bishop(color, position)
 
-    def _update_position(self, position):
+    def update_position(self, position):
         self.position = position
         self._rook.position = position
         self._bishop.position = position

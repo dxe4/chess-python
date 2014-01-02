@@ -78,7 +78,7 @@ class Move:
 
     def exec(self, board: Board):
         board[self.piece.position] = None  # remove the piece from the board
-        self.piece.position = self.end  # move the piece
+        self.piece.update_position(self.end)  # move the piece
         if board[self.end]:  # kill previous piece if existed
             self.killed = board[self.end]
             board.killed.append(self.killed)
