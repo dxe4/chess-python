@@ -5,7 +5,9 @@ from copy import deepcopy
 
 
 class Board(OrderedDict):
-
+    """
+        Holds the state but has no logic. All logic is done in GameEngine
+    """
     def __init__(self, player_down: str="W"):
         super(Board, self).__init__()
         board = {i: None for i in product(range(0, 8), range(0, 8))}
@@ -19,6 +21,10 @@ class Board(OrderedDict):
 
         self.killed = []
         self.turn = "W"
+
+    def get_pieces(self, color: str):
+        # todo cache after moves
+        return {piece for position, piece in self.items() if piece.color is color}
 
     def _color_picker(self, index: int):
         if self.player_down is "W":
@@ -87,10 +93,24 @@ class Move:
 
 
 class GameEngine:
-
+    """
+        Creates and executes move. The only class changing state on pieces and board.
+        The main idea is to keep mutation controlled in one place
+    """
     def __init__(self, board: Board):
         self.board = board
         self.moves = []
+
+    def king_attacked(self):
+        # todo refactor cache pieces
+        _color = "W" if self.board.turn is "B" else "B"
+        opposite_team = self.board.get_pieces(_color)
+        current_team = self.board.get_pieces(self.board.turn)
+        king = [piece for piece in current_team if isinstance(piece, King)][0]
+        if len([piece.check_move(king.position,self.board) for piece in opposite_team]) > 1:
+            return True
+        else:
+            return False
 
     def _move(self, piece: Piece, end: tuple):
         move = Move(piece, end)
