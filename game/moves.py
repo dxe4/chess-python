@@ -78,15 +78,15 @@ class Math:
     @staticmethod
     def clean_moves(f):
         @wraps(f)
-        def wrapper(*args, **kwargs):
-            # todo make it a class decorator
-            piece, start, end = args
-            if (start, end) in piece.find_cache:
-                return piece.find_cache[(start, end)]
+        def wrapper(self, *args, **kwargs):
+            start, end = args
+            # all-ready calculated, exists in cache
+            if (start, end) in self.find_cache:
+                return self.find_cache[(start, end)]
 
-            moves = f(*args, **kwargs)
+            moves = f(self, *args, **kwargs)
             moves = {move for move in moves if Math.check_range(move)} - {args}
-            piece.find_cache[(start, end)] = moves
+            self.find_cache[(start, end)] = moves
             return moves
 
         return wrapper
@@ -101,10 +101,10 @@ class Math:
         """
 
         @wraps(f)
-        def wrapper(*args, **kwargs):
-            moves = f(*args, **kwargs)
+        def wrapper(self, *args, **kwargs):
+            moves = f(self, *args, **kwargs)
             # get start/end points from object
-            start, end = args[0].position, args[1]
+            start, end = self.position, args[0]
             # get the line formula as a callable
             in_line = Math.line(end, start=start)
             # calculate the diff of start and end
