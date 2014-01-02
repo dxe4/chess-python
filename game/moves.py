@@ -249,6 +249,8 @@ class Pawn(Piece):
         # TODO kill moves (en passant, up left and up down)
         non_kill_moves = self.find(*self.position)
         non_kill_moves = self._filter_non_kill_moves(board, **non_kill_moves)
+        # manually update the cache in pawn case because the decorator is not used
+        self.find_cache[self.position] = non_kill_moves
         return non_kill_moves
 
 
