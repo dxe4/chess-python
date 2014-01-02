@@ -269,7 +269,7 @@ class Queen(Piece):
         self._rook.position = position
         self._bishop.position = position
 
-    def find(self, x: int, y: int):
+    def find(self, x: int, y: int, board: OrderedDict=None):
         return self._bishop.find(x, y).union(self._rook.find(x, y))
 
     @Math.filter_line
