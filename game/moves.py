@@ -79,14 +79,14 @@ class Math:
     def clean_moves(f):
         @wraps(f)
         def wrapper(self, *args, **kwargs):
-            start, end = args
+            x, y = args
             # all-ready calculated, exists in cache
-            if (start, end) in self.find_cache:
-                return self.find_cache[(start, end)]
+            if (x, y) in self.find_cache:
+                return self.find_cache[(x, y)]
 
             moves = f(self, *args, **kwargs)
             moves = {move for move in moves if Math.check_range(move)} - {args}
-            self.find_cache[(start, end)] = moves
+            self.find_cache[(x, y)] = moves
             return moves
 
         return wrapper
@@ -219,14 +219,14 @@ class Pawn(Piece):
         self.y_initial, self.y_add = (6, -1) if self.color == game.player_down else (1, 1)
 
     @Math.clean_moves
-    def find(self, x: int, y: int) -> set:
+    def find(self, x: int, y: int) -> list:
         # TODO en passant
         moves = {(x, y + self.y_add)}
         if y == self.y_initial:  # first position can move two
             moves.add((x, y + self.y_add * 2))
         return moves
 
-    @Math.check_blocks
+    #@Math.check_blocks
     def check_move(self, end: tuple, board: OrderedDict):
         return self.find(*self.position)
 
