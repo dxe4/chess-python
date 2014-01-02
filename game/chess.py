@@ -99,7 +99,7 @@ class GameEngine:
 
     def move(self, start: tuple, end: tuple, player: str):
         if player is not self.board.turn:
-            raise Exception("Its not your turn. Given %s expected %s" % (player, self.turn))
+            raise Exception("Its not your turn. Given %s expected %s" % (player, self.board.turn))
         piece = self.board[start]
         if piece.check_move(end, self.board):
             self._move(piece, end)
