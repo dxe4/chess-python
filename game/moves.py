@@ -156,11 +156,11 @@ class Piece(object):
         self.find_cache = {}
 
     @abstractmethod
-    def find(self, x: int, y: int):
+    def find(self, x: int, y: int, board: OrderedDict=None):
         pass
 
     @abstractmethod
-    def check_move(self, end: tuple, board: OrderedDict):
+    def check_move(self, end: tuple, board: OrderedDict) ->set:
         pass
 
     def update_position(self, position):
@@ -176,7 +176,7 @@ class Piece(object):
 class Rook(Piece):
 
     @Math.clean_moves
-    def find(self, x: int, y: int) -> set:
+    def find(self, x: int, y: int, board: OrderedDict=None):
         return {(x, i) for i in range(0, 8)}.union({(i, y) for i in range(0, 8)})
 
     @Math.check_blocks
@@ -188,7 +188,7 @@ class Rook(Piece):
 class Bishop(Piece):
 
     @Math.clean_moves
-    def find(self, x: int, y: int) -> set:
+    def find(self, x: int, y: int, board: OrderedDict=None):
         possible = lambda k: [
             (x + k, y + k), (x + k, y - k), (x - k, y + k), (x - k, y - k)]
         return {j for i in range(1, 8) for j in possible(i)}
@@ -202,7 +202,7 @@ class Bishop(Piece):
 class Knight(Piece):
 
     @Math.clean_moves
-    def find(self, x: int, y: int) -> set:
+    def find(self, x: int, y: int, board: OrderedDict=None):
         moves = chain(product([x - 1, x + 1], [y - 2, y + 2]),
                       product([x - 2, x + 2], [y - 1, y + 1]))
         return set(moves)
@@ -219,45 +219,37 @@ class Pawn(Piece):
         self.y_initial, self.y_add = (6, -1) if self.color == game.player_down else (1, 1)
 
     #@Math.clean_moves
-    def find(self, x: int, y: int) -> dict:
-        moves = dict()
-        moves["move_one"] = (x, y + self.y_add)
-        # when placed at initial position pawn can move two squares
-        if y == self.y_initial:
-            moves["move_two"] = (x, y + self.y_add * 2)
-        return moves
+    def find(self, x: int, y: int, board: OrderedDict=None) -> set:
+        # TODO kill moves (en passant, up left and up down) and --cache--
+        non_kill = self._find_non_kill_moves(x, y, board=board)
+        return non_kill
 
-    def _filter_non_kill_moves(self, board: OrderedDict, move_one: tuple=None, move_two: tuple=None) ->set:
+    def _find_non_kill_moves(self, x: int, y: int, board: OrderedDict) ->set:
         """
             The pawn case has to be processed in different way because it can't kill when moving forward.
         @param board: the board
-        @param move_one: case x1=x2 and y1=y2+-1 (move one square)
-        @param move_two:case x1=x2 and y1=y2+-2 (move two squares from initial position)
         @return:
         """
         filtered_forward_moves = set()
+        move_a = (x, y + self.y_add)
         # just check if the square is empty
-        if board[move_one] is None:
-            filtered_forward_moves.add(move_one)
+        if board[move_a] is None:
+            filtered_forward_moves.add(move_a)
         # check that two squares are empty
-        if move_two:
-            if board[move_two] is None and board[move_two[0], move_two[1] - self.y_add] is None:
-                filtered_forward_moves.add(move_two)
+        if y is self.y_initial:
+            move_b = (x, y + self.y_add * 2)
+            if board[move_b] is None and board[move_b[0], move_b[1] - self.y_add] is None:
+                filtered_forward_moves.add(move_b)
         return filtered_forward_moves
 
     def check_move(self, end: tuple, board: OrderedDict):
-        # TODO kill moves (en passant, up left and up down)
-        non_kill_moves = self.find(*self.position)
-        non_kill_moves = self._filter_non_kill_moves(board, **non_kill_moves)
-        # manually update the cache in pawn case because the decorator is not used
-        self.find_cache[self.position] = non_kill_moves
-        return non_kill_moves
+        return self.find(*self.position, board=board)
 
 
 class King(Piece):
 
     @Math.clean_moves
-    def find(self, x: int, y: int) -> set:
+    def find(self, x: int, y: int, board: OrderedDict=None):
         return product([x - 1, x + 1, x], [y + 1, y - 1, y])
 
     @Math.check_blocks
