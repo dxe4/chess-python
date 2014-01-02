@@ -107,7 +107,7 @@ class GameEngine:
         opposite_team = self.board.get_pieces(_color)
         current_team = self.board.get_pieces(self.board.turn)
         king = [piece for piece in current_team if isinstance(piece, King)][0]
-        if len([piece.check_move(king.position,self.board) for piece in opposite_team]) > 1:
+        if len([piece.check_move(king.position, self.board) for piece in opposite_team]) > 1:
             return True
         else:
             return False
