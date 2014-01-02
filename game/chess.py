@@ -5,9 +5,11 @@ from copy import deepcopy
 
 
 class Board(OrderedDict):
+
     """
         Holds the state but has no logic. All logic is done in GameEngine
     """
+
     def __init__(self, player_down: str="W"):
         super(Board, self).__init__()
         board = {i: None for i in product(range(0, 8), range(0, 8))}
@@ -93,10 +95,12 @@ class Move:
 
 
 class GameEngine:
+
     """
         Creates and executes move. The only class changing state on pieces and board.
         The main idea is to keep mutation controlled in one place
     """
+
     def __init__(self, board: Board):
         self.board = board
         self.moves = []
