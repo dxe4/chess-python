@@ -7,6 +7,7 @@ from collections import OrderedDict
 
 
 class Math:
+
     @staticmethod
     def check_range(move: tuple, min_=0, max_=8) -> bool:
         """
@@ -78,7 +79,7 @@ class Math:
     def clean_moves(f):
         @wraps(f)
         def wrapper(*args, **kwargs):
-            #todo make it a class decorator
+            # todo make it a class decorator
             piece, start, end = args
             if (start, end) in piece.find_cache:
                 return piece.find_cache[(start, end)]
@@ -115,7 +116,7 @@ class Math:
             end_check = Math.end_point_check(diff)
             moves = {move for move in moves
                      if in_line(*move) and start_check(move) and end_check(move, end)
-            }
+                     }
             return moves
 
         return wrapper
@@ -170,6 +171,7 @@ class Piece(object):
 
 
 class Rook(Piece):
+
     @Math.clean_moves
     def find(self, x: int, y: int) -> set:
         return {(x, i) for i in range(0, 8)}.union({(i, y) for i in range(0, 8)})
@@ -181,6 +183,7 @@ class Rook(Piece):
 
 
 class Bishop(Piece):
+
     @Math.clean_moves
     def find(self, x: int, y: int) -> set:
         possible = lambda k: [
@@ -194,6 +197,7 @@ class Bishop(Piece):
 
 
 class Knight(Piece):
+
     @Math.clean_moves
     def find(self, x: int, y: int) -> set:
         moves = chain(product([x - 1, x + 1], [y - 2, y + 2]),
@@ -206,6 +210,7 @@ class Knight(Piece):
 
 
 class Pawn(Piece):
+
     def __init__(self, color: str, position: tuple):
         super(Pawn, self).__init__(color, position)
         self.y_initial, self.y_add = (6, -1) if self.color == game.player_down else (1, 1)
@@ -224,6 +229,7 @@ class Pawn(Piece):
 
 
 class King(Piece):
+
     @Math.clean_moves
     def find(self, x: int, y: int) -> set:
         return product([x - 1, x + 1, x], [y + 1, y - 1, y])
@@ -234,6 +240,7 @@ class King(Piece):
 
 
 class Queen(Piece):
+
     def __init__(self, color: str, position: tuple):
         super(Queen, self).__init__(color, position)
         self._rook = Rook(color, position)
