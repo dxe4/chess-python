@@ -1,7 +1,7 @@
 from itertools import product
-from . import Rook, Bishop, Pawn, Queen, King, Knight, Piece
 from collections import OrderedDict
 from copy import deepcopy
+from . import Rook, Bishop, Pawn, Queen, King, Knight, Piece
 
 
 class Board(OrderedDict):

@@ -2,8 +2,8 @@ from itertools import product, chain
 from functools import wraps
 from math import fabs
 from abc import ABCMeta, abstractmethod
-import game
 from collections import OrderedDict
+import game
 
 
 class Math:
