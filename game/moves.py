@@ -218,17 +218,38 @@ class Pawn(Piece):
         super(Pawn, self).__init__(color, position)
         self.y_initial, self.y_add = (6, -1) if self.color == game.player_down else (1, 1)
 
-    @Math.clean_moves
-    def find(self, x: int, y: int) -> list:
-        # TODO en passant
-        moves = {(x, y + self.y_add)}
-        if y == self.y_initial:  # first position can move two
-            moves.add((x, y + self.y_add * 2))
+    #@Math.clean_moves
+    def find(self, x: int, y: int) -> dict:
+        moves = dict()
+        moves["move_one"] = (x, y + self.y_add)
+        # when placed at initial position pawn can move two squares
+        if y == self.y_initial:
+            moves["move_two"] = (x, y + self.y_add * 2)
         return moves
 
-    #@Math.check_blocks
+    def _filter_non_kill_moves(self, board: OrderedDict, move_one: tuple=None, move_two: tuple=None) ->set:
+        """
+            The pawn case has to be processed in different way because it can't kill when moving forward.
+        @param board: the board
+        @param move_one: case x1=x2 and y1=y2+-1 (move one square)
+        @param move_two:case x1=x2 and y1=y2+-2 (move two squares from initial position)
+        @return:
+        """
+        filtered_forward_moves = set()
+        # just check if the square is empty
+        if board[move_one] is None:
+            filtered_forward_moves.add(move_one)
+        # check that two squares are empty
+        if move_two:
+            if board[move_two] is None and board[move_two[0], move_two[1] - self.y_add] is None:
+                filtered_forward_moves.add(move_two)
+        return filtered_forward_moves
+
     def check_move(self, end: tuple, board: OrderedDict):
-        return self.find(*self.position)
+        # TODO kill moves (en passant, up left and up down)
+        non_kill_moves = self.find(*self.position)
+        non_kill_moves = self._filter_non_kill_moves(board, **non_kill_moves)
+        return non_kill_moves
 
 
 class King(Piece):
