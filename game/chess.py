@@ -36,16 +36,21 @@ class Board(OrderedDict):
         else:
             raise TypeError("player down must be W or B")
 
-    def _get_row(self, row: int):
-        return filter(lambda x: x[1] is row, self.keys()), self._color_picker(row)
+    def _get_row(self, y: int) -> tuple:
+        """
+            Return the whole row as a generator(filter) and a color for the row
+        @param y: y position of the row
+        @return: (row,color)
+        """
+        return filter(lambda x: x[1] is y, self.keys()), self._color_picker(y)
 
-    def _add_pawns(self, row: int):
-        positions, color = self._get_row(row)
+    def _add_pawns(self, y: int):
+        positions, color = self._get_row(y)
         for i in positions:
             self[i] = Pawn(color, i)
 
-    def _add_other(self, row: int):
-        positions, color = self._get_row(row)
+    def _add_other(self, y: int):
+        positions, color = self._get_row(y)
         pieces = [Rook, Knight, Bishop, Queen, King, Bishop, Knight, Rook]
         for count, i in enumerate(positions):
             self[i] = pieces[count](color, i)
