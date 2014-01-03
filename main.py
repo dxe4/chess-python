@@ -12,3 +12,12 @@ print(game_engine.moves[0].piece)
 print(game_engine.moves[1].piece)
 game_engine.moves[1].undo(board)
 print(board)
+
+#TODO manual check king testing, make a unit test
+board[(4, 1)] = None
+board[(4, 6)] = None
+print(board)
+game_engine.move((3, 0), (4, 1), "W")
+game_engine.board.turn = "B"
+print(game_engine.king_attacked())
+print(board)

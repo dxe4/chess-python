@@ -26,7 +26,7 @@ class Board(OrderedDict):
 
     def get_pieces(self, color: str):
         # todo cache after moves
-        return {piece for position, piece in self.items() if piece.color is color}
+        return {piece for position, piece in self.items() if piece and piece.color is color}
 
     def _color_picker(self, index: int):
         if self.player_down is "W":
@@ -117,7 +117,8 @@ class GameEngine:
         opposite_team = self.board.get_pieces(_color)
         current_team = self.board.get_pieces(self.board.turn)
         king = [piece for piece in current_team if isinstance(piece, King)][0]
-        if len([piece.check_move(king.position, self.board) for piece in opposite_team]) > 1:
+        opposite_attackers = [piece.check_move(king.position, self.board) for piece in opposite_team]
+        if len([move for move in opposite_attackers if move]) >= 1:
             return True
         else:
             return False
