@@ -4,7 +4,7 @@ from game.chess import Board
 import game
 
 
-class TestCheckMove(unittest.TestCase):
+class TestInitialState(unittest.TestCase):
 
     def setUp(self):
         self.board = Board(player_down=game.player_down)
@@ -51,6 +51,10 @@ class TestCheckMove(unittest.TestCase):
         assert not self.white_knight_2.check_move((0, 0), self.board)
         assert not self.white_knight.check_move((3, 1), self.board)
 
+
+class TestMoves(unittest.TestCase):
+    def setUp(self):
+        self.board = Board(player_down=game.player_down)
 
 if __name__ == '__main__':
     unittest.main()
