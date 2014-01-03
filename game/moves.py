@@ -247,6 +247,7 @@ class Pawn(Piece):
             return self.find(*self.position, board=board)
         return False
 
+
 class King(Piece):
 
     @Math.clean_moves
