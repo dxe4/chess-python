@@ -91,9 +91,10 @@ class Move:
             board.killed.append(self.killed)
         board[self.end] = self.piece  # make the move on the board
 
-    def undo(self):
-        # TODO implement me
-        raise NotImplementedError()
+    def undo(self, board: Board):
+        board[self.start] = self.piece
+        self.piece.update_position(self.start)
+        board[self.end] = self.killed
 
     def __repr__(self):
         return "%s -> moved from: %s killed: %s" % (self.piece, self.start, self.killed)
@@ -133,3 +134,6 @@ class GameEngine:
         if piece.check_move(end, self.board):
             self._move(piece, end)
             return True
+
+    def undo(self, move: Move):
+        move.undo(self.board)
