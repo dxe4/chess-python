@@ -3,6 +3,8 @@ from collections import OrderedDict
 from copy import deepcopy
 from . import Rook, Bishop, Pawn, Queen, King, Knight, Piece
 
+color_change = {"W": "B", "B": "W"}
+
 
 class Board(OrderedDict):
 
@@ -114,7 +116,7 @@ class GameEngine:
 
     def king_attacked(self):
         # todo refactor cache pieces
-        _color = "W" if self.board.turn is "B" else "B"
+        _color = color_change[self.board.turn]
         opposite_team = self.board.get_pieces(_color)
         current_team = self.board.get_pieces(self.board.turn)
         king = [piece for piece in current_team if isinstance(piece, King)][0]

@@ -40,17 +40,18 @@ class Math:
         if start:
             slope = Math.slope(start, end)
         if slope is "vertical":  # vertical line
-            return lambda x, y: x == end[0]
-        return lambda x, y: y - end[1] == slope * (x - end[0])
+            return lambda x, y: x is end[0]
+        return lambda x, y: y - end[1] is slope * (x - end[0])
 
     @staticmethod
     def safe_divide(a: int, b: int, default=0) -> int:
         """
             Return 0 if dividing by 0
         """
-        if b == 0:
+        a, b = map(int, [a, b])
+        if b is 0:
             return default
-        return a / b
+        return int(a / b)
 
     @staticmethod
     def diff_points(start: tuple, end: tuple) -> tuple:
@@ -112,7 +113,7 @@ class Math:
             # make sure the point is bigger than start and smaller than end
             # start 3,3 end 5,5 -> 2,2 is not bigger than start 6,6 is not bigger
             # than end
-            start_check = lambda _move: Math.diff_points(start, _move) == diff
+            start_check = lambda _move: Math.diff_points(start, _move) is diff
             end_check = Math.end_point_check(diff)
             moves = {move for move in moves
                      if in_line(*move) and start_check(move) and end_check(move, end)
@@ -216,7 +217,7 @@ class Pawn(Piece):
 
     def __init__(self, color: str, position: tuple):
         super(Pawn, self).__init__(color, position)
-        self.y_initial, self.y_add = (6, -1) if self.color == game.player_down else (1, 1)
+        self.y_initial, self.y_add = (6, -1) if self.color is game.player_down else (1, 1)
 
     #@Math.clean_moves
     def find(self, x: int, y: int, board: OrderedDict=None) -> set:

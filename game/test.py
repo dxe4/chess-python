@@ -53,6 +53,7 @@ class TestInitialState(unittest.TestCase):
 
 
 class TestMoves(unittest.TestCase):
+
     def setUp(self):
         self.board = Board(player_down=game.player_down)
 
