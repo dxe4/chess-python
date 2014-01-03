@@ -119,10 +119,7 @@ class GameEngine:
         current_team = self.board.get_pieces(self.board.turn)
         king = [piece for piece in current_team if isinstance(piece, King)][0]
         opposite_attackers = [piece.check_move(king.position, self.board) for piece in opposite_team]
-        if len([move for move in opposite_attackers if move]) >= 1:
-            return True
-        else:
-            return False
+        return len([move for move in opposite_attackers if move]) >= 1
 
     def _move(self, piece: Piece, end: tuple):
         move = Move(piece, end)
