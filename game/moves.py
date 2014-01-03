@@ -243,8 +243,9 @@ class Pawn(Piece):
         return filtered_forward_moves
 
     def check_move(self, end: tuple, board: OrderedDict):
-        return self.find(*self.position, board=board)
-
+        if end in self.find(*self.position, board=board):
+            return self.find(*self.position, board=board)
+        return False
 
 class King(Piece):
 
