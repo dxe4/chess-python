@@ -110,6 +110,7 @@ class GameEngine:
     def __init__(self, board: Board):
         self.board = board
         self.moves = []
+        self.undone_moves = []
 
     def king_attacked(self):
         # todo refactor cache pieces
@@ -136,5 +137,8 @@ class GameEngine:
             self._move(piece, end)
             return True
 
-    def undo(self, move: Move):
+    def undo(self, move: Move=None):
+        if not move:
+            move = self.moves.pop()
         move.undo(self.board)
+        self.undone_moves.append(move)
