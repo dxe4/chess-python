@@ -130,8 +130,15 @@ class GameEngine:
         if player is not self.board.turn:
             raise Exception("Its not your turn. Given %s expected %s" % (player, self.board.turn))
         piece = self.board[start]
-        if piece.check_move(end, self.board):
-            self._move(piece, end)
+        # illegal move
+        if not piece.check_move(end, self.board):
+            return False
+        # move and check if king is under attack
+        self._move(piece, end)
+        # move is invalid undo
+        if self.king_attacked():
+            self.undo()
+        else:
             return True
 
     def undo(self, move: Move=None):
