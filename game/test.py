@@ -1,6 +1,6 @@
 import unittest
 from game.moves import Rook, Bishop, Pawn, Queen, King, Knight
-from game.chess import Board
+from game.chess import Board, GameEngine
 import game
 
 
@@ -52,10 +52,36 @@ class TestInitialState(unittest.TestCase):
         assert not self.white_knight.check_move((3, 1), self.board)
 
 
-class TestMoves(unittest.TestCase):
+class TestModernDefence(unittest.TestCase):
+
+    """
+        http://www.chess.com/opening/eco/B06_Modern_Defense_Standard_Defense
+    """
 
     def setUp(self):
-        self.board = Board(player_down=game.player_down)
+        self.board = Board(player_down="W")
+        self.game_engine = GameEngine(self.board)
+
+    def test_moves(self):
+        assert self.board.player_down is "W"
+
+        assert self.game_engine.move((4, 6), (4, 4), "W")
+        assert self.game_engine.move((6, 1), (6, 2), "B")
+
+        assert self.game_engine.move((3, 6), (3, 4), "W")
+        assert self.game_engine.move((5, 0), (6, 1), "B")
+
+        assert self.game_engine.move((1, 7), (2, 5), "W")
+        assert self.game_engine.move((3, 1), (3, 2), "B")
+
+        assert len(self.game_engine.moves) is 6
+        assert self.board.turn is "W"
+
+        for i in range(0, 6):
+            self.game_engine.undo()
+
+        assert self.board.turn is "W"
+
 
 if __name__ == '__main__':
     unittest.main()
