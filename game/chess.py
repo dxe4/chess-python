@@ -27,6 +27,8 @@ class Board(OrderedDict):
         self.turn = "W"
 
     def __eq__(self, other) -> bool:
+        if not other or not isinstance(other, self.__class__):
+            return False
         return self.get_pieces("W") == other.get_pieces("W") \
             and self.get_pieces("B") == other.get_pieces("B") \
             and self.killed == other.killed \
@@ -95,6 +97,15 @@ class Move:
         self.end = end
         self.killed = None
 
+    def __hash__(self):
+        pass
+
+    def __eq__(self, other):
+        pass
+
+    def __repr__(self):
+        return "%s -> moved from: %s killed: %s" % (self.piece, self.start, self.killed)
+
     def exec(self, board: Board):
         board[self.piece.position] = None  # remove the piece from the board
         self.piece.update_position(self.end)  # move the piece
@@ -107,9 +118,6 @@ class Move:
         board[self.start] = self.piece
         self.piece.update_position(self.start)
         board[self.end] = self.killed
-
-    def __repr__(self):
-        return "%s -> moved from: %s killed: %s" % (self.piece, self.start, self.killed)
 
 
 class GameEngine:
