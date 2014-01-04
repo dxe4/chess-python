@@ -113,7 +113,7 @@ class Math:
             # make sure the point is bigger than start and smaller than end
             # start 3,3 end 5,5 -> 2,2 is not bigger than start 6,6 is not bigger
             # than end
-            start_check = lambda _move: Math.diff_points(start, _move) is diff
+            start_check = lambda _move: Math.diff_points(start, _move) == diff
             end_check = Math.end_point_check(diff)
             moves = {move for move in moves
                      if in_line(*move) and start_check(move) and end_check(move, end)
@@ -215,9 +215,9 @@ class Knight(Piece):
 
 class Pawn(Piece):
 
-    def __init__(self, color: str, position: tuple):
+    def __init__(self, color: str, position: tuple, player_down: str):
         super(Pawn, self).__init__(color, position)
-        self.y_initial, self.y_add = (6, -1) if self.color is game.player_down else (1, 1)
+        self.y_initial, self.y_add = (6, -1) if self.color is player_down else (1, 1)
 
     #@Math.clean_moves
     def find(self, x: int, y: int, board: OrderedDict=None) -> set:
