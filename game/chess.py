@@ -52,7 +52,7 @@ class Board(OrderedDict):
     def _add_pawns(self, y: int):
         positions, color = self._get_row(y)
         for i in positions:
-            self[i] = Pawn(color, i)
+            self[i] = Pawn(color, i, self.player_down)
 
     def _add_other(self, y: int):
         positions, color = self._get_row(y)
