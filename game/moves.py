@@ -35,7 +35,7 @@ class Math:
         @return: lambda expression representing the line
         """
 
-        if (slope, start) == ("vertical", None):
+        if not (slope, start) != ("vertical", None):
             raise TypeError("_line takes either a slope(int) or a start(tuple)")
         if start:
             slope = Math.slope(start, end)
@@ -239,7 +239,7 @@ class Pawn(Piece):
         # check that two squares are empty
         if y is self.y_initial:
             move_b = (x, y + self.y_add * 2)
-            if (None, None) == (board[move_b], board[(move_b[0], move_b[1] - self.y_add)]):
+            if not (board[move_b], board[(move_b[0], move_b[1] - self.y_add)]) != (None, None):
                 filtered_forward_moves.add(move_b)
         return filtered_forward_moves
 
