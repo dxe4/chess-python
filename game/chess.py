@@ -26,6 +26,9 @@ class Board(OrderedDict):
         self.killed = []
         self.turn = "W"
 
+    def flip_color(self):
+        self.turn = color_change[self.turn]
+
     def get_pieces(self, color: str):
         # todo cache after moves
         return {piece for position, piece in self.items() if piece and piece.color is color}
@@ -141,6 +144,7 @@ class GameEngine:
         if self.king_attacked():
             self.undo()
         else:
+            self.board.flip_color()
             return True
 
     def undo(self, move: Move=None):
@@ -148,3 +152,4 @@ class GameEngine:
             move = self.moves.pop()
         move.undo(self.board)
         self.undone_moves.append(move)
+        self.board.flip_color()
