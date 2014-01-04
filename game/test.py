@@ -74,6 +74,8 @@ class TestModernDefence(unittest.TestCase):
         assert self.game_engine.move((1, 7), (2, 5), "W")
         assert self.game_engine.move((3, 1), (3, 2), "B")
 
+        self.assertRaises(Exception, self.wrong_player_moved)
+
         assert len(self.game_engine.moves) is 6
         assert self.board.turn is "W"
 
@@ -85,6 +87,10 @@ class TestModernDefence(unittest.TestCase):
         assert not self.board == Board(player_down="B")
         assert self.board.turn is "W"
         assert not self.game_engine.moves
+
+    def wrong_player_moved(self):
+        # TODO move in separate class and make it generic, for now its fine
+        assert self.game_engine.move((0, 1), (0, 2), "B")
 
 
 if __name__ == '__main__':
