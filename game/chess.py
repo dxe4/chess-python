@@ -98,10 +98,12 @@ class Move:
         self.killed = None
 
     def __hash__(self):
-        pass
+        return hash(" ".join(map(str, self.piece,self.start,self.end,self.killed)))
 
     def __eq__(self, other):
-        pass
+        if not other or not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
 
     def __repr__(self):
         return "%s -> moved from: %s killed: %s" % (self.piece, self.start, self.killed)
