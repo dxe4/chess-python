@@ -82,6 +82,7 @@ class TestModernDefence(unittest.TestCase):
             self.game_engine.undo()
         # assert undo was fine
         assert self.board == Board(player_down="W")
+        assert not self.board == Board(player_down="B")
         assert self.board.turn is "W"
         assert not self.game_engine.moves
 
