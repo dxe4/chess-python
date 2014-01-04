@@ -26,6 +26,13 @@ class Board(OrderedDict):
         self.killed = []
         self.turn = "W"
 
+    def __eq__(self, other) -> bool:
+        return self.get_pieces("W") == other.get_pieces("W") \
+            and self.get_pieces("B") == other.get_pieces("B") \
+            and self.killed == other.killed \
+            and self.player_down == other.player_down \
+            and self.turn == other.turn
+
     def flip_color(self):
         self.turn = color_change[self.turn]
 

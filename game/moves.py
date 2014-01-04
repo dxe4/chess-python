@@ -156,6 +156,14 @@ class Piece(object):
         self.position = position
         self.find_cache = {}
 
+    def __eq__(self, other) -> bool:
+        if not other or not isinstance(other, self.__class__):
+            return False
+        return self.position == other.position and self.color is other.color
+
+    def __hash__(self):
+        return hash(" ".join(map(str, [self.position, self.color])))
+
     @abstractmethod
     def find(self, x: int, y: int, board: OrderedDict=None):
         pass

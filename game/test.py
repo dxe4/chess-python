@@ -77,10 +77,13 @@ class TestModernDefence(unittest.TestCase):
         assert len(self.game_engine.moves) is 6
         assert self.board.turn is "W"
 
-        for i in range(0, 6):
+        # undo all moves
+        for i in range(0, len(self.game_engine.moves)):
             self.game_engine.undo()
-
+        # assert undo was fine
+        assert self.board == Board(player_down="W")
         assert self.board.turn is "W"
+        assert not self.game_engine.moves
 
 
 if __name__ == '__main__':
