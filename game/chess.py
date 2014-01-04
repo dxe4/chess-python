@@ -98,7 +98,7 @@ class Move:
         self.killed = None
 
     def __hash__(self):
-        return hash(" ".join(map(str, self.piece,self.start,self.end,self.killed)))
+        return hash(" ".join(map(str, self.piece, self.start, self.end, self.killed)))
 
     def __eq__(self, other):
         if not other or not isinstance(other, self.__class__):
