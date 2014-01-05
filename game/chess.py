@@ -150,15 +150,88 @@ class Math:
         return wrapper
 
 
+class GameEngine:
+
+    """
+        Creates and executes move. The only class changing state on pieces and board.
+        The main idea is to keep mutation controlled in one place
+    """
+
+    def __init__(self, board):
+        """
+        @param board: Board
+        """
+        self.board = board
+        self.moves = []
+        self.undone_moves = []
+
+    @staticmethod
+    def square_attacked(end: tuple, board):
+        opposite_color = color_change[board.turn]
+        opposite_team = board.get_pieces(opposite_color)
+        opposite_attackers = [piece.check_move(end, board) for piece in opposite_team]
+        return len([move for move in opposite_attackers if move]) >= 1
+
+    @staticmethod
+    def king_attacked(board):
+        # todo refactor cache pieces
+        king = board.get_king(board.turn)
+        return GameEngine.square_attacked(king.position, board)
+
+    def _move(self, move):
+        """
+
+        @param move: AbstractMove
+        @return: True if move was valid
+        """
+        move.exec(self.board)
+        if move.post_exec(self.board):
+            self.board.flip_color()
+            self.moves.append(move)
+            return True
+
+    def move(self, start: tuple, end: tuple, player: str):
+        if player is not self.board.turn:
+            raise Exception("Its not your turn. Given %s expected %s" % (player, self.board.turn))
+        piece = self.board[start]
+        move = piece.get_move(end, self.board)
+        if not move:
+            return False
+        return self._move(move)
+
+    def undo(self, move=None):
+        if not move:
+            move = self.moves.pop()
+        move.undo(self.board)
+        self.undone_moves.append(move)
+        self.board.flip_color()
+
+
 class AbstractMove:
     __metaclass__ = ABCMeta
 
     @abstractmethod
-    def exec(self, board: OrderedDict):
+    def exec(self, board):
+        """
+
+        @param board: Board
+        """
         pass
 
     @abstractmethod
-    def undo(self, board: OrderedDict):
+    def undo(self, board):
+        """
+
+        @param board: Board
+        """
+        pass
+
+    @abstractmethod
+    def post_exec(self, board):
+        """
+
+        @param board: Board
+        """
         pass
 
 
@@ -226,7 +299,7 @@ class Move(AbstractMove):
     def __repr__(self):
         return "%s -> moved from: %s killed: %s" % (self.piece, self.start, self.killed)
 
-    def exec(self, board: OrderedDict):
+    def exec(self, board):
         board[self.piece.position] = None  # remove the piece from the board
         self.piece.update_position(self.end)  # move the piece
         if board[self.end]:  # kill previous piece if existed
@@ -235,11 +308,17 @@ class Move(AbstractMove):
         board[self.end] = self.piece  # make the move on the board
         self.piece.increase_moves()
 
-    def undo(self, board: OrderedDict):
+    def undo(self, board):
         board[self.start] = self.piece
         self.piece.update_position(self.start)
         board[self.end] = self.killed
         self.piece.decrease_moves()
+
+    def post_exec(self, board):
+        if GameEngine.king_attacked(board):
+            self.undo(board)
+        else:
+            return True
 
 
 class CastlingMove(AbstractMove):
@@ -248,6 +327,9 @@ class CastlingMove(AbstractMove):
         pass
 
     def undo(self, board: OrderedDict):
+        pass
+
+    def post_exec(self, board):
         pass
 
 
@@ -479,54 +561,6 @@ class Board(OrderedDict):
                 to_join.append("\n")
         return "".join(to_join)
 
-
-class GameEngine:
-
-    """
-        Creates and executes move. The only class changing state on pieces and board.
-        The main idea is to keep mutation controlled in one place
-    """
-
-    def __init__(self, board: Board):
-        self.board = board
-        self.moves = []
-        self.undone_moves = []
-
-    def square_attacked(self, end: tuple):
-        opposite_color = color_change[self.board.turn]
-        opposite_team = self.board.get_pieces(opposite_color)
-        opposite_attackers = [piece.check_move(end, self.board) for piece in opposite_team]
-        return len([move for move in opposite_attackers if move]) >= 1
-
-    def king_attacked(self):
-        # todo refactor cache pieces
-        king = self.board.get_king(self.board.turn)
-        return self.square_attacked(king.position)
-
-    def _move(self, move: Move):
-        move.exec(self.board)
-        self.moves.append(move)
-
-    def move(self, start: tuple, end: tuple, player: str):
-        if player is not self.board.turn:
-            raise Exception("Its not your turn. Given %s expected %s" % (player, self.board.turn))
-        piece = self.board[start]
-        move = piece.get_move(end, self.board)
-        if not move:
-            return False
-        self._move(move)
-        if self.king_attacked():
-            self.undo()
-        else:
-            self.board.flip_color()
-            return True
-
-    def undo(self, move: Move=None):
-        if not move:
-            move = self.moves.pop()
-        move.undo(self.board)
-        self.undone_moves.append(move)
-        self.board.flip_color()
 
 
         # 0y [0, 1, 2, 3, 4, 5, 6, 7]x
