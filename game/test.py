@@ -1,5 +1,5 @@
 import unittest
-from game.moves import Rook, Bishop, Pawn, Queen, King, Knight
+from game.chess import Rook, Bishop, Pawn, Queen, King, Knight
 from game.chess import Board, GameEngine
 import game
 

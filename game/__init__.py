@@ -1,4 +1,2 @@
-from game.moves import Rook, Bishop, Pawn, Queen, King, Knight, Piece, Castling
-from game.chess import Board, GameEngine
-
+from game.chess import Board, GameEngine, Rook, Bishop, Pawn, Queen, King, Knight, Piece, Castling
 player_down = "B"
