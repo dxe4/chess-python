@@ -115,11 +115,13 @@ class Move:
             self.killed = board[self.end]
             board.killed.append(self.killed)
         board[self.end] = self.piece  # make the move on the board
+        self.piece.increase_moves()
 
     def undo(self, board: Board):
         board[self.start] = self.piece
         self.piece.update_position(self.start)
         board[self.end] = self.killed
+        self.piece.decrease_moves()
 
 
 class GameEngine:
@@ -161,7 +163,6 @@ class GameEngine:
         if self.king_attacked():
             self.undo()
         else:
-            piece.increase_moves()
             self.board.flip_color()
             return True
 
