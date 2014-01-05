@@ -458,7 +458,7 @@ class Castling:
         if board[self.rook_position].moved is 0 or self.king.moved is 0:
             return False
 
-        return True
+        return self
 
 
 class King(Piece):
@@ -494,13 +494,11 @@ class King(Piece):
         return self.find(*self.position, board=board)
 
     def get_move(self, end: tuple, board):
-        if not self.is_castling(end, board):
+        castling = self.is_castling(end, board)
+        if not castling:
             return super(King, self).get_move(end, board)
-        elif self.is_castling(end, board):
-            # todo return castling move
-            return False
         else:
-            return False
+            return CastlingMove(castling)
 
 
 class Queen(Piece):
