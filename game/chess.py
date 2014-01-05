@@ -150,6 +150,18 @@ class Math:
         return wrapper
 
 
+class AbstractMove:
+    __metaclass__ = ABCMeta
+
+    @abstractmethod
+    def exec(self, board: OrderedDict):
+        pass
+
+    @abstractmethod
+    def undo(self, board: OrderedDict):
+        pass
+
+
 class Piece(object):
     __metaclass__ = ABCMeta
 
@@ -167,12 +179,6 @@ class Piece(object):
     def __hash__(self):
         return hash(" ".join(map(str, [self.position, self.color])))
 
-    def increase_moves(self):
-        self.moved += 1
-
-    def decrease_moves(self):
-        self.moved -= 1
-
     @abstractmethod
     def find(self, x: int, y: int, board: OrderedDict=None):
         pass
@@ -180,6 +186,16 @@ class Piece(object):
     @abstractmethod
     def check_move(self, end: tuple, board: OrderedDict) ->set:
         pass
+
+    def get_move(self, end: tuple, board: OrderedDict):
+        if self.check_move(end, board):
+            return Move(self, end)
+
+    def increase_moves(self):
+        self.moved += 1
+
+    def decrease_moves(self):
+        self.moved -= 1
 
     def update_position(self, position):
         self.position = position
@@ -189,6 +205,50 @@ class Piece(object):
 
     def __str__(self):
         return "%s %s" % (repr(self), str(self.position))
+
+
+class Move(AbstractMove):
+
+    def __init__(self, piece: Piece, end: tuple):
+        self.piece = deepcopy(piece)
+        self.start = piece.position
+        self.end = end
+        self.killed = None
+
+    def __hash__(self):
+        return hash(" ".join(map(str, self.piece, self.start, self.end, self.killed)))
+
+    def __eq__(self, other):
+        if not other or not isinstance(other, self.__class__):
+            return False
+        return self.__dict__ == other.__dict__
+
+    def __repr__(self):
+        return "%s -> moved from: %s killed: %s" % (self.piece, self.start, self.killed)
+
+    def exec(self, board: OrderedDict):
+        board[self.piece.position] = None  # remove the piece from the board
+        self.piece.update_position(self.end)  # move the piece
+        if board[self.end]:  # kill previous piece if existed
+            self.killed = board[self.end]
+            board.killed.append(self.killed)
+        board[self.end] = self.piece  # make the move on the board
+        self.piece.increase_moves()
+
+    def undo(self, board: OrderedDict):
+        board[self.start] = self.piece
+        self.piece.update_position(self.start)
+        board[self.end] = self.killed
+        self.piece.decrease_moves()
+
+
+class CastlingMove(AbstractMove):
+
+    def exec(self, board: OrderedDict):
+        pass
+
+    def undo(self, board: OrderedDict):
+        pass
 
 
 class Rook(Piece):
@@ -415,53 +475,6 @@ class Board(OrderedDict):
             if position[0] == 7:
                 to_join.append("\n")
         return "".join(to_join)
-
-
-class AbstractMove:
-    __metaclass__ = ABCMeta
-
-    @abstractmethod
-    def exec(self, board: Board):
-        pass
-
-    @abstractmethod
-    def undo(self, board: Board):
-        pass
-
-
-class Move(AbstractMove):
-
-    def __init__(self, piece: Piece, end: tuple):
-        self.piece = deepcopy(piece)
-        self.start = piece.position
-        self.end = end
-        self.killed = None
-
-    def __hash__(self):
-        return hash(" ".join(map(str, self.piece, self.start, self.end, self.killed)))
-
-    def __eq__(self, other):
-        if not other or not isinstance(other, self.__class__):
-            return False
-        return self.__dict__ == other.__dict__
-
-    def __repr__(self):
-        return "%s -> moved from: %s killed: %s" % (self.piece, self.start, self.killed)
-
-    def exec(self, board: Board):
-        board[self.piece.position] = None  # remove the piece from the board
-        self.piece.update_position(self.end)  # move the piece
-        if board[self.end]:  # kill previous piece if existed
-            self.killed = board[self.end]
-            board.killed.append(self.killed)
-        board[self.end] = self.piece  # make the move on the board
-        self.piece.increase_moves()
-
-    def undo(self, board: Board):
-        board[self.start] = self.piece
-        self.piece.update_position(self.start)
-        board[self.end] = self.killed
-        self.piece.decrease_moves()
 
 
 class GameEngine:
