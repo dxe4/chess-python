@@ -424,7 +424,9 @@ class Pawn(Piece):
         # check that two squares are empty
         if y is self.y_initial:
             move_b = (x, y + self.y_add * 2)
-            if not (board[move_b], board[(move_b[0], move_b[1] - self.y_add)]) != (None, None):
+            piece_a = board[move_b]
+            piece_b = board[(move_b[0], move_b[1] - self.y_add)]
+            if not (piece_a, piece_b) != (None, None):
                 filtered_forward_moves.add(move_b)
         return filtered_forward_moves
 
