@@ -498,12 +498,7 @@ class GameEngine:
         opposite_attackers = [piece.check_move(king.position, self.board) for piece in opposite_team]
         return len([move for move in opposite_attackers if move]) >= 1
 
-    def _move(self, piece: Piece, end: tuple, castling: Castling=None):
-        move = None
-        if castling:
-            pass
-        else:
-            move = Move(piece, end)
+    def _move(self, move: Move):
         move.exec(self.board)
         self.moves.append(move)
 
@@ -511,16 +506,10 @@ class GameEngine:
         if player is not self.board.turn:
             raise Exception("Its not your turn. Given %s expected %s" % (player, self.board.turn))
         piece = self.board[start]
-        castling = None
-        if not piece:
+        move = piece.get_move(end, self.board)
+        if not move:
             return False
-        if isinstance(piece, King) and piece.is_castling():
-            castling = piece.is_castling(end, self.board)
-        elif not piece.check_move(end, self.board):
-            return False
-        # move and check if king is under attack
-        self._move(piece, end, castling=castling)
-        # move is invalid undo
+        self._move(move)
         if self.king_attacked():
             self.undo()
         else:
