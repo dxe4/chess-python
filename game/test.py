@@ -7,7 +7,7 @@ import game
 class TestInitialState(unittest.TestCase):
 
     def setUp(self):
-        self.board = Board(player_down=game.player_down, create= True)
+        self.board = Board(player_down=game.player_down, create=True)
         self.black_knight = self.board[1, 7]
         self.black_knight_2 = self.board[6, 7]
 
@@ -59,7 +59,7 @@ class TestModernDefence(unittest.TestCase):
     """
 
     def setUp(self):
-        self.board = Board(player_down="W", create= True)
+        self.board = Board(player_down="W", create=True)
         self.board.create()
         self.game_engine = GameEngine(self.board)
 
