@@ -294,7 +294,7 @@ class King(Piece):
         self.castling = {((4, y), (2, y)): Castling(1, 4, y, self),
                          ((4, y), (6, y)): Castling(5, 7, y, self)}
 
-    def is_castiling(self, end: tuple, board: OrderedDict):
+    def is_castling(self, end: tuple, board: OrderedDict):
         possible_castling = (self.position, end)
         if not possible_castling in self.castling:
             return False
