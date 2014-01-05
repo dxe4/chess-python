@@ -475,19 +475,29 @@ class King(Piece):
         castling = self.castling[possible_castling]
         return castling.is_valid(board)
 
+    def get_castling_moves(self, board) -> set:
+        moves = set()
+        for positions in self.castling.keys():
+            self.is_castling(positions[1], board)
+            moves.add(positions[1])
+        return moves
+
     @Math.clean_moves
     def find(self, x: int, y: int, board=None):
-        return product([x - 1, x + 1, x], [y + 1, y - 1, y])
+        normal_moves = set(product([x - 1, x + 1, x], [y + 1, y - 1, y]))
+        castling_moves = self.get_castling_moves(board)
+        return normal_moves.union(castling_moves)
 
     @Math.check_blocks
     def check_move(self, end: tuple, board):
         return self.find(*self.position)
 
     def get_move(self, end: tuple, board):
-        if self.check_move(end, board):
+        if not self.is_castling(end, board):
             return super(King, self).get_move(end, board)
         elif self.is_castling(end, board):
-            return
+            # todo return castling move
+            return False
         else:
             return False
 
