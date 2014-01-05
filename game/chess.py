@@ -12,19 +12,13 @@ class Board(OrderedDict):
         Holds the state but has no logic. All logic is done in GameEngine
     """
 
-    def __init__(self, player_down: str="W"):
+    def __init__(self, player_down: str="W", create: bool=False):
         super(Board, self).__init__()
-        board = {i: None for i in product(range(0, 8), range(0, 8))}
-        self.update(sorted(board.items(), key=lambda x: x[0][0] + ((1 + x[0][1]) * 100)))
-
         self.player_down = player_down
-        self._add_pawns(1)
-        self._add_pawns(6)
-        self._add_other(0)
-        self._add_other(7)
-
         self.killed = []
         self.turn = "W"
+        if create:
+            self.create()
 
     def __eq__(self, other) -> bool:
         if not other or not isinstance(other, self.__class__):
@@ -34,6 +28,14 @@ class Board(OrderedDict):
             and self.killed == other.killed \
             and self.player_down == other.player_down \
             and self.turn == other.turn
+
+    def create(self):
+        board = {i: None for i in product(range(0, 8), range(0, 8))}
+        self.update(sorted(board.items(), key=lambda x: x[0][0] + ((1 + x[0][1]) * 100)))
+        self._add_pawns(1)
+        self._add_pawns(6)
+        self._add_other(0)
+        self._add_other(7)
 
     def flip_color(self):
         self.turn = color_change[self.turn]

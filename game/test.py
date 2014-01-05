@@ -7,7 +7,7 @@ import game
 class TestInitialState(unittest.TestCase):
 
     def setUp(self):
-        self.board = Board(player_down=game.player_down)
+        self.board = Board(player_down=game.player_down, create= True)
         self.black_knight = self.board[1, 7]
         self.black_knight_2 = self.board[6, 7]
 
@@ -59,7 +59,8 @@ class TestModernDefence(unittest.TestCase):
     """
 
     def setUp(self):
-        self.board = Board(player_down="W")
+        self.board = Board(player_down="W", create= True)
+        self.board.create()
         self.game_engine = GameEngine(self.board)
 
     def test_moves(self):
@@ -83,8 +84,8 @@ class TestModernDefence(unittest.TestCase):
         for i in range(0, len(self.game_engine.moves)):
             self.game_engine.undo()
         # assert undo was fine
-        assert self.board == Board(player_down="W")
-        assert not self.board == Board(player_down="B")
+        assert self.board == Board(player_down="W", create=True)
+        assert not self.board == Board(player_down="B", create=True)
         assert self.board.turn is "W"
         assert not self.game_engine.moves
 
