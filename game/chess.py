@@ -180,7 +180,7 @@ class GameEngine:
 
     def _move(self, move):
         """
-
+            Executes the move
         @param move: AbstractMove
         @return: True if move was valid
         """
@@ -213,7 +213,7 @@ class AbstractMove:
     @abstractmethod
     def exec(self, board):
         """
-
+            Execute the move
         @param board: Board
         """
         pass
@@ -221,7 +221,7 @@ class AbstractMove:
     @abstractmethod
     def undo(self, board):
         """
-
+            Undo the mvoe
         @param board: Board
         """
         pass
@@ -229,7 +229,7 @@ class AbstractMove:
     @abstractmethod
     def post_exec(self, board):
         """
-
+            Check if after executing the king is under attack. If it is undo
         @param board: Board
         """
         pass
@@ -253,16 +253,34 @@ class Piece(object):
         return hash(" ".join(map(str, [self.position, self.color])))
 
     @abstractmethod
-    def find(self, x: int, y: int, board: OrderedDict=None):
+    def find(self, x: int, y: int, board=None):
+        """
+            Find all "logical moves"
+        @param x: int end x
+        @param y: int end y
+        @param board: Board
+        """
         pass
 
     @abstractmethod
-    def check_move(self, end: tuple, board: OrderedDict) ->set:
+    def check_move(self, end: tuple, board) ->set:
+        """
+            Checks if "logical moves" generated in find are legal
+        @param end: tuple endpoint
+        @param board: Board
+        """
         pass
 
-    def get_move(self, end: tuple, board: OrderedDict):
+    def get_move(self, end: tuple, board) -> AbstractMove:
+        """
+            Get the a Move object if the move was legal
+        @param end: tuple endpoint
+        @param board: Board
+        @return AbstractMove
+        """
         if self.check_move(end, board):
             return Move(self, end)
+        return False
 
     def increase_moves(self):
         self.moved += 1
@@ -323,10 +341,18 @@ class Move(AbstractMove):
 
 class CastlingMove(AbstractMove):
 
-    def exec(self, board: OrderedDict):
+    def __init__(self, castling):
+        """
+            Castling is a special moves and needs to be implemented separate
+            because its the only case two pieces move at once
+        @param castling: Castling
+        """
         pass
 
-    def undo(self, board: OrderedDict):
+    def exec(self, board):
+        pass
+
+    def undo(self, board):
         pass
 
     def post_exec(self, board):
@@ -419,15 +445,17 @@ class Castling:
         self.king = king
 
     def is_valid(self, board):
+        if GameEngine.king_attacked(board):
+            return False
         # check if castling is blocked
         for square in self.squares:
-            if board[square] is not None:
+            if board[square] is not None or GameEngine.square_attacked(square, board):
                 return False
         # check if pieces have been moved previously
         if board[self.rook_position].moved is 0 or self.king.moved is 0:
             return False
 
-        return self
+        return True
 
 
 class King(Piece):
@@ -452,6 +480,14 @@ class King(Piece):
     @Math.check_blocks
     def check_move(self, end: tuple, board):
         return self.find(*self.position)
+
+    def get_move(self, end: tuple, board):
+        if self.check_move(end, board):
+            return super(King, self).get_move(end, board)
+        elif self.is_castling(end, board):
+            return
+        else:
+            return False
 
 
 class Queen(Piece):
