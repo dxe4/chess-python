@@ -426,6 +426,9 @@ class Board(OrderedDict):
     def flip_color(self):
         self.turn = color_change[self.turn]
 
+    def get_king(self, color: str) -> Piece:
+        return [piece for piece in self.get_pieces(color) if isinstance(piece, King)][0]
+
     def get_pieces(self, color: str):
         # todo cache after moves
         return {piece for position, piece in self.items() if piece and piece.color is color}
@@ -489,14 +492,16 @@ class GameEngine:
         self.moves = []
         self.undone_moves = []
 
+    def square_attacked(self, end: tuple):
+        opposite_color = color_change[self.board.turn]
+        opposite_team = self.board.get_pieces(opposite_color)
+        opposite_attackers = [piece.check_move(end, self.board) for piece in opposite_team]
+        return len([move for move in opposite_attackers if move]) >= 1
+
     def king_attacked(self):
         # todo refactor cache pieces
-        _color = color_change[self.board.turn]
-        opposite_team = self.board.get_pieces(_color)
-        current_team = self.board.get_pieces(self.board.turn)
-        king = [piece for piece in current_team if isinstance(piece, King)][0]
-        opposite_attackers = [piece.check_move(king.position, self.board) for piece in opposite_team]
-        return len([move for move in opposite_attackers if move]) >= 1
+        king = self.board.get_king(self.board.turn)
+        return self.square_attacked(king.position)
 
     def _move(self, move: Move):
         move.exec(self.board)
