@@ -336,39 +336,39 @@ class CastlingMove(AbstractMove):
 class Rook(Piece):
 
     @Math.clean_moves
-    def find(self, x: int, y: int, board: OrderedDict=None):
+    def find(self, x: int, y: int, board=None):
         return {(x, i) for i in range(0, 8)}.union({(i, y) for i in range(0, 8)})
 
     @Math.check_blocks
     @Math.filter_line
-    def check_move(self, end: tuple, board: OrderedDict):
+    def check_move(self, end: tuple, board):
         return self.find(*self.position)
 
 
 class Bishop(Piece):
 
     @Math.clean_moves
-    def find(self, x: int, y: int, board: OrderedDict=None):
+    def find(self, x: int, y: int, board=None):
         possible = lambda k: [
             (x + k, y + k), (x + k, y - k), (x - k, y + k), (x - k, y - k)]
         return {j for i in range(1, 8) for j in possible(i)}
 
     @Math.check_blocks
     @Math.filter_line
-    def check_move(self, end: tuple, board: OrderedDict):
+    def check_move(self, end: tuple, board):
         return self.find(*self.position)
 
 
 class Knight(Piece):
 
     @Math.clean_moves
-    def find(self, x: int, y: int, board: OrderedDict=None):
+    def find(self, x: int, y: int, board=None):
         moves = chain(product([x - 1, x + 1], [y - 2, y + 2]),
                       product([x - 2, x + 2], [y - 1, y + 1]))
         return set(moves)
 
     @Math.check_blocks
-    def check_move(self, end: tuple, board: OrderedDict):
+    def check_move(self, end: tuple, board):
         return self.find(*self.position)
 
 
@@ -379,12 +379,12 @@ class Pawn(Piece):
         self.y_initial, self.y_add = (6, -1) if self.color is player_down else (1, 1)
 
     #@Math.clean_moves
-    def find(self, x: int, y: int, board: OrderedDict=None) -> set:
+    def find(self, x: int, y: int, board=None) -> set:
         # TODO kill moves (en passant, up left and up down) and --cache--
         non_kill = self._find_non_kill_moves(x, y, board=board)
         return non_kill
 
-    def _find_non_kill_moves(self, x: int, y: int, board: OrderedDict) ->set:
+    def _find_non_kill_moves(self, x: int, y: int, board) ->set:
         """
             The pawn case has to be processed in different way because it can't kill when moving forward.
         @param board: the board
@@ -402,7 +402,7 @@ class Pawn(Piece):
                 filtered_forward_moves.add(move_b)
         return filtered_forward_moves
 
-    def check_move(self, end: tuple, board: OrderedDict):
+    def check_move(self, end: tuple, board):
         moves = self.find(*self.position, board=board)
         if end in moves:
             return moves
@@ -418,7 +418,7 @@ class Castling:
         self.rook_position = (rook_x, y)
         self.king = king
 
-    def is_valid(self, board: OrderedDict):
+    def is_valid(self, board):
         # check if castling is blocked
         for square in self.squares:
             if board[square] is not None:
@@ -438,7 +438,7 @@ class King(Piece):
         self.castling = {((4, y), (2, y)): Castling(1, 4, y, self),
                          ((4, y), (6, y)): Castling(5, 7, y, self)}
 
-    def is_castling(self, end: tuple, board: OrderedDict):
+    def is_castling(self, end: tuple, board):
         possible_castling = (self.position, end)
         if not possible_castling in self.castling:
             return False
@@ -446,11 +446,11 @@ class King(Piece):
         return castling.is_valid(board)
 
     @Math.clean_moves
-    def find(self, x: int, y: int, board: OrderedDict=None):
+    def find(self, x: int, y: int, board=None):
         return product([x - 1, x + 1, x], [y + 1, y - 1, y])
 
     @Math.check_blocks
-    def check_move(self, end: tuple, board: OrderedDict):
+    def check_move(self, end: tuple, board):
         return self.find(*self.position)
 
 
@@ -466,11 +466,11 @@ class Queen(Piece):
         self._rook.position = position
         self._bishop.position = position
 
-    def find(self, x: int, y: int, board: OrderedDict=None):
+    def find(self, x: int, y: int, board=None):
         return self._bishop.find(x, y).union(self._rook.find(x, y))
 
     @Math.filter_line
-    def check_move(self, end: tuple, board: OrderedDict):
+    def check_move(self, end: tuple, board):
         return self.find(*self.position)
 
 
