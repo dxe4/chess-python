@@ -169,7 +169,8 @@ class GameEngine:
     def square_attacked(end: tuple, board):
         opposite_color = color_change[board.turn]
         opposite_team = board.get_pieces(opposite_color)
-        opposite_attackers = [piece.check_move(end, board) for piece in opposite_team]
+        opposite_attackers = [piece.check_move(end, board)
+                              for piece in opposite_team if not isinstance(piece, King)]
         return len([move for move in opposite_attackers if move]) >= 1
 
     @staticmethod
@@ -490,7 +491,7 @@ class King(Piece):
 
     @Math.check_blocks
     def check_move(self, end: tuple, board):
-        return self.find(*self.position)
+        return self.find(*self.position, board=board)
 
     def get_move(self, end: tuple, board):
         if not self.is_castling(end, board):
