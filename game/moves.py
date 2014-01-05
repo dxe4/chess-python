@@ -155,6 +155,7 @@ class Piece(object):
         self.color = color
         self.position = position
         self.find_cache = {}
+        self.moved = 0
 
     def __eq__(self, other) -> bool:
         if not other or not isinstance(other, self.__class__):
@@ -163,6 +164,12 @@ class Piece(object):
 
     def __hash__(self):
         return hash(" ".join(map(str, [self.position, self.color])))
+
+    def increase_moves(self):
+        self.moved += 1
+
+    def decrease_moves(self):
+        self.moved -= 1
 
     @abstractmethod
     def find(self, x: int, y: int, board: OrderedDict=None):
@@ -258,7 +265,39 @@ class Pawn(Piece):
         return False
 
 
+class Castling:
+
+    # TODO broken atm
+    def __init__(self, y: int, start: int, end: int):
+        self.squares = [(x, y) for x in range(start, end)]
+        rook_x = 0 if start == 1 else 7
+        self.rook_position = (rook_x, y)
+
+    def is_valid(self, board: OrderedDict, king: King):
+        for square in self.squares:
+            # castling is blocked
+            if board[square] is not None:
+                return False
+
+        if board[self.rook_position].moved is 0 or king.moved is 0:
+            return False
+
+
 class King(Piece):
+
+    def __init__(self, color: str, position: tuple):
+        super(King, self).__init__(color, position)
+        y = self.position[1]
+        self.castling = {[(4, y), (2, y)]: Castling(1, 4, y),
+                         [(4, y), (6, y)]: Castling(5, 7, y)}
+
+    def is_castiling(self, end: tuple, board: OrderedDict):
+        possible_castling = [self.position, end]
+        if not possible_castling in self.castling:
+            return False
+        castling = self.castling[possible_castling]
+        return castling.is_valid(board, self)
+
 
     @Math.clean_moves
     def find(self, x: int, y: int, board: OrderedDict=None):
