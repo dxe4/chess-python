@@ -275,11 +275,11 @@ class Castling:
         self.king = king
 
     def is_valid(self, board: OrderedDict):
+        # check if castling is blocked
         for square in self.squares:
-            # castling is blocked
             if board[square] is not None:
                 return False
-
+        # check if pieces have been moved previously
         if board[self.rook_position].moved is 0 or self.king.moved is 0:
             return False
 
