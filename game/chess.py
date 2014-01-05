@@ -1,4 +1,5 @@
 from itertools import product
+from abc import ABCMeta, abstractmethod
 from collections import OrderedDict
 from copy import deepcopy
 from . import Rook, Bishop, Pawn, Queen, King, Knight, Piece
@@ -91,7 +92,19 @@ class Board(OrderedDict):
         return "".join(to_join)
 
 
-class Move:
+class AbstractMove:
+    __metaclass__ = ABCMeta
+
+    @abstractmethod
+    def exec(self, board: Board):
+        pass
+
+    @abstractmethod
+    def undo(self, board: Board):
+        pass
+
+
+class Move(AbstractMove):
 
     def __init__(self, piece: Piece, end: tuple):
         self.piece = deepcopy(piece)
