@@ -352,21 +352,29 @@ class CastlingMove(AbstractMove):
         self.rook_position = castling.rook_position
         self.squares = castling.squares
         self.end = castling.end
-
+        self.rook = None
+        self.rook_x = 3 if self.end == 2 else 5
 
     def exec(self, board):
+        self.rook = deepcopy(board[self.rook_position])
         king = board[self.king.position]
         rook = board[self.rook_position]
-        rook_x = 3 if self.end == 2 else 5
 
         board[rook.position] = None
         board[king.position] = None
 
-        rook.update_position(rook_x, self.end[1])
+        rook.update_position(self.rook_x, self.end[1])
         king.update_position(self.end)
 
+        king.increase_moves()
+        rook.increase_moves()
+
     def undo(self, board):
-        pass
+        board[self.end] = None
+        board[self.rook_x, self.end[1]] = None
+
+        board[self.king.position] = self.king
+        board[self.rook_position] = self.rook
 
     def post_exec(self, board):
         pass
