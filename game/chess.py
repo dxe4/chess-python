@@ -348,10 +348,16 @@ class CastlingMove(AbstractMove):
             because its the only case two pieces move at once
         @param castling: Castling
         """
-        pass
+        self.king = deepcopy(castling.king)
+        self.rook_position = castling.rook_position
+        self.squares = castling.squares
+        self.end = castling.end
 
     def exec(self, board):
-        pass
+        king = board[self.king.position]
+        rook = board[self.rook_position]
+        rook.update_position(self.end[0])
+
 
     def undo(self, board):
         pass
@@ -440,12 +446,13 @@ class Pawn(Piece):
 
 class Castling:
 
-    # TODO broken atm
     def __init__(self, y: int, start: int, end: int, king: Piece):
         self.squares = [(x, y) for x in range(start, end)]
         rook_x = 0 if start == 1 else 7
         self.rook_position = (rook_x, y)
         self.king = king
+        end_x = 2 if start == 1 else 6
+        self.end = (end_x, king.position[1])
 
     def is_valid(self, board):
         if GameEngine.king_attacked(board):
