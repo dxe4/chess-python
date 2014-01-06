@@ -331,7 +331,7 @@ class Move(AbstractMove):
         board[self.start] = self.piece
         self.piece.update_position(self.start)
         board[self.end] = self.killed
-        self.piece.decrease_moves()
+        #self.piece.decrease_moves()
 
     def post_exec(self, board):
         if GameEngine.king_attacked(board):
@@ -377,7 +377,7 @@ class CastlingMove(AbstractMove):
         board[self.rook_position] = self.rook
 
     def post_exec(self, board):
-        pass
+        return True
 
 
 class Rook(Piece):
