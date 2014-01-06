@@ -353,11 +353,17 @@ class CastlingMove(AbstractMove):
         self.squares = castling.squares
         self.end = castling.end
 
+
     def exec(self, board):
         king = board[self.king.position]
         rook = board[self.rook_position]
-        rook.update_position(self.end[0])
+        rook_x = 3 if self.end == 2 else 5
 
+        board[rook.position] = None
+        board[king.position] = None
+
+        rook.update_position(rook_x, self.end[1])
+        king.update_position(self.end)
 
     def undo(self, board):
         pass
