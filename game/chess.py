@@ -350,24 +350,27 @@ class CastlingMove(AbstractMove):
         """
         self.king = deepcopy(castling.king)
         self.rook_position = castling.rook_position
+        self.king_position = self.king.position
         self.squares = castling.squares
         self.end = castling.end
+        self.rook_end = castling.rook_end
         self.rook = None
         self.rook_x = 3 if self.end == 2 else 5
 
     def exec(self, board):
         self.rook = deepcopy(board[self.rook_position])
-        king = board[self.king.position]
-        rook = board[self.rook_position]
 
-        board[rook.position] = None
-        board[king.position] = None
+        board[self.rook.position] = None
+        board[self.king.position] = None
 
-        rook.update_position(self.rook_x, self.end[1])
-        king.update_position(self.end)
+        board[self.rook_end] = self.rook
+        board[self.end] = self.king
 
-        king.increase_moves()
-        rook.increase_moves()
+        self.rook.update_position(self.rook_end)
+        self.king.update_position(self.end)
+
+        self.king.increase_moves()
+        self.rook.increase_moves()
 
     def undo(self, board):
         board[self.end] = None
@@ -465,8 +468,10 @@ class Castling:
         rook_x = 0 if start == 1 else 7
         self.rook_position = (rook_x, king.position[1])
         self.king = king
-        end_x = 2 if start == 1 else 6
-        self.end = (end_x, king.position[1])
+        king_end_x = 2 if start == 1 else 6
+        rook_end_x = 3 if start == 1 else 5
+        self.end = (king_end_x, king.position[1])
+        self.rook_end = (rook_end_x, king.position[1])
 
     def is_valid(self, board):
         if GameEngine.king_attacked(board):
@@ -476,7 +481,7 @@ class Castling:
             if board[square] is not None or GameEngine.square_attacked(square, board):
                 return False
         # check if pieces have been moved previously
-        if board[self.rook_position].moved is 0 or self.king.moved is 0:
+        if not(board[self.rook_position].moved is 0 or self.king.moved is 0):
             return False
 
         return self
@@ -487,8 +492,8 @@ class King(Piece):
     def __init__(self, color: str, position: tuple):
         super(King, self).__init__(color, position)
         y = self.position[1]
-        self.castling = {((4, y), (2, y)): Castling(1, 4, y, self),
-                         ((4, y), (6, y)): Castling(5, 7, y, self)}
+        self.castling = {((4, y), (2, y)): Castling(y, 1, 4, self),
+                         ((4, y), (6, y)): Castling(y, 5, 7, self)}
 
     def is_castling(self, end: tuple, board):
         possible_castling = (self.position, end)
