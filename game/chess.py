@@ -463,7 +463,7 @@ class Castling:
     def __init__(self, y: int, start: int, end: int, king: Piece):
         self.squares = [(x, y) for x in range(start, end)]
         rook_x = 0 if start == 1 else 7
-        self.rook_position = (rook_x, y)
+        self.rook_position = (rook_x, king.position[1])
         self.king = king
         end_x = 2 if start == 1 else 6
         self.end = (end_x, king.position[1])
