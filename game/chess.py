@@ -350,7 +350,7 @@ class CastlingMove(AbstractMove):
         """
         self.king = deepcopy(castling.king)
         self.rook_position = castling.rook_position
-        self.king_position = self.king.position
+        self.king_position = deepcopy(self.king.position)
         self.squares = castling.squares
         self.end = castling.end
         self.rook_end = castling.rook_end
@@ -374,10 +374,13 @@ class CastlingMove(AbstractMove):
 
     def undo(self, board):
         board[self.end] = None
-        board[self.rook_x, self.end[1]] = None
+        board[self.rook_end] = None
 
-        board[self.king.position] = self.king
+        board[self.king_position] = self.king
         board[self.rook_position] = self.rook
+
+        self.king.update_position(self.king_position)
+        self.rook.update_position(self.rook_position)
 
     def post_exec(self, board):
         return True

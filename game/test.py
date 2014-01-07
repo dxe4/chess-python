@@ -111,9 +111,9 @@ class TestCastling(unittest.TestCase):
 
     def test_white(self):
         # white
-        assert self.game_engine.move((4, 7), (2, 7), "W")
-        self.game_engine.undo()
         assert self.game_engine.move((4, 7), (6, 7), "W")
+        self.game_engine.undo()
+        assert self.game_engine.move((4, 7), (2, 7), "W")
         # black
         assert self.game_engine.move((4, 0), (2, 0), "B")
         self.game_engine.undo()
