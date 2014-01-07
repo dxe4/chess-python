@@ -553,6 +553,8 @@ class Board(OrderedDict):
         self.player_down = player_down
         self.killed = []
         self.turn = "W"
+        board = {i: None for i in product(range(0, 8), range(0, 8))}
+        self.update(sorted(board.items(), key=lambda x: x[0][0] + ((1 + x[0][1]) * 100)))
         if create:
             self.create()
 
@@ -566,8 +568,6 @@ class Board(OrderedDict):
             and self.turn == other.turn
 
     def create(self):
-        board = {i: None for i in product(range(0, 8), range(0, 8))}
-        self.update(sorted(board.items(), key=lambda x: x[0][0] + ((1 + x[0][1]) * 100)))
         self._add_pawns(1)
         self._add_pawns(6)
         self._add_other(0)
