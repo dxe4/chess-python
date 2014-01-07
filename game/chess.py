@@ -5,6 +5,17 @@ from math import fabs
 from abc import ABCMeta, abstractmethod
 from collections import OrderedDict
 
+"""
+Board holds the state of the game only.
+GameEngine holds a Board.
+game_engine.move moves the pieces:
+    1) finds the piece on board.
+    2) calls get move on the piece (returns extends AbstractMove objecet)
+    3) calls move.execute
+    4) moves have post_exec func to check if after moving the king is under attacked
+    5) if post_exec the move was succesful else post_exec will undo the move which makes it invalid
+"""
+
 color_change = {"W": "B", "B": "W"}
 
 
