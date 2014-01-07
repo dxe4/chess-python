@@ -60,7 +60,6 @@ class TestModernDefence(unittest.TestCase):
 
     def setUp(self):
         self.board = Board(player_down="W", create=True)
-        self.board.create()
         self.game_engine = GameEngine(self.board)
 
     def test_moves(self):
@@ -93,6 +92,27 @@ class TestModernDefence(unittest.TestCase):
         # TODO move in separate class and make it generic, for now its fine
         assert self.game_engine.move((0, 1), (0, 2), "B")
 
+
+class TestCastling(unittest.TestCase):
+
+    def setUp(self):
+        self.board = Board(player_down="W", create=False)
+        self._add_piece((4, 7), "W", King)
+        self._add_piece((0, 7), "W", Rook)
+        self._add_piece((7, 7), "W", Rook)
+
+        self._add_piece((4, 0), "B", King)
+        self._add_piece((0, 0), "B", Rook)
+        self._add_piece((7, 0), "B", Rook)
+
+    def _add_piece(self, start: tuple, color: str, clazz):
+        self.board[start] = clazz(color,start)
+
+    def test_white(self):
+        pass
+
+    def test_black(self):
+        pass
 
 if __name__ == '__main__':
     unittest.main()
