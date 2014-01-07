@@ -349,38 +349,38 @@ class CastlingMove(AbstractMove):
         @param castling: Castling
         """
         self.king = deepcopy(castling.king)
-        self.rook_position = castling.rook_position
-        self.king_position = deepcopy(self.king.position)
+        self.rook_start = castling.rook_start
+        self.king_start = deepcopy(self.king.position)
         self.squares = castling.squares
-        self.end = castling.end
+        self.king_end = castling.king_end
         self.rook_end = castling.rook_end
         self.rook = None
-        self.rook_x = 3 if self.end == 2 else 5
+        #self.rook_x = 3 if self.king_end == 2 else 5
 
     def exec(self, board):
-        self.rook = deepcopy(board[self.rook_position])
+        self.rook = deepcopy(board[self.rook_start])
 
         board[self.rook.position] = None
         board[self.king.position] = None
 
         board[self.rook_end] = self.rook
-        board[self.end] = self.king
+        board[self.king_end] = self.king
 
         self.rook.update_position(self.rook_end)
-        self.king.update_position(self.end)
+        self.king.update_position(self.king_end)
 
         self.king.increase_moves()
         self.rook.increase_moves()
 
     def undo(self, board):
-        board[self.end] = None
+        board[self.king_end] = None
         board[self.rook_end] = None
 
-        board[self.king_position] = self.king
-        board[self.rook_position] = self.rook
+        board[self.king_start] = self.king
+        board[self.rook_start] = self.rook
 
-        self.king.update_position(self.king_position)
-        self.rook.update_position(self.rook_position)
+        self.king.update_position(self.king_start)
+        self.rook.update_position(self.rook_start)
 
     def post_exec(self, board):
         return True
@@ -469,11 +469,11 @@ class Castling:
     def __init__(self, y: int, start: int, end: int, king: Piece):
         self.squares = [(x, y) for x in range(start, end)]
         rook_x = 0 if start == 1 else 7
-        self.rook_position = (rook_x, king.position[1])
+        self.rook_start = (rook_x, king.position[1])
         self.king = king
         king_end_x = 2 if start == 1 else 6
         rook_end_x = 3 if start == 1 else 5
-        self.end = (king_end_x, king.position[1])
+        self.king_end = (king_end_x, king.position[1])
         self.rook_end = (rook_end_x, king.position[1])
 
     def is_valid(self, board):
@@ -484,7 +484,7 @@ class Castling:
             if board[square] is not None or GameEngine.square_attacked(square, board):
                 return False
         # check if pieces have been moved previously
-        if not(board[self.rook_position].moved is 0 or self.king.moved is 0):
+        if not(board[self.rook_start].moved is 0 or self.king.moved is 0):
             return False
 
         return self
