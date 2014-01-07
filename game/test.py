@@ -97,6 +97,7 @@ class TestCastling(unittest.TestCase):
 
     def setUp(self):
         self.board = Board(player_down="W", create=False)
+        self.game_engine = GameEngine(self.board)
         self._add_piece((4, 7), "W", King)
         self._add_piece((0, 7), "W", Rook)
         self._add_piece((7, 7), "W", Rook)
@@ -106,13 +107,17 @@ class TestCastling(unittest.TestCase):
         self._add_piece((7, 0), "B", Rook)
 
     def _add_piece(self, start: tuple, color: str, clazz):
-        self.board[start] = clazz(color,start)
+        self.board[start] = clazz(color, start)
 
     def test_white(self):
-        pass
-
-    def test_black(self):
-        pass
+        # white
+        assert self.game_engine.move((4, 7), (2, 7), "W")
+        self.game_engine.undo()
+        assert self.game_engine.move((4, 7), (6, 7), "W")
+        # black
+        assert self.game_engine.move((4, 0), (2, 0), "B")
+        self.game_engine.undo()
+        assert self.game_engine.move((4, 0), (6, 0), "B")
 
 if __name__ == '__main__':
     unittest.main()
