@@ -119,5 +119,14 @@ class TestCastling(unittest.TestCase):
         self.game_engine.undo()
         assert self.game_engine.move((4, 0), (6, 0), "B")
 
+        assert isinstance(self.board[2, 7], King)
+        assert isinstance(self.board[3, 7], Rook)
+        assert isinstance(self.board[7, 7], Rook)
+
+        assert isinstance(self.board[6, 0], King)
+        assert isinstance(self.board[5, 0], Rook)
+        assert isinstance(self.board[0, 0], Rook)
+
+
 if __name__ == '__main__':
     unittest.main()
