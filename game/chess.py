@@ -456,19 +456,19 @@ class Pawn(Piece):
         @param board: the board
         @return:
         """
-        filtered_forward_moves = set()
+        non_kill_moves = set()
         move_a = (x, y + self.y_add)
         # just check if the square is empty
         if board[move_a] is None:
-            filtered_forward_moves.add(move_a)
+            non_kill_moves.add(move_a)
         # check that two squares are empty
         if y is self.y_initial:
             move_b = (x, y + self.y_add * 2)
             piece_a = board[move_b]
             piece_b = board[(move_b[0], move_b[1] - self.y_add)]
             if not (piece_a, piece_b) != (None, None):
-                filtered_forward_moves.add(move_b)
-        return filtered_forward_moves
+                non_kill_moves.add(move_b)
+        return non_kill_moves
 
     def check_move(self, end: tuple, board):
         moves = self.find(*self.position, board=board)
