@@ -4,6 +4,7 @@ from functools import wraps
 from math import fabs
 from abc import ABCMeta, abstractmethod
 from collections import OrderedDict
+import operator
 
 """
 Board holds the state of the game only.
@@ -489,14 +490,35 @@ class Pawn(Piece):
         kill = self._kill_moves(x, y, board=board)
         return non_kill.union(kill)
 
-    def _kill_moves(self, x: int, y: int, board):
+    def _get_kill_pieces(self, x: int, y: int, board, _operator):
+        """
+            Gets all that could be killed.
+            Used in _en_pasant and _kill_moves
+            for normal kill moves x,y+self.y_add
+            for en_passant moves x,y-self,y_add
+        @return: All possible pieces to be killed
+        """
         x1, x2 = x - 1, x + 1
-        positions = [(x1, y + self.y_add), (x2, y + self.y_add)]
-        pieces = [board[position] for position in positions
-                  if Math.check_range(position)]
-        return {piece.position for piece in pieces
-                if piece and piece.color is not self.color
-                }
+        new_y = _operator(y + self.y_add)
+        positions = [(x1, new_y), (x2, new_y)]
+        positions = [i for i in positions if Math.check_range(i)]
+        pieces = [board[position] for position in positions]
+        return set(filter(lambda piece: piece and piece.color is not self.color, pieces))
+
+    def _en_passant(self, x: int, y: int, board):
+        last_move_piece = board.moves[-1].piece
+        # en passant requires last move to be opponents pawn
+        _all = [last_move_piece,
+                isinstance(last_move_piece, Pawn),
+                last_move_piece.color is color_change[self.color]]
+        if not all(_all):
+            return False
+        # Check if end is in all "killable" en-passant pieces
+        pieces = self._get_kill_pieces(x, y, board, operator.sub)
+        return (x, y) in [piece.position for piece in pieces]
+
+    def _kill_moves(self, x: int, y: int, board):
+        return self._get_kill_pieces(x, y, board, operator.add)
 
     def _find_non_kill_moves(self, x: int, y: int, board) ->set:
         """
