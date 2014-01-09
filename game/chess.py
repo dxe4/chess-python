@@ -488,7 +488,8 @@ class Pawn(Piece):
         # TODO test kill moves, add en passant and --cache--
         non_kill = self._find_non_kill_moves(x, y, board=board)
         kill = self._kill_moves(x, y, board=board)
-        return non_kill.union(kill)
+        en_passant_moves = self._en_passant(x, y, board)
+        return set(chain(kill, non_kill, en_passant_moves))
 
     def _get_kill_pieces(self, x: int, y: int, board, _operator):
         """
@@ -499,23 +500,28 @@ class Pawn(Piece):
         @return: All possible pieces to be killed
         """
         x1, x2 = x - 1, x + 1
-        new_y = _operator(y + self.y_add)
+        new_y = _operator(y, self.y_add)
         positions = [(x1, new_y), (x2, new_y)]
-        positions = [i for i in positions if Math.check_range(i)]
-        pieces = [board[position] for position in positions]
+        pieces = [board[i] for i in positions if Math.check_range(i)]
         return set(filter(lambda piece: piece and piece.color is not self.color, pieces))
 
     def _en_passant(self, x: int, y: int, board):
+        # not moves yet en passant is impossible
+        if not board.moves:
+            return {}
         last_move_piece = board.moves[-1].piece
         # en passant requires last move to be opponents pawn
         _all = [last_move_piece,
                 isinstance(last_move_piece, Pawn),
                 last_move_piece.color is color_change[self.color]]
+
         if not all(_all):
-            return False
+            return {}
         # Check if end is in all "killable" en-passant pieces
         pieces = self._get_kill_pieces(x, y, board, operator.sub)
-        return (x, y) in [piece.position for piece in pieces]
+        if (x, y) in [piece.position for piece in pieces]:
+            return {(x, y)}
+        return {}
 
     def _kill_moves(self, x: int, y: int, board):
         return self._get_kill_pieces(x, y, board, operator.add)
