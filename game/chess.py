@@ -12,7 +12,7 @@ game_engine.move moves the pieces:
     1) finds the piece on board.
     2) calls get move on the piece (returns extends AbstractMove objecet)
     3) calls move.execute
-    4) moves have post_exec func to check if after moving the king is under attacked
+    4) moves have post_exec func to check if after moving the king is under attack
     5) if post_exec the move was succesful else post_exec will undo the move which makes it invalid
 """
 
@@ -192,17 +192,28 @@ class GameEngine:
 
     def _move(self, move):
         """
-            Executes the move
+            Executes the move as returned by piece.get_move
         @param move: AbstractMove
         @return: True if move was valid
         """
         move.exec(self.board)
+        # the easiest way to check if a move is blocked by checked king
+        # is to actually execute it and check the board state, if its illegal undo
+        # this is done by post_exec
         if move.post_exec(self.board):
             self.board.flip_color()
             self.moves.append(move)
             return True
 
     def move(self, start: tuple, end: tuple, player: str):
+        """
+            Moves the pieces on the board, just give the points.
+            The module docstring explains the whole flow
+        @param start: tuple start point (x,y)
+        @param end: tuple end point (x,y)
+        @param player: str player color
+        @return: True if moved else False @raise Exception: When is not the players turn
+        """
         if player is not self.board.turn:
             raise Exception("Its not your turn. Given %s expected %s" % (player, self.board.turn))
         piece = self.board[start]
@@ -235,7 +246,7 @@ class AbstractMove:
     @abstractmethod
     def undo(self, board):
         """
-            Undo the mvoe
+            Undo the move
         @param board: Board
         """
         pass
@@ -243,7 +254,8 @@ class AbstractMove:
     @abstractmethod
     def post_exec(self, board):
         """
-            Check if after executing the king is under attack. If it is undo
+            Check if after executing the king is under attack. If it is undo.
+            Castling move always returns true
         @param board: Board
         """
         pass
@@ -297,12 +309,25 @@ class Piece(object):
         return False
 
     def increase_moves(self):
+        """
+            Increase the times a piece moved.
+            Needed for castling and potentially statistics in AI
+        """
         self.moved += 1
 
     def decrease_moves(self):
+        """
+            Decrease moves when undoing moves.
+            Needed for castling and potentially statistics in AI
+        """
         self.moved -= 1
 
     def update_position(self, position):
+        """
+            Updates the piece's position after every move.
+            Queen has a special implementation
+        @param position:
+        """
         self.position = position
 
     def __repr__(self):
@@ -454,7 +479,8 @@ class Pawn(Piece):
     def _kill_moves(self, x: int, y: int, board):
         x1, x2 = x - 1, x + 1
         positions = [(x1, y + self.y_add), (x2, y + self.y_add)]
-        pieces = [board[position] for position in positions if Math.check_range(position)]
+        pieces = [board[position] for position in positions
+                  if Math.check_range(position)]
         return {piece.position for piece in pieces
                 if piece and piece.color is not self.color
                 }
