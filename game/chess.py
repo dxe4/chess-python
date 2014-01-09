@@ -195,8 +195,6 @@ class GameEngine:
         @param board: Board
         """
         self.board = board
-        self.moves = []
-        self.undone_moves = []
 
     @staticmethod
     def square_attacked(end: tuple, board):
@@ -224,7 +222,7 @@ class GameEngine:
         # this is done by post_exec
         if move.post_exec(self.board):
             self.board.flip_color()
-            self.moves.append(move)
+            self.board.moves.append(move)
             return True
 
     def move(self, start: tuple, end: tuple, player: str):
@@ -248,9 +246,9 @@ class GameEngine:
 
     def undo(self, move=None):
         if not move:
-            move = self.moves.pop()
+            move = self.board.moves.pop()
         move.undo(self.board)
-        self.undone_moves.append(move)
+        self.board.undone_moves.append(move)
         self.board.flip_color()
 
 
@@ -632,6 +630,8 @@ class Board(OrderedDict):
         super(Board, self).__init__()
         self.player_down = player_down
         self.killed = []
+        self.moves = []
+        self.undone_moves = []
         self.turn = "W"
         board = {i: None for i in product(range(0, 8), range(0, 8))}
         self.update(sorted(board.items(), key=lambda x: x[0][0] + ((1 + x[0][1]) * 100)))

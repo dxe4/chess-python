@@ -76,17 +76,17 @@ class TestModernDefence(unittest.TestCase):
 
         self.assertRaises(Exception, self.wrong_player_moved)
 
-        assert len(self.game_engine.moves) is 6
+        assert len(self.board.moves) is 6
         assert self.board.turn is "W"
 
         # undo all moves
-        for i in range(0, len(self.game_engine.moves)):
+        for i in range(0, len(self.board.moves)):
             self.game_engine.undo()
         # assert undo was fine
         assert self.board == Board(player_down="W", create=True)
         assert not self.board == Board(player_down="B", create=True)
         assert self.board.turn is "W"
-        assert not self.game_engine.moves
+        assert not self.board.moves
 
     def wrong_player_moved(self):
         # TODO move in separate class and make it generic, for now its fine
