@@ -344,7 +344,7 @@ class Move(AbstractMove):
         board[self.start] = self.piece
         self.piece.update_position(self.start)
         board[self.end] = self.killed
-        #self.piece.decrease_moves()
+        # self.piece.decrease_moves()
 
     def post_exec(self, board):
         if GameEngine.king_attacked(board):
@@ -449,13 +449,15 @@ class Pawn(Piece):
         # TODO test kill moves, add en passant and --cache--
         non_kill = self._find_non_kill_moves(x, y, board=board)
         kill = self._kill_moves(x, y, board=board)
-        return non_kill
+        return non_kill.union(kill)
 
     def _kill_moves(self, x: int, y: int, board):
-        x1, x2 = x-1, x+1
-        pos1, pos2 = (x1, y+self.y_add), (x2, y+self.y_add)
-        pieces = [board[pos1], board[pos2]]
-        return {piece.position for piece in pieces if piece and piece.color is not self.color}
+        x1, x2 = x - 1, x + 1
+        positions = [(x1, y + self.y_add), (x2, y + self.y_add)]
+        pieces = [board[position] for position in positions if Math.check_range(position)]
+        return {piece.position for piece in pieces
+                if piece and piece.color is not self.color
+                }
 
     def _find_non_kill_moves(self, x: int, y: int, board) ->set:
         """
