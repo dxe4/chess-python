@@ -446,9 +446,16 @@ class Pawn(Piece):
 
     #@Math.clean_moves
     def find(self, x: int, y: int, board=None) -> set:
-        # TODO kill moves (en passant, up left and up down) and --cache--
+        # TODO test kill moves, add en passant and --cache--
         non_kill = self._find_non_kill_moves(x, y, board=board)
+        kill = self._kill_moves(x, y, board=board)
         return non_kill
+
+    def _kill_moves(self, x: int, y: int, board):
+        x1, x2 = x-1, x+1
+        pos1, pos2 = (x1, y+self.y_add), (x2, y+self.y_add)
+        pieces = [board[pos1], board[pos2]]
+        return {piece.position for piece in pieces if piece and piece.color is not self.color}
 
     def _find_non_kill_moves(self, x: int, y: int, board) ->set:
         """
