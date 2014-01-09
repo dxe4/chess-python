@@ -4,7 +4,6 @@ from functools import wraps
 from math import fabs
 from abc import ABCMeta, abstractmethod
 from collections import OrderedDict
-from functools import lru_cache
 
 """
 Board holds the state of the game only.
@@ -23,7 +22,6 @@ color_change = {"W": "B", "B": "W"}
 class Math:
 
     @staticmethod
-    @lru_cache
     def check_range(move: tuple, min_=0, max_=8) -> bool:
         """
             Check if a point is within a range. The default range is 0,8.
@@ -35,7 +33,6 @@ class Math:
         return min_ <= move[0] < max_ and min_ <= move[1] < max_
 
     @staticmethod
-    @lru_cache
     def slope(start: tuple, end: tuple) -> int:
         """
             For the math formula of the line.
@@ -44,7 +41,6 @@ class Math:
         return Math.safe_divide(start[1] - end[1], start[0] - end[0], default="vertical")
 
     @staticmethod
-    @lru_cache
     def line(end: tuple, slope: int=None, start: tuple=None) -> callable:
         """
             Line math formula
@@ -61,7 +57,6 @@ class Math:
         return lambda x, y: y - end[1] is slope * (x - end[0])
 
     @staticmethod
-    @lru_cache
     def safe_divide(a: int, b: int, default=0) -> int:
         """
             Return 0 if dividing by 0.
@@ -77,7 +72,6 @@ class Math:
         return int(a / b)
 
     @staticmethod
-    @lru_cache
     def diff_points(start: tuple, end: tuple) -> tuple:
         """
             Calculate a tuple to identify how we move.
@@ -89,7 +83,6 @@ class Math:
         return Math.safe_divide(x, fabs(x)), Math.safe_divide(y, fabs(y))
 
     @staticmethod
-    @lru_cache
     def end_point_check(diff: tuple) -> callable:
         """
             Return lambda to check the endpoint. If moving down the move must be >= than end point else <= than endpoint
