@@ -59,7 +59,12 @@ class Math:
     @staticmethod
     def safe_divide(a: int, b: int, default=0) -> int:
         """
-            Return 0 if dividing by 0
+            Return 0 if dividing by 0.
+            If default is specified will return default
+        @param a: int
+        @param b: int
+        @param default: If specified the value will be returned instead of 0
+        @return: int result or 0 or default value
         """
         a, b = map(int, [a, b])
         if b is 0:
@@ -91,6 +96,15 @@ class Math:
 
     @staticmethod
     def clean_moves(f):
+        """
+            Wraps piece.find
+            It makes sure:
+            1) A cache is maintained
+            2) The found moves are in board range (0,0) -> (7,7)
+            3) The start point is not included in the possible moves
+        @return: All logically possible moves cleaned (ignoring board state)
+        """
+
         @wraps(f)
         def wrapper(self, *args, **kwargs):
             x, y = args
@@ -138,6 +152,7 @@ class Math:
     @staticmethod
     def check_blocks(f):
         """
+            Wraps piece.check_move
             Check if there's any pieces blocking the way to move.
             Also check if the end square is empty or has enemy piece
         """
@@ -150,7 +165,7 @@ class Math:
             # all-ready invalid
             if not moves or end not in moves:
                 return False
-                # check if no items block the way. last square can have an item from opposite team
+            # check if no items block the way. last square can have an item from opposite team
             blocked = len({i for i in moves if board[i] is None}) not in (len(moves), len(moves) - 1)
             last_item_invalid = item_at_end is not None and piece.color is item_at_end.color
             # Knight and king don't need blocked validation
@@ -516,8 +531,8 @@ class Castling:
 
     def __init__(self, y: int, start: int, end: int, king: Piece):
         self.squares = [(x, y) for x in range(start, end)]
-        rook_x = 0 if start == 1 else 7
-        self.rook_start = (rook_x, king.position[1])
+        rook_start_x = 0 if start == 1 else 7
+        self.rook_start = (rook_start_x, king.position[1])
         self.king = king
         king_end_x = 2 if start == 1 else 6
         rook_end_x = 3 if start == 1 else 5
@@ -546,17 +561,19 @@ class King(Piece):
         self.castling = {((4, y), (2, y)): Castling(y, 1, 4, self),
                          ((4, y), (6, y)): Castling(y, 5, 7, self)}
 
-    def is_castling(self, end: tuple, board):
+    def _is_castling(self, end: tuple, board):
         possible_castling = (self.position, end)
+        # Not logically a castling move
         if not possible_castling in self.castling:
             return False
+        # A castling move that may actually be invalid
         castling = self.castling[possible_castling]
         return castling.is_valid(board)
 
     def get_castling_moves(self, board) -> set:
         moves = set()
         for positions in self.castling.keys():
-            self.is_castling(positions[1], board)
+            self._is_castling(positions[1], board)
             moves.add(positions[1])
         return moves
 
@@ -571,7 +588,7 @@ class King(Piece):
         return self.find(*self.position, board=board)
 
     def get_move(self, end: tuple, board):
-        castling = self.is_castling(end, board)
+        castling = self._is_castling(end, board)
         if not castling:
             return super(King, self).get_move(end, board)
         else:
