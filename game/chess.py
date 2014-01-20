@@ -292,6 +292,11 @@ class Piece(object):
     def __hash__(self):
         return hash(" ".join(map(str, [self.position, self.color])))
 
+    def __repr__(self):
+        to_join = [self.color.lower(),
+                   self.__class__.__name__[0]]
+        return "".join(to_join)
+
     @abstractmethod
     def find(self, x: int, y: int, board=None):
         """
@@ -475,6 +480,10 @@ class Knight(Piece):
     @Math.check_blocks
     def check_move(self, end: tuple, board):
         return self.find(*self.position)
+
+    def __repr__(self):
+        to_join = [self.color.lower(), "N"]
+        return "".join(to_join)
 
 
 class Pawn(Piece):

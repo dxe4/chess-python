@@ -21,3 +21,12 @@ def initial_board():
         raise Exception
     game_engine = game.make_game_engine(game.player_down)
     return make_response("Implement me", 502)
+
+
+@api_app.route("/foo", methods=["POST"])
+def initial_board():
+    key = request.form["key"]
+    if not key:
+        raise Exception
+    game_engine = game.make_game_engine("B")
+    return make_response("Implement me", 502)

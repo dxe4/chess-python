@@ -34,7 +34,7 @@ function CanvasCtrl($scope, $log, $http) {
 
          $http({method: 'GET', url: '/initial_board'}).
                 success(function(data, status, headers, config) {
-                    $scope.bar = data["result"];
+                    $scope.data = data;
                 });
      };
 
