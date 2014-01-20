@@ -6,12 +6,12 @@ function CanvasCtrl($scope, $log, $http) {
     var white_pieces = ['wK', 'wQ', 'wR', 'wB', 'wN', 'wP'];
     var black_pieces = ['bK', 'bQ', 'bR', 'bB', 'bN', 'bP'];
 
-    $scope.data = [
-
-    ];
+    $scope.data = null;
+    $scope.killed = null;
+    $scope.moves = null;
 
     $scope.addData = function() {
-        $scope.draw($scope.data);
+        //$scope.draw($scope.data);
     };
 
     $scope.draw = function(data) {
@@ -31,20 +31,18 @@ function CanvasCtrl($scope, $log, $http) {
     };
 
      $scope._init = function(){
-
-         $http({method: 'GET', url: '/initial_board'}).
+         $http({method: 'GET', url: '/api/initial_board'}).
                 success(function(data, status, headers, config) {
-                    $scope.data = data;
-                });
+                    $scope.data = data["values"];
+             });
      };
 
      $scope.init = function(){
+        $scope._init();
         context.globalAlpha = 1.0;
         context.beginPath();
         $scope.draw($scope.data);
     };
-
-
 }
 
 function FooCtrl($scope,$log,$http) {

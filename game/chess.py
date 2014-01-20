@@ -355,6 +355,7 @@ class Piece(object):
                    self.__class__.__name__[0]]
         return "".join(to_join)
 
+
 class Move(AbstractMove):
 
     def __init__(self, piece: Piece, end: tuple):

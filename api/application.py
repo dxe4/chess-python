@@ -14,7 +14,7 @@ def vote_website():
         return make_response('NOT OK', 200)
 
 
-@api_app.route("/foo", methods=["GET"])
+@api_app.route("/initial_board", methods=["GET"])
 def initial_board():
 #     key = request.form["key"]
 #     if not key:
