@@ -1,10 +1,14 @@
-
-var counter = 0;
-function CanvasCtrl($scope, $log) {
+var image_type = ".png";
+function CanvasCtrl($scope, $log, $http) {
     var canvas = document.getElementById('canvas');
     var context = canvas.getContext('2d');
 
-    $scope.data = [];
+    var white_pieces = ['wK', 'wQ', 'wR', 'wB', 'wN', 'wP'];
+    var black_pieces = ['bK', 'bQ', 'bR', 'bB', 'bN', 'bP'];
+
+    $scope.data = [
+
+    ];
 
     $scope.addData = function() {
         $scope.draw($scope.data);
@@ -25,6 +29,14 @@ function CanvasCtrl($scope, $log) {
             context.drawImage(img,10,10);
         }
     };
+
+     $scope._init = function(){
+
+         $http({method: 'GET', url: '/initial_board'}).
+                success(function(data, status, headers, config) {
+                    $scope.bar = data["result"];
+                });
+     };
 
      $scope.init = function(){
         context.globalAlpha = 1.0;
