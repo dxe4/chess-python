@@ -292,11 +292,6 @@ class Piece(object):
     def __hash__(self):
         return hash(" ".join(map(str, [self.position, self.color])))
 
-    def __repr__(self):
-        to_join = [self.color.lower(),
-                   self.__class__.__name__[0]]
-        return "".join(to_join)
-
     @abstractmethod
     def find(self, x: int, y: int, board=None):
         """
@@ -349,12 +344,16 @@ class Piece(object):
         """
         self.position = position
 
-    def __repr__(self):
-        return "%s %s" % (self.color, type(self).__name__,)
+    # def __repr__(self):
+    #     return "%s %s" % (self.color, type(self).__name__,)
 
     def __str__(self):
         return "%s %s" % (repr(self), str(self.position))
 
+    def __repr__(self):
+        to_join = [self.color.lower(),
+                   self.__class__.__name__[0]]
+        return "".join(to_join)
 
 class Move(AbstractMove):
 
@@ -676,6 +675,9 @@ class Board(OrderedDict):
             and self.killed == other.killed \
             and self.player_down == other.player_down \
             and self.turn == other.turn
+
+    def json_dict(self):
+        return {"values": list(self.values())}
 
     def create(self):
         self._add_pawns(1)
