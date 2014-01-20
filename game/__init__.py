@@ -1,2 +1,2 @@
-from game.chess import Board, GameEngine, Rook, Bishop, Pawn, Queen, King, Knight, Piece, Castling
+from game.chess import Board, GameEngine, make_game_engine
 player_down = "B"

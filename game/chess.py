@@ -731,6 +731,10 @@ class Board(OrderedDict):
         return "".join(to_join)
 
 
+def make_game_engine(player_down: str):
+    board = Board(player_down=player_down, create=True)
+    game_engine = GameEngine(board)
+    return game_engine
 
         # 0y [0, 1, 2, 3, 4, 5, 6, 7]x
         # 1y [0, 1, 2, 3, 4, 5, 6, 7]x
