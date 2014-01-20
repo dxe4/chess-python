@@ -27,6 +27,7 @@ function CanvasCtrl($scope, $log) {
     };
 
      $scope.init = function(){
+        $log.error("error");
         context.globalAlpha = 1.0;
         context.beginPath();
         $scope.draw($scope.data);
