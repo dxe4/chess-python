@@ -1,15 +1,20 @@
-<html ng-app="foobar">
+<html>
 <head>
     <title>%^£$%$£%£$</title>
     <link rel="stylesheet" href='static/lib/bootstrap/css/bootstrap.css'/>
     <link rel="stylesheet" type="text/css" href="static/css/home.css">
     <script type=text/javascript src="static/lib/angular.js"></script>
     <script type=text/javascript src="static/js/controllers.js"></script>
+    <script type=text/javascript src="static/js/jquery.js"></script>
 </head>
 
 <body>
 
-    <div>
+<div id="angular-test" style="margin: 10px" ng-app>
+    <div ng-controller="CanvasCtrl">
+        <canvas id="canvas" style="border: 1px gray solid; float: left"></canvas>
     </div>
+</div>
+
 </body>
 </html>
