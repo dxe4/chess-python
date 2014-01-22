@@ -49,6 +49,8 @@ class Math:
         @return: lambda expression representing the line
         """
 
+        # TODO when you think about it.... this is wrong
+        # But works at the moment...
         if not (slope, start) != ("vertical", None):
             raise TypeError("_line takes either a slope(int) or a start(tuple)")
         if start:
