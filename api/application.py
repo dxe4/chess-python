@@ -6,13 +6,6 @@ from flask import make_response, Response
 import game
 import json
 
-@api_app.route("/foo", methods=["PUT"])
-def vote_website():
-    try:
-        return make_response("OK", 200)
-    except Exception as e:
-        return make_response('NOT OK', 200)
-
 
 @api_app.route("/initial_board", methods=["GET"])
 def initial_board():
