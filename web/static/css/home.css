@@ -1,3 +1,10 @@
-.hidden_image{
-  visibility:hidden;
+#piece_images img {
+    visibility: hidden;
+}
+
+canvas {
+    border: 1px gray solid;
+    float: left;
+    width: 600px;
+    height: 600px;
 }
