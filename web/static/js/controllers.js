@@ -1,10 +1,22 @@
-var myApp = angular.module('chess', []);
+
+
+var underscore = angular.module('underscore', []);
+underscore.factory('_', function() {
+  return window._;
+});
+
+var kinestic = angular.module('kinestic', []);
+underscore.factory('kinestic', function() {
+  return window.kinestic;
+});
+
+var myApp = angular.module('chess', ["underscore"]);
 var image_type = ".png";
 
 
 
-myApp.controller('CanvasCtrl', ['$scope', '$log', '$http',
-    function ($scope, $log, $http) {
+myApp.controller('CanvasCtrl', ['$scope', '$log', '$http', '_', 'kinestic',
+    function ($scope, $log, $http, _, kinestic) {
 
         var canvas = document.getElementById('canvas');
         var context = canvas.getContext('2d');
@@ -95,3 +107,4 @@ myApp.controller('TestCtrl', ['$scope', '$log', '$http',
     function ($scope, $log, $http) {
         //use only for testing
     }]);
+
