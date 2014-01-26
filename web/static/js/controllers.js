@@ -27,10 +27,8 @@ myApp.controller('CanvasCtrl', ['$scope', '$log', '$http',
             var images = $scope.get_images();
             angular.forEach(images,
                 function (value, key) {
-                    if (key == 0) {
-                        $scope.drawImage(value);
-                    }
-
+                    // TODO add the real values here
+                    $scope.drawImage(value, key, key);
                 }
             );
         };
@@ -60,10 +58,10 @@ myApp.controller('CanvasCtrl', ['$scope', '$log', '$http',
             return document.getElementById("piece_images").children;
         };
 
-        $scope.drawImage = function (image) {
+        $scope.drawImage = function (image, x, y) {
             $log.info(image);
             image.onload = function () {
-                context.drawImage(image, 0, 0, image.width, image.height);
+                context.drawImage(image, x*piece_size, y*piece_size, image.width, image.height);
             };
 
         };
