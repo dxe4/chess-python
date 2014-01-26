@@ -1,16 +1,17 @@
-<html>
+<!doctype html>
+<html ng-app="chess">
 <head>
     <title>%^£$%$£%£$</title>
+     <script type=text/javascript src="static/lib/angular.js"></script>
+    <script type=text/javascript src="static/js/controllers.js"></script>
     <link rel="stylesheet" href='static/lib/bootstrap/css/bootstrap.css'/>
     <link rel="stylesheet" type="text/css" href="static/css/home.css">
-    <script type=text/javascript src="static/lib/angular.js"></script>
-    <script type=text/javascript src="static/js/controllers.js"></script>
-    <script type=text/javascript src="static/js/jquery.js"></script>
+
 </head>
 
 <body>
 
-<div id="angular-test" style="margin: 10px" ng-app>
+<div id="app" style="margin: 10px">
     <div ng-controller="CanvasCtrl" data-ng-init="init()">
         <canvas id="canvas"></canvas>
     </div>
