@@ -28,12 +28,13 @@ myApp.controller('CanvasCtrl', ['$scope', '$log', '$http',
             angular.forEach(images,
                 function (value, key) {
                     // TODO add the real values here
-                    $scope.drawImage(value, key, key);
+                    $scope.drawImage(value, key, 0);
                 }
             );
         };
 
         $scope.draw_board = function () {
+            context.fillStyle = "rgba(130, 110, 50, 0.5)";
             for (var i = 0; i < 8; i++) {
                 for (var j = 0; j < 8; j++) {
                     context.moveTo(0, piece_size * j);
@@ -52,6 +53,7 @@ myApp.controller('CanvasCtrl', ['$scope', '$log', '$http',
                     }
                 }
             }
+            context.fillStyle = "rgba(0, 0, 0)";
         };
 
         $scope.get_images = function () {
