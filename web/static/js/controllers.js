@@ -32,21 +32,29 @@ myApp.controller('CanvasCtrl', ['$scope', '$log', '$http', '_', 'kinetic',
             canvas.height = board_size - 400;
         };
 
+
+         function create_image(item, x, y) {
+            var img = new Image();
+            img.x = x;
+            img.y = y;
+            img.onload = drawImage;
+            img.src = "static/img/" + item + ".png";
+            return img;
+        };
+
         $scope._init_images = function (data) {
             var x = 0;
             var y = 0;
+
             _.each(data, function (item) {
                 if (item) {
-                    var img = new Image();
-                    img.x = x;
-                    img.y = y;
-                    img.onload = function () {
-                        drawImage(this);
-                    };
-                    img.src = "static/img/" + item + ".png"
-                    images.push(img);
+                    images.push(create_image(item, x, y));
                 }
+                x += piece_size;
+                y += piece_size;
+
             });
+            $log.info(images);
         };
 
         $scope._init = function () {
@@ -62,7 +70,9 @@ myApp.controller('CanvasCtrl', ['$scope', '$log', '$http', '_', 'kinetic',
             $scope._init();
         };
 
-        function drawImage(imageObj) {
+         function drawImage() {
+            var imageObj = this;
+            $log.info(imageObj.x);
             var stage = new Kinetic.Stage({
                 container: "container",
                 width: board_size,
