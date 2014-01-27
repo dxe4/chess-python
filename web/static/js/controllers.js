@@ -3,17 +3,17 @@ underscore.factory('_', function () {
     return window._;
 });
 
-var kinestic = angular.module('kinestic', []);
-underscore.factory('kinestic', function () {
-    return window.kinestic;
+var kinetic = angular.module('kinetic', []);
+underscore.factory('kinetic', function () {
+    return window.kinetic;
 });
 
 var myApp = angular.module('chess', ["underscore"]);
 var image_type = ".png";
 
 
-myApp.controller('CanvasCtrl', ['$scope', '$log', '$http', '_', 'kinestic',
-    function ($scope, $log, $http, _, kinestic) {
+myApp.controller('CanvasCtrl', ['$scope', '$log', '$http', '_', 'kinetic',
+    function ($scope, $log, $http, _, kinetic) {
 
         var canvas = document.getElementById('canvas');
         var context = canvas.getContext('2d');
