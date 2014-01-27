@@ -14,30 +14,9 @@
 
 <body>
 
-<div id="app" style="margin: 10px">
-    <div ng-controller="CanvasCtrl" data-ng-init="init()">
-        <canvas id="canvas"></canvas>
-    </div>
-
-    <!--all pieces in the future this will draw killed pieces on the side-->
-    <div id="piece_images">
-        <img id="bK" src="/static/img/bK.png"/>
-        <img id="bQ" src="/static/img/bQ.png"/>
-        <img id="bR" src="/static/img/bR.png"/>
-        <img id="bB" src="/static/img/bB.png"/>
-        <img id="bN" src="/static/img/bN.png"/>
-        <img id="bP" src="/static/img/bP.png"/>
-        <img id="wK" src="/static/img/wK.png"/>
-        <img id="wQ" src="/static/img/wQ.png"/>
-        <img id="wE" src="/static/img/wR.png"/>
-        <img id="wB" src="/static/img/wB.png"/>
-        <img id="wN" src="/static/img/wN.png"/>
-        <img id="wP" src="/static/img/wP.png"/>
-    </div>
-
+<div id="app" style="margin: 10px" ng-controller="CanvasCtrl" data-ng-init="init()">
+    <div id="container"></div>
 </div>
-
-<div id="container"></div>
 
 </body>
 </html>
