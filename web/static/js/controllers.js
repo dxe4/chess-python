@@ -3,12 +3,14 @@ underscore.factory('_', function () {
     return window._;
 });
 
+
 var kinetic = angular.module('kinetic', []);
-underscore.factory('kinetic', function () {
+kinetic.factory('kinetic', function () {
     return window.kinetic;
 });
 
-var myApp = angular.module('chess', ["underscore"]);
+var myApp = angular.module('chess', ["underscore", "kinetic"]);
+
 var image_type = ".png";
 
 
@@ -49,14 +51,15 @@ myApp.controller('CanvasCtrl', ['$scope', '$log', '$http', '_', 'kinetic',
         $scope.drawImage = function (image, x, y) {
             $log.info(image);
             image.onload = function () {
-                context.drawImage(image, x * piece_size, y * piece_size, image.width, image.height);
+                //context.drawImage(image, x * piece_size, y * piece_size, image.width, image.height);
             };
 
         };
 
         $scope.resize_canvas = function () {
-            canvas.width = board_size;
-            canvas.height = board_size;
+            //TODO change this back to normal when done with kinetic
+            canvas.width = board_size - 400;
+            canvas.height = board_size - 400;
         };
 
         $scope._init = function () {
@@ -73,6 +76,42 @@ myApp.controller('CanvasCtrl', ['$scope', '$log', '$http', '_', 'kinetic',
             context.beginPath();
             $scope.draw($scope.data);
         };
+
+        function drawImage(imageObj) {
+            var stage = new Kinetic.Stage({
+                container: "container",
+                width: 400,
+                height: 400
+            });
+            var layer = new Kinetic.Layer();
+
+            var img = new Kinetic.Image({
+                image: imageObj,
+                x: 0,
+                y: 0,
+                width: imageObj.width,
+                height: imageObj.height,
+                draggable: true
+            });
+
+            img.on('mouseover', function () {
+                document.body.style.cursor = 'pointer';
+            });
+            img.on('mouseout', function () {
+                document.body.style.cursor = 'default';
+            });
+
+            layer.add(img);
+            stage.add(layer);
+        }
+
+        //var imageObj = $scope.get_images()[0];
+        var imageObj = new Image();
+        imageObj.onload = function () {
+            drawImage(this);
+        };
+        imageObj.src = 'static/img/bK.png';
+
     }]);
 
 
