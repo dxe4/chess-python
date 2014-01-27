@@ -680,8 +680,8 @@ class Board(OrderedDict):
             and self.turn == other.turn
 
     def json_dict(self):
-        to_string = lambda x: str(x) if x else x
-        return {"values": [to_string(i) for i in self.values()]}
+        _repr = lambda x: repr(x) if x else x
+        return {"values": [_repr(i) for i in self.values()]}
 
     def create(self):
         self._add_pawns(1)
