@@ -1,18 +1,15 @@
-
-
 var underscore = angular.module('underscore', []);
-underscore.factory('_', function() {
-  return window._;
+underscore.factory('_', function () {
+    return window._;
 });
 
 var kinestic = angular.module('kinestic', []);
-underscore.factory('kinestic', function() {
-  return window.kinestic;
+underscore.factory('kinestic', function () {
+    return window.kinestic;
 });
 
 var myApp = angular.module('chess', ["underscore"]);
 var image_type = ".png";
-
 
 
 myApp.controller('CanvasCtrl', ['$scope', '$log', '$http', '_', 'kinestic',
@@ -45,29 +42,6 @@ myApp.controller('CanvasCtrl', ['$scope', '$log', '$http', '_', 'kinestic',
             );
         };
 
-        $scope.draw_board = function () {
-            context.fillStyle = "rgba(130, 110, 50, 0.5)";
-            for (var i = 0; i < 8; i++) {
-                for (var j = 0; j < 8; j++) {
-                    context.moveTo(0, piece_size * j);
-                    context.lineTo(board_size, piece_size * j);
-                    context.stroke();
-                    context.moveTo(piece_size * i, 0);
-                    context.lineTo(piece_size * i, board_size);
-                    context.stroke();
-                    var left = 0;
-                    for (var a = 0; a < 8; a++) {
-                        for (var b = 0; b < 8; b += 2) {
-                            var startX = b * piece_size;
-                            if (a % 2 == 0) startX = (b + 1) * piece_size;
-                            context.fillRect(startX + left, (a * piece_size), piece_size, piece_size);
-                        }
-                    }
-                }
-            }
-            context.fillStyle = "rgba(0, 0, 0)";
-        };
-
         $scope.get_images = function () {
             return document.getElementById("piece_images").children;
         };
@@ -75,7 +49,7 @@ myApp.controller('CanvasCtrl', ['$scope', '$log', '$http', '_', 'kinestic',
         $scope.drawImage = function (image, x, y) {
             $log.info(image);
             image.onload = function () {
-                context.drawImage(image, x*piece_size, y*piece_size, image.width, image.height);
+                context.drawImage(image, x * piece_size, y * piece_size, image.width, image.height);
             };
 
         };
@@ -98,7 +72,6 @@ myApp.controller('CanvasCtrl', ['$scope', '$log', '$http', '_', 'kinestic',
             context.globalAlpha = 1.0;
             context.beginPath();
             $scope.draw($scope.data);
-            $scope.draw_board();
         };
     }]);
 
