@@ -32,29 +32,54 @@ myApp.controller('CanvasCtrl', ['$scope', '$log', '$http', '_', 'kinetic',
             canvas.height = board_size - 400;
         };
 
+        var drawImage = function (imageObj, _x, _y) {
+            var img = new Kinetic.Image({
+                image: imageObj,
+                x: _x,
+                y: _y,
+                width: imageObj.width,
+                height: imageObj.height,
+                name: imageObj.name,
+                draggable: true
+            });
 
-         function create_image(item, x, y) {
+            img.on('mouseover', function () {
+                document.body.style.cursor = 'pointer';
+            });
+            img.on('mouseout', function () {
+                document.body.style.cursor = 'default';
+            });
+            $log.info(img);
+            $scope.layer.add(img);
+        };
+
+        function create_image(item, x, y) {
             var img = new Image();
             img.x = x;
             img.y = y;
-            img.onload = drawImage;
+            img.name = item;
+            img.onload = function () {
+                drawImage(this, x, y);
+            };
             img.src = "static/img/" + item + ".png";
             return img;
-        };
+        }
 
         $scope._init_images = function (data) {
             var x = 0;
             var y = 0;
-
             _.each(data, function (item) {
                 if (item) {
-                    images.push(create_image(item, x, y));
+                    var img = create_image(item, x, y);
+                    images.push(img);
                 }
-                x += piece_size;
-                y += piece_size;
-
+                if (x >= piece_size * 8) {
+                    x = 0;
+                    y += piece_size;
+                } else {
+                    x += piece_size;
+                }
             });
-            $log.info(images);
         };
 
         $scope._init = function () {
@@ -67,38 +92,16 @@ myApp.controller('CanvasCtrl', ['$scope', '$log', '$http', '_', 'kinetic',
         };
 
         $scope.init = function () {
-            $scope._init();
-        };
-
-         function drawImage() {
-            var imageObj = this;
-            $log.info(imageObj.x);
-            var stage = new Kinetic.Stage({
+            $scope.stage = new Kinetic.Stage({
                 container: "container",
                 width: board_size,
                 height: board_size
             });
-            var layer = new Kinetic.Layer();
+            $scope.layer = new Kinetic.Layer();
+            $scope._init();
+            $scope.stage.add($scope.layer);
+        };
 
-            var img = new Kinetic.Image({
-                image: imageObj,
-                x: imageObj.x,
-                y: imageObj.y,
-                width: imageObj.width,
-                height: imageObj.height,
-                draggable: true
-            });
-
-            img.on('mouseover', function () {
-                document.body.style.cursor = 'pointer';
-            });
-            img.on('mouseout', function () {
-                document.body.style.cursor = 'default';
-            });
-
-            layer.add(img);
-            stage.add(layer);
-        }
 
     }]);
 
