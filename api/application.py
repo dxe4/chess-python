@@ -14,4 +14,4 @@ def initial_board():
 #         raise Exception
     game_engine = game.make_game_engine(game.player_down)
     json_dict = game_engine.board.json_dict()
-    return Response(json.dumps(str(json_dict)),  mimetype='application/json')
+    return Response(json.dumps(json_dict),  mimetype='application/json')
