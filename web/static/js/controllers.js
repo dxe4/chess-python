@@ -27,6 +27,9 @@ myApp.controller('CanvasCtrl', ['$scope', '$log', '$http', '_', 'kinetic',
         $scope.moves = null;
 
         var drawImage = function (imageObj, _x, _y, f) {
+
+            this.initial_point = [];
+
             var img = new Kinetic.Image({
                 image: imageObj,
                 x: _x,
@@ -43,6 +46,17 @@ myApp.controller('CanvasCtrl', ['$scope', '$log', '$http', '_', 'kinetic',
             img.on('mouseout', function () {
                 document.body.style.cursor = 'default';
             });
+
+            img.on('dragstart', function (event) {
+                if(!this.initial_point){
+
+                }
+            });
+
+            img.on('dragend', function (event) {
+                $log.info(event);
+            });
+
             $scope.layer.add(img);
             f();
         };
@@ -88,17 +102,17 @@ myApp.controller('CanvasCtrl', ['$scope', '$log', '$http', '_', 'kinetic',
             $http({method: 'GET', url: '/api/initial_board'}).
                 success(function (data, status, headers, config) {
                     $scope.data = data["values"];
-                    if(callback){
+                    if (callback) {
                         callback();
                     }
                 });
         };
 
         $scope._init = function () {
-            var callback = _.after(1, function(){
+            var callback = _.after(1, function () {
                 $scope._init_images($scope.data);
             });
-            $scope.get_data(null,callback);
+            $scope.get_data(null, callback);
         };
 
         $scope.init = function () {
