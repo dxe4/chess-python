@@ -32,7 +32,7 @@ myApp.controller('CanvasCtrl', ['$scope', '$log', '$http', '_', 'kinetic',
             canvas.height = board_size - 400;
         };
 
-        var drawImage = function (imageObj, _x, _y) {
+        var drawImage = function (imageObj, _x, _y, f) {
             var img = new Kinetic.Image({
                 image: imageObj,
                 x: _x,
@@ -51,15 +51,16 @@ myApp.controller('CanvasCtrl', ['$scope', '$log', '$http', '_', 'kinetic',
             });
             $log.info(img);
             $scope.layer.add(img);
+            f();
         };
 
-        function create_image(item, x, y) {
+        function create_image(item, x, y, f) {
             var img = new Image();
             img.x = x;
             img.y = y;
             img.name = item;
             img.onload = function () {
-                drawImage(this, x, y);
+                drawImage(this, x, y, f);
             };
             img.src = "static/img/" + item + ".png";
             return img;
@@ -68,9 +69,10 @@ myApp.controller('CanvasCtrl', ['$scope', '$log', '$http', '_', 'kinetic',
         $scope._init_images = function (data) {
             var x = 0;
             var y = 0;
-            _.each(data, function (item) {
+
+            var process_data = function (item) {
                 if (item) {
-                    var img = create_image(item, x, y);
+                    var img = create_image(item, x, y, f);
                     images.push(img);
                 }
                 if (x >= piece_size * 8) {
@@ -79,14 +81,20 @@ myApp.controller('CanvasCtrl', ['$scope', '$log', '$http', '_', 'kinetic',
                 } else {
                     x += piece_size;
                 }
+            };
+            f = _.after(31, function (x) {
+                $scope.stage.add($scope.layer);
             });
+            _.each(data, function (item) {
+                process_data(item, f);
+            });
+
         };
 
         $scope._init = function () {
             $http({method: 'GET', url: '/api/initial_board'}).
                 success(function (data, status, headers, config) {
                     $scope.data = data["values"];
-                    $log.info(data);
                     $scope._init_images($scope.data);
                 });
         };
@@ -99,7 +107,6 @@ myApp.controller('CanvasCtrl', ['$scope', '$log', '$http', '_', 'kinetic',
             });
             $scope.layer = new Kinetic.Layer();
             $scope._init();
-            $scope.stage.add($scope.layer);
         };
 
 

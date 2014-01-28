@@ -1,9 +1,0 @@
-#piece_images img {
-    visibility: hidden;
-}
-
-canvas {
-    border: 1px gray solid;
-    float: left;
-    background-image: url(../img/chessboard.png);
-}
