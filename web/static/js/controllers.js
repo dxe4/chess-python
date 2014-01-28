@@ -68,7 +68,7 @@ myApp.controller('CanvasCtrl', ['$scope', '$log', '$http', '_', 'kinetic',
                     var img = create_image(item, x, y, f);
                     images.push(img);
                 }
-                if (x >= piece_size * 7 ) {
+                if (x >= piece_size * 7) {
                     x = 0;
                     y += piece_size;
                 } else {
@@ -84,12 +84,19 @@ myApp.controller('CanvasCtrl', ['$scope', '$log', '$http', '_', 'kinetic',
 
         };
 
-        $scope._init = function () {
+        $scope.get_data = function (move, callback) {
             $http({method: 'GET', url: '/api/initial_board'}).
                 success(function (data, status, headers, config) {
                     $scope.data = data["values"];
-                    $scope._init_images($scope.data);
+                    callback();
                 });
+        };
+
+        $scope._init = function () {
+            var callback = _.after(1, function(){
+                $scope._init_images($scope.data);
+            });
+            $scope.get_data(null,callback);
         };
 
         $scope.init = function () {
