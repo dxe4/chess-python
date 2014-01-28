@@ -18,19 +18,13 @@ myApp.controller('CanvasCtrl', ['$scope', '$log', '$http', '_', 'kinetic',
     function ($scope, $log, $http, _, kinetic) {
 
         var piece_size = 80;
-        var board_size = piece_size * 8;
+        var board_size = piece_size * 9;
 
         var images = [];
 
         $scope.data = null;
         $scope.killed = null;
         $scope.moves = null;
-
-        $scope.resize_canvas = function () {
-            //TODO change this back to normal when done with kinetic
-            canvas.width = board_size - 400;
-            canvas.height = board_size - 400;
-        };
 
         var drawImage = function (imageObj, _x, _y, f) {
             var img = new Kinetic.Image({
@@ -49,7 +43,6 @@ myApp.controller('CanvasCtrl', ['$scope', '$log', '$http', '_', 'kinetic',
             img.on('mouseout', function () {
                 document.body.style.cursor = 'default';
             });
-            $log.info(img);
             $scope.layer.add(img);
             f();
         };
@@ -70,19 +63,19 @@ myApp.controller('CanvasCtrl', ['$scope', '$log', '$http', '_', 'kinetic',
             var x = 0;
             var y = 0;
 
-            var process_data = function (item) {
+            var process_data = function (item, f) {
                 if (item) {
                     var img = create_image(item, x, y, f);
                     images.push(img);
                 }
-                if (x >= piece_size * 8) {
+                if (x >= piece_size * 7 ) {
                     x = 0;
                     y += piece_size;
                 } else {
                     x += piece_size;
                 }
             };
-            f = _.after(31, function (x) {
+            var f = _.after(31, function (x) {
                 $scope.stage.add($scope.layer);
             });
             _.each(data, function (item) {
