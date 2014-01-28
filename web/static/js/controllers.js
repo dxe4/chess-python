@@ -25,10 +25,9 @@ myApp.controller('CanvasCtrl', ['$scope', '$log', '$http', '_', 'kinetic',
         $scope.data = null;
         $scope.killed = null;
         $scope.moves = null;
+        $scope.current_image_values = [];
 
         var drawImage = function (imageObj, _x, _y, f) {
-
-            this.initial_point = [];
 
             var img = new Kinetic.Image({
                 image: imageObj,
@@ -48,13 +47,19 @@ myApp.controller('CanvasCtrl', ['$scope', '$log', '$http', '_', 'kinetic',
             });
 
             img.on('dragstart', function (event) {
-                if(!this.initial_point){
-
+                if (!$scope.current_image_values) {
+                    $scope.current_image_values =
+                        [this.x(), this.y(), this.image()];
                 }
             });
 
             img.on('dragend', function (event) {
-                $log.info(event);
+                var valid = true;
+                if (valid) {
+                    $scope.current_image_values = null;
+                }else {
+                    //invalid move back to initial position
+                }
             });
 
             $scope.layer.add(img);
