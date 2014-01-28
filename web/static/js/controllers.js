@@ -88,7 +88,9 @@ myApp.controller('CanvasCtrl', ['$scope', '$log', '$http', '_', 'kinetic',
             $http({method: 'GET', url: '/api/initial_board'}).
                 success(function (data, status, headers, config) {
                     $scope.data = data["values"];
-                    callback();
+                    if(callback){
+                        callback();
+                    }
                 });
         };
 
