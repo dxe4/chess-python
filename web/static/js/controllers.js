@@ -58,7 +58,9 @@ myApp.controller('CanvasCtrl', ['$scope', '$log', '$http', '_', 'kinetic',
             });
 
             $scope.layer.add(img);
-            f();
+            if (f) {
+                f();
+            }
         };
 
         function create_image(item, x, y, f) {
