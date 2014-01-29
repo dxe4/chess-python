@@ -3,29 +3,24 @@ underscore.factory('_', function () {
     return window._;
 });
 
-
 var kinetic = angular.module('kinetic', []);
 kinetic.factory('kinetic', function () {
     return window.kinetic;
 });
 
 var myApp = angular.module('chess', ["underscore", "kinetic"]);
-
 var image_type = ".png";
-
 
 myApp.controller('CanvasCtrl', ['$scope', '$log', '$http', '_', 'kinetic',
     function ($scope, $log, $http, _, kinetic) {
 
         var piece_size = 80;
-        var board_size = piece_size * 9;
-
+        var board_size = piece_size * 8;
         var images = [];
-
         $scope.data = null;
         $scope.killed = null;
         $scope.moves = null;
-        $scope.current_image_values = [];
+        $scope.current_image_values = null;
 
         var drawImage = function (imageObj, _x, _y, f) {
 
@@ -50,14 +45,16 @@ myApp.controller('CanvasCtrl', ['$scope', '$log', '$http', '_', 'kinetic',
                 if (!$scope.current_image_values) {
                     $scope.current_image_values =
                         [this.x(), this.y(), this.image()];
+                    $log.info($scope.current_image_values);
+
                 }
             });
 
             img.on('dragend', function (event) {
-                var valid = true;
+                var valid = false;
                 if (valid) {
                     $scope.current_image_values = null;
-                }else {
+                } else {
                     //invalid move back to initial position
                 }
             });
@@ -74,7 +71,7 @@ myApp.controller('CanvasCtrl', ['$scope', '$log', '$http', '_', 'kinetic',
             img.onload = function () {
                 drawImage(this, x, y, f);
             };
-            img.src = "static/img/" + item + ".png";
+            img.src = "static/img/" + item + image_type;
             return img;
         }
 
