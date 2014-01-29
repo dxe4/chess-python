@@ -47,12 +47,13 @@ myApp.controller('CanvasCtrl', ['$scope', '$log', '$http', '_', 'kinetic',
 
             img.on('dragend', function (event) {
                 //TODO send all valid moves from server after every move
-                var valid = true;
+                var valid = false;
                 if (valid) {
                     current_pos = {x: img.x(), y: img.y()};
                     //TODO need to center in square;
                 } else {
                     //TODO notify the user move was invalid...
+                    //TODO if mouse gets out of the page, piece doesnt go back
                     img.setPosition(current_pos);
                     $scope.layer.draw();
                 }
