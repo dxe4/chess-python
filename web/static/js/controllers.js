@@ -48,7 +48,8 @@ myApp.controller('CanvasCtrl', ['$scope', '$log', '$http', '_', 'kinetic',
             img.on('dragend', function (event) {
                 var valid = true;
                 if (valid) {
-                    current_pos = {x: img.x, y: img.y};
+                    current_pos = {x: img.x(), y: img.y()};
+                    $log.info(current_pos);
                     //TODO need to center in square;
                 } else {
                     //invalid move back to initial position
@@ -93,6 +94,13 @@ myApp.controller('CanvasCtrl', ['$scope', '$log', '$http', '_', 'kinetic',
             };
             var f = _.after(31, function () {
                 $scope.stage.add($scope.layer);
+                var checkExists = setInterval(function () {
+                    var _canvas = document.querySelector("#container canvas");
+                    if (document.querySelector("#container canvas")) {
+                        _canvas.style.backgroundImage = 'url(static/img/chessboard.png)';
+                        clearInterval(checkExists);
+                    }
+                }, 100);
             });
             _.each(data, function (item) {
                 process_data(item, f);
