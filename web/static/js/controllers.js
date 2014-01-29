@@ -23,7 +23,7 @@ myApp.controller('CanvasCtrl', ['$scope', '$log', '$http', '_', 'kinetic',
         $scope.current_image_values = null;
 
         var drawImage = function (imageObj, _x, _y, f) {
-
+            var current_pos = {x: _x, y: _y};
             var img = new Kinetic.Image({
                 image: imageObj,
                 x: _x,
@@ -42,18 +42,18 @@ myApp.controller('CanvasCtrl', ['$scope', '$log', '$http', '_', 'kinetic',
             });
 
             img.on('dragstart', function (event) {
-                if (!$scope.current_image_values) {
-                    $scope.current_image_values =
-                        [this.x(), this.y(), this.image()];
-                }
+
             });
 
             img.on('dragend', function (event) {
-                var valid = false;
+                var valid = true;
                 if (valid) {
-                    $scope.current_image_values = null;
+                    current_pos = {x: img.x, y: img.y};
+                    //TODO need to center in square;
                 } else {
                     //invalid move back to initial position
+                    img.setPosition(current_pos);
+                    $scope.layer.draw();
                 }
             });
 
@@ -91,7 +91,7 @@ myApp.controller('CanvasCtrl', ['$scope', '$log', '$http', '_', 'kinetic',
                     x += piece_size;
                 }
             };
-            var f = _.after(31, function (x) {
+            var f = _.after(31, function () {
                 $scope.stage.add($scope.layer);
             });
             _.each(data, function (item) {
