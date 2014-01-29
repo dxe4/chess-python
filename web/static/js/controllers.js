@@ -22,7 +22,7 @@ myApp.controller('CanvasCtrl', ['$scope', '$log', '$http', '_', 'kinetic',
         $scope.moves = null;
         $scope.current_image_values = null;
 
-        var drawImage = function (imageObj, _x, _y, f) {
+        var drawImage = function (imageObj, _x, _y, callback) {
             var current_pos = {x: _x, y: _y};
             var img = new Kinetic.Image({
                 image: imageObj,
@@ -42,35 +42,35 @@ myApp.controller('CanvasCtrl', ['$scope', '$log', '$http', '_', 'kinetic',
             });
 
             img.on('dragstart', function (event) {
-
+                //TODO make sure the piece to move is included in the valid moves
             });
 
             img.on('dragend', function (event) {
+                //TODO send all valid moves from server after every move
                 var valid = true;
                 if (valid) {
                     current_pos = {x: img.x(), y: img.y()};
-                    $log.info(current_pos);
                     //TODO need to center in square;
                 } else {
-                    //invalid move back to initial position
+                    //TODO notify the user move was invalid...
                     img.setPosition(current_pos);
                     $scope.layer.draw();
                 }
             });
 
             $scope.layer.add(img);
-            if (f) {
-                f();
+            if (callback) {
+                callback();
             }
         };
 
-        function create_image(item, x, y, f) {
+        function create_image(item, x, y, callback) {
             var img = new Image();
             img.x = x;
             img.y = y;
             img.name = item;
             img.onload = function () {
-                drawImage(this, x, y, f);
+                drawImage(this, x, y, callback);
             };
             img.src = "static/img/" + item + image_type;
             return img;
@@ -80,9 +80,9 @@ myApp.controller('CanvasCtrl', ['$scope', '$log', '$http', '_', 'kinetic',
             var x = 0;
             var y = 0;
 
-            var process_data = function (item, f) {
+            var process_data = function (item, callback) {
                 if (item) {
-                    var img = create_image(item, x, y, f);
+                    var img = create_image(item, x, y, callback);
                     images.push(img);
                 }
                 if (x >= piece_size * 7) {
@@ -92,7 +92,7 @@ myApp.controller('CanvasCtrl', ['$scope', '$log', '$http', '_', 'kinetic',
                     x += piece_size;
                 }
             };
-            var f = _.after(31, function () {
+            var callback = _.after(31, function () {
                 $scope.stage.add($scope.layer);
                 var checkExists = setInterval(function () {
                     var _canvas = document.querySelector("#container canvas");
@@ -103,7 +103,7 @@ myApp.controller('CanvasCtrl', ['$scope', '$log', '$http', '_', 'kinetic',
                 }, 100);
             });
             _.each(data, function (item) {
-                process_data(item, f);
+                process_data(item, callback);
             });
 
         };
