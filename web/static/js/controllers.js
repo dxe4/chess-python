@@ -45,8 +45,6 @@ myApp.controller('CanvasCtrl', ['$scope', '$log', '$http', '_', 'kinetic',
                 if (!$scope.current_image_values) {
                     $scope.current_image_values =
                         [this.x(), this.y(), this.image()];
-                    $log.info($scope.current_image_values);
-
                 }
             });
 
