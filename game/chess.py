@@ -21,7 +21,6 @@ color_change = {"W": "B", "B": "W"}
 
 
 class Math:
-
     @staticmethod
     def check_range(move: tuple, min_=0, max_=8) -> bool:
         """
@@ -39,7 +38,8 @@ class Math:
             For the math formula of the line.
         @return: slope int
         """
-        return Math.safe_divide(start[1] - end[1], start[0] - end[0], default="vertical")
+        return Math.safe_divide(
+            start[1] - end[1], start[0] - end[0], default="vertical")
 
     @staticmethod
     def line(end: tuple, slope: int=None, start: tuple=None) -> callable:
@@ -147,7 +147,7 @@ class Math:
             end_check = Math.end_point_check(diff)
             moves = {move for move in moves
                      if in_line(*move) and start_check(move) and end_check(move, end)
-                     }
+            }
             return moves
 
         return wrapper
@@ -168,9 +168,11 @@ class Math:
             # all-ready invalid
             if not moves or end not in moves:
                 return False
-            # check if no items block the way. last square can have an item from opposite team
-            blocked = len({i for i in moves if board[i] is None}) not in (len(moves), len(moves) - 1)
-            last_item_invalid = item_at_end is not None and piece.color is item_at_end.color
+                # check if no items block the way. last square can have an item from opposite team
+            blocked = len({i for i in moves if board[i] is None}) \
+                not in (len(moves), len(moves) - 1)
+            last_item_invalid = item_at_end is not None \
+                and piece.color is item_at_end.color
             # Knight and king don't need blocked validation
             if not (blocked or last_item_invalid) or \
                     (piece.__class__ in (Knight, King) and not last_item_invalid):
@@ -180,7 +182,6 @@ class Math:
 
 
 class GameEngine:
-
     """
         Creates and executes move. The only class changing state on pieces and board.
         The main idea is to keep mutation controlled in one place
@@ -196,8 +197,10 @@ class GameEngine:
     def square_attacked(end: tuple, board):
         opposite_color = color_change[board.turn]
         opposite_team = board.get_pieces(opposite_color)
-        opposite_attackers = [piece.check_move(end, board)
-                              for piece in opposite_team if not isinstance(piece, King)]
+        opposite_attackers = [
+            piece.check_move(end, board) for piece in opposite_team
+            if not isinstance(piece, King)
+        ]
         return len([move for move in opposite_attackers if move]) >= 1
 
     @staticmethod
@@ -231,7 +234,8 @@ class GameEngine:
         @return: True if moved else False @raise Exception: When is not the players turn
         """
         if player is not self.board.turn:
-            raise Exception("Its not your turn. Given %s expected %s" % (player, self.board.turn))
+            raise Exception("Its not your turn. Given %s expected %s" % (
+                player, self.board.turn))
         piece = self.board[start]
         if not piece:
             return False
@@ -305,7 +309,7 @@ class Piece(object):
         pass
 
     @abstractmethod
-    def check_move(self, end: tuple, board) ->set:
+    def check_move(self, end: tuple, board) -> set:
         """
             Checks if "logical moves" generated in find are legal
         @param end: tuple endpoint
@@ -359,7 +363,6 @@ class Piece(object):
 
 
 class Move(AbstractMove):
-
     def __init__(self, piece: Piece, end: tuple):
         self.piece = deepcopy(piece)
         self.start = piece.position
@@ -367,7 +370,8 @@ class Move(AbstractMove):
         self.killed = None
 
     def __hash__(self):
-        return hash(" ".join(map(str, self.piece, self.start, self.end, self.killed)))
+        return hash(" ".join(map(
+            str, self.piece, self.start, self.end, self.killed)))
 
     def __eq__(self, other):
         if not other or not isinstance(other, self.__class__):
@@ -375,7 +379,8 @@ class Move(AbstractMove):
         return self.__dict__ == other.__dict__
 
     def __repr__(self):
-        return "%s -> moved from: %s killed: %s" % (self.piece, self.start, self.killed)
+        return "%s -> moved from: %s killed: %s" % (
+            self.piece, self.start, self.killed)
 
     def exec(self, board):
         board[self.piece.position] = None  # remove the piece from the board
@@ -400,7 +405,6 @@ class Move(AbstractMove):
 
 
 class CastlingMove(AbstractMove):
-
     def __init__(self, castling):
         """
             Castling is a special moves and needs to be implemented separate
@@ -446,7 +450,6 @@ class CastlingMove(AbstractMove):
 
 
 class Rook(Piece):
-
     @Math.clean_moves
     def find(self, x: int, y: int, board=None):
         return {(x, i) for i in range(0, 8)}.union({(i, y) for i in range(0, 8)})
@@ -458,7 +461,6 @@ class Rook(Piece):
 
 
 class Bishop(Piece):
-
     @Math.clean_moves
     def find(self, x: int, y: int, board=None):
         possible = lambda k: [
@@ -472,7 +474,6 @@ class Bishop(Piece):
 
 
 class Knight(Piece):
-
     @Math.clean_moves
     def find(self, x: int, y: int, board=None):
         moves = chain(product([x - 1, x + 1], [y - 2, y + 2]),
@@ -489,7 +490,6 @@ class Knight(Piece):
 
 
 class Pawn(Piece):
-
     def __init__(self, color: str, position: tuple, player_down: str):
         super(Pawn, self).__init__(color, position)
         self.y_initial, self.y_add = (6, -1) if self.color is player_down else (1, 1)
@@ -528,7 +528,7 @@ class Pawn(Piece):
 
         if not all(_all):
             return {}
-        # Check if end is in all "killable" en-passant pieces
+            # Check if end is in all "killable" en-passant pieces
         pieces = self._get_kill_pieces(x, y, board, operator.sub)
         if (x, y) in [piece.position for piece in pieces]:
             return {(x, y)}
@@ -537,7 +537,7 @@ class Pawn(Piece):
     def _kill_moves(self, x: int, y: int, board):
         return self._get_kill_pieces(x, y, board, operator.add)
 
-    def _find_non_kill_moves(self, x: int, y: int, board) ->set:
+    def _find_non_kill_moves(self, x: int, y: int, board) -> set:
         """
             The pawn case has to be processed in different way because it can't kill when moving forward.
         @param board: the board
@@ -548,7 +548,7 @@ class Pawn(Piece):
         # just check if the square is empty
         if board[move_a] is None:
             non_kill_moves.add(move_a)
-        # check that two squares are empty
+            # check that two squares are empty
         if y is self.y_initial:
             move_b = (x, y + self.y_add * 2)
             piece_a = board[move_b]
@@ -565,7 +565,6 @@ class Pawn(Piece):
 
 
 class Castling:
-
     def __init__(self, y: int, start: int, end: int, king: Piece):
         self.squares = [(x, y) for x in range(start, end)]
         rook_start_x = 0 if start == 1 else 7
@@ -579,19 +578,18 @@ class Castling:
     def is_valid(self, board):
         if GameEngine.king_attacked(board):
             return False
-        # check if castling is blocked
+            # check if castling is blocked
         for square in self.squares:
             if board[square] is not None or GameEngine.square_attacked(square, board):
                 return False
-        # check if pieces have been moved previously
-        if not(board[self.rook_start].moved is 0 or self.king.moved is 0):
+                # check if pieces have been moved previously
+        if not (board[self.rook_start].moved is 0 or self.king.moved is 0):
             return False
 
         return self
 
 
 class King(Piece):
-
     def __init__(self, color: str, position: tuple):
         super(King, self).__init__(color, position)
         y = self.position[1]
@@ -603,7 +601,7 @@ class King(Piece):
         # Not logically a castling move
         if not possible_castling in self.castling:
             return False
-        # A castling move that may actually be invalid
+            # A castling move that may actually be invalid
         castling = self.castling[possible_castling]
         return castling.is_valid(board)
 
@@ -633,7 +631,6 @@ class King(Piece):
 
 
 class Queen(Piece):
-
     def __init__(self, color: str, position: tuple):
         super(Queen, self).__init__(color, position)
         self._rook = Rook(color, position)
@@ -653,7 +650,6 @@ class Queen(Piece):
 
 
 class Board(OrderedDict):
-
     """
         Holds the state but has no logic. All logic is done in GameEngine
     """
@@ -674,9 +670,9 @@ class Board(OrderedDict):
         if not other or not isinstance(other, self.__class__):
             return False
         return self.get_pieces("W") == other.get_pieces("W") \
-            and self.get_pieces("B") == other.get_pieces("B") \
-            and self.killed == other.killed \
-            and self.player_down == other.player_down \
+                   and self.get_pieces("B") == other.get_pieces("B") \
+                   and self.killed == other.killed \
+                   and self.player_down == other.player_down \
             and self.turn == other.turn
 
     def json_dict(self):
@@ -737,7 +733,7 @@ class Board(OrderedDict):
             # start of row print y
             if position[0] == 0:
                 to_join.append("%i  " % position[1])
-            # print content with spaces
+                # print content with spaces
             to_join.append(to_print)
             to_join.append(" " * (spaces_count + 1 - len(to_print)))
             # end of row print new line
@@ -751,11 +747,11 @@ def make_game_engine(player_down: str):
     game_engine = GameEngine(board)
     return game_engine
 
-        # 0y [0, 1, 2, 3, 4, 5, 6, 7]x
-        # 1y [0, 1, 2, 3, 4, 5, 6, 7]x
-        # 2y [0, 1, 2, 3, 4, 5, 6, 7]x
-        # 3y [0, 1, 2, 3, 4, 5, 6, 7]x
-        # 4y [0, 1, 2, 3, 4, 5, 6, 7]x
-        # 5y [0, 1, 2, 3, 4, 5, 6, 7]x
-        # 6y [0, 1, 2, 3, 4, 5, 6, 7]x
-        # 7y [0, 1, 2, 3, 4, 5, 6, 7]x
+    # 0y [0, 1, 2, 3, 4, 5, 6, 7]x
+    # 1y [0, 1, 2, 3, 4, 5, 6, 7]x
+    # 2y [0, 1, 2, 3, 4, 5, 6, 7]x
+    # 3y [0, 1, 2, 3, 4, 5, 6, 7]x
+    # 4y [0, 1, 2, 3, 4, 5, 6, 7]x
+    # 5y [0, 1, 2, 3, 4, 5, 6, 7]x
+    # 6y [0, 1, 2, 3, 4, 5, 6, 7]x
+    # 7y [0, 1, 2, 3, 4, 5, 6, 7]x
