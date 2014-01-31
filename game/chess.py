@@ -147,7 +147,8 @@ class Math:
             end_check = Math.end_point_check(diff)
             moves = {
                 move for move in moves
-                if in_line(*move) and start_check(move) and end_check(move, end)}
+                if in_line(*move) and
+                   start_check(move) and end_check(move, end)}
             return moves
 
         return wrapper
@@ -175,7 +176,8 @@ class Math:
                 and piece.color is item_at_end.color
             # Knight and king don't need blocked validation
             if not (blocked or last_item_invalid) or \
-                    (piece.__class__ in (Knight, King) and not last_item_invalid):
+                    (piece.__class__ in (Knight, King)
+                     and not last_item_invalid):
                 return moves
 
         return wrapper
@@ -452,7 +454,8 @@ class CastlingMove(AbstractMove):
 class Rook(Piece):
     @Math.clean_moves
     def find(self, x: int, y: int, board=None):
-        return {(x, i) for i in range(0, 8)}.union({(i, y) for i in range(0, 8)})
+        return {
+            (x, i) for i in range(0, 8)}.union({(i, y) for i in range(0, 8)})
 
     @Math.check_blocks
     @Math.filter_line
@@ -492,7 +495,8 @@ class Knight(Piece):
 class Pawn(Piece):
     def __init__(self, color: str, position: tuple, player_down: str):
         super(Pawn, self).__init__(color, position)
-        self.y_initial, self.y_add = (6, -1) if self.color is player_down else (1, 1)
+        self.y_initial, self.y_add = \
+            (6, -1) if self.color is player_down else (1, 1)
 
     #@Math.clean_moves
     def find(self, x: int, y: int, board=None) -> set:
@@ -514,7 +518,8 @@ class Pawn(Piece):
         new_y = _operator(y, self.y_add)
         positions = [(x1, new_y), (x2, new_y)]
         pieces = [board[i] for i in positions if Math.check_range(i)]
-        return set(filter(lambda piece: piece and piece.color is not self.color, pieces))
+        return set(filter(
+            lambda piece: piece and piece.color is not self.color, pieces))
 
     def _en_passant(self, x: int, y: int, board):
         # not moves yet en passant is impossible
@@ -580,7 +585,8 @@ class Castling:
             return False
             # check if castling is blocked
         for square in self.squares:
-            if board[square] is not None or GameEngine.square_attacked(square, board):
+            if board[square] is not None or \
+                    GameEngine.square_attacked(square, board):
                 return False
                 # check if pieces have been moved previously
         if not (board[self.rook_start].moved is 0 or self.king.moved is 0):
@@ -662,7 +668,8 @@ class Board(OrderedDict):
         self.undone_moves = []
         self.turn = "W"
         board = {i: None for i in product(range(0, 8), range(0, 8))}
-        self.update(sorted(board.items(), key=lambda x: x[0][0] + ((1 + x[0][1]) * 100)))
+        self.update(sorted(
+            board.items(), key=lambda x: x[0][0] + ((1 + x[0][1]) * 100)))
         if create:
             self.create()
 
@@ -689,11 +696,15 @@ class Board(OrderedDict):
         self.turn = color_change[self.turn]
 
     def get_king(self, color: str) -> Piece:
-        return [piece for piece in self.get_pieces(color) if isinstance(piece, King)][0]
+        return [
+            piece for piece in self.get_pieces(color)
+            if isinstance(piece, King)][0]
 
     def get_pieces(self, color: str):
         # todo cache after moves
-        return {piece for position, piece in self.items() if piece and piece.color is color}
+        return {
+            piece for position, piece in self.items()
+            if piece and piece.color is color}
 
     def _color_picker(self, index: int):
         if self.player_down is "W":
