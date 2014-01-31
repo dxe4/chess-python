@@ -230,6 +230,8 @@ class GameEngine:
         # TODO refacator
         # At the moment its "brute forced"
         # Better performance would be to filter the squares processed
+        # Best way would be to cache all "logical"
+        # moves and save it in key value store
         our_positions = self.board.our_positions()
         possible = self.board.all_possible_positions()
         _possible_moves = defaultdict(list)
