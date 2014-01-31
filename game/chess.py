@@ -3,7 +3,7 @@ from itertools import product, chain
 from functools import wraps
 from math import fabs
 from abc import ABCMeta, abstractmethod
-from collections import OrderedDict
+from collections import OrderedDict, defaultdict
 import operator
 
 """
@@ -227,9 +227,18 @@ class GameEngine:
         return GameEngine.square_attacked(king.position, board)
 
     def possible_moves(self):
-        our_pieces = self.board.our_positions()
-        for piece in our_pieces:
-            self._check_move()
+        # TODO refacator
+        # At the moment its "brute forced"
+        # Better performance would be to filter the squares processed
+        our_positions = self.board.our_positions()
+        possible = self.board.all_possible_positions()
+        _possible_moves = defaultdict(list)
+        for start in our_positions:
+            for end in possible:
+                valid = self._check_move(start, end, self.board.turn)
+                if valid:
+                    _possible_moves[start].append(end)
+        return _possible_moves
 
     def _check_move(self, start: tuple, end: tuple, player: str):
         try:
@@ -741,9 +750,9 @@ class Board(OrderedDict):
     def our_positions(self) -> set:
         return self.get_positions(self.turn)
 
-    def all_possible_squares(self, our_pieces=None):
-        our_pieces = our_pieces if our_pieces else self.our_positions()
-        return {i for i in self.keys()}
+    def all_possible_positions(self, our_positions=None):
+        our_positions = our_positions if our_positions else self.our_positions()
+        return {i for i in self.keys() if not i in our_positions}
 
     def _color_picker(self, index: int):
         if self.player_down is "W":
