@@ -183,6 +183,22 @@ class Math:
         return wrapper
 
 
+def requires_turn(turn_position):
+    def _requires_turn(f):
+        @wraps(f)
+        def wrapper(*args, **kwargs):
+            turn = args[0].board.turn
+            player = args[turn_position]
+            if player is not turn:
+                msg = "Its not your turn. Given %s expected %s" % (player, turn)
+                raise Exception(msg)
+            return f(*args, **kwargs)
+
+        return wrapper
+
+    return _requires_turn
+
+
 class GameEngine:
     """
         Creates and executes move. The only class changing state on pieces and board.
@@ -210,6 +226,12 @@ class GameEngine:
         king = board.get_king(board.turn)
         return GameEngine.square_attacked(king.position, board)
 
+    def possible_moves(self):
+        our_pieces = self.board.our_pieces()
+
+    def _check_move(self):
+        pass
+
     def _move(self, move):
         """
             Executes the move as returned by piece.get_move
@@ -225,6 +247,7 @@ class GameEngine:
             self.board.moves.append(move)
             return True
 
+    @requires_turn(3)
     def move(self, start: tuple, end: tuple, player: str):
         """
             Moves the pieces on the board, just give the points.
@@ -234,9 +257,6 @@ class GameEngine:
         @param player: str player color
         @return: True if moved else False @raise Exception: When is not the players turn
         """
-        if player is not self.board.turn:
-            raise Exception("Its not your turn. Given %s expected %s" % (
-                player, self.board.turn))
         piece = self.board[start]
         if not piece:
             return False
@@ -676,9 +696,9 @@ class Board(OrderedDict):
         if not other or not isinstance(other, self.__class__):
             return False
         return self.get_pieces("W") == other.get_pieces("W") \
-            and self.get_pieces("B") == other.get_pieces("B") \
-            and self.killed == other.killed \
-            and self.player_down == other.player_down \
+                   and self.get_pieces("B") == other.get_pieces("B") \
+                   and self.killed == other.killed \
+                   and self.player_down == other.player_down \
             and self.turn == other.turn
 
     def json_dict(self):
