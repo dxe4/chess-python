@@ -145,9 +145,9 @@ class Math:
             # than end
             start_check = lambda _move: Math.diff_points(start, _move) == diff
             end_check = Math.end_point_check(diff)
-            moves = {move for move in moves
-                     if in_line(*move) and start_check(move) and end_check(move, end)
-            }
+            moves = {
+                move for move in moves
+                if in_line(*move) and start_check(move) and end_check(move, end)}
             return moves
 
         return wrapper
