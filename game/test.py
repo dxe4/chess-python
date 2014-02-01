@@ -61,6 +61,8 @@ class TestModernDefence(unittest.TestCase):
     def setUp(self):
         self.board = Board(player_down="W", create=True)
         self.game_engine = GameEngine(self.board)
+        # TODO make a test for this it has wrong moves
+        self.game_engine.possible_moves()
 
     def test_moves(self):
         assert self.board.player_down is "W"

@@ -213,7 +213,7 @@ class GameEngine:
 
     @staticmethod
     def square_attacked(end: tuple, board):
-        opposite_pieces = board.opposite_positions()
+        opposite_pieces = board.opposite_pieces()
         opposite_attackers = [
             piece.check_move(end, board) for piece in opposite_pieces
             if not isinstance(piece, King)
@@ -232,12 +232,12 @@ class GameEngine:
         # Better performance would be to filter the squares processed
         # Best way would be to cache all "logical"
         # moves and save it in key value store
-        our_positions = self.board.our_positions()
-        possible = self.board.all_possible_positions()
+        our_pieces = self.board.our_pieces()
+        possible = self.board.all_possible_positions(our_pieces=our_pieces)
         _possible_moves = defaultdict(list)
-        for start in our_positions:
+        for start in our_pieces:
             for end in possible:
-                valid = self._check_move(start, end, self.board.turn)
+                valid = self._check_move(start.position, end, self.board.turn)
                 if valid:
                     _possible_moves[start].append(end)
         return _possible_moves
@@ -248,7 +248,7 @@ class GameEngine:
             if moved:
                 self.undo()
                 return True
-        except Exception:
+        except Exception as e:
             return False
         return False
 
@@ -436,6 +436,8 @@ class Move(AbstractMove):
         board[self.start] = self.piece
         self.piece.update_position(self.start)
         board[self.end] = self.killed
+        if board.killed:
+            del board.killed[-1]
         # self.piece.decrease_moves()
 
     def post_exec(self, board):
@@ -715,10 +717,10 @@ class Board(OrderedDict):
     def __eq__(self, other) -> bool:
         if not other or not isinstance(other, self.__class__):
             return False
-        return self.get_positions("W") == other.get_positions("W") \
-                   and self.get_positions("B") == other.get_positions("B") \
-                   and self.killed == other.killed \
-                   and self.player_down == other.player_down \
+        return self.get_pieces("W") == other.get_pieces("W") \
+            and self.get_pieces("B") == other.get_pieces("B") \
+            and self.killed == other.killed \
+            and self.player_down == other.player_down \
             and self.turn == other.turn
 
     def json_dict(self):
@@ -736,25 +738,26 @@ class Board(OrderedDict):
 
     def get_king(self, color: str) -> Piece:
         return [
-            piece for piece in self.get_positions(color)
+            piece for piece in self.get_pieces(color)
             if isinstance(piece, King)][0]
 
-    def get_positions(self, color: str) -> set:
+    def get_pieces(self, color: str) -> set:
         # todo cache after moves
         return {
             piece for position, piece in self.items()
             if piece and piece.color is color}
 
-    def opposite_positions(self) -> set:
+    def opposite_pieces(self) -> set:
         opposite_color = color_change[self.turn]
-        return self.get_positions(opposite_color)
+        return self.get_pieces(opposite_color)
 
-    def our_positions(self) -> set:
-        return self.get_positions(self.turn)
+    def our_pieces(self) -> set:
+        return self.get_pieces(self.turn)
 
-    def all_possible_positions(self, our_positions=None):
-        our_positions = our_positions if our_positions else self.our_positions()
-        return {i for i in self.keys() if not i in our_positions}
+    def all_possible_positions(self, our_pieces=None):
+        our_pieces = our_pieces if our_pieces else self.our_pieces()
+        our_pieces = {i.position for i in our_pieces}
+        return {i for i in self.keys() if not i in our_pieces}
 
     def _color_picker(self, index: int):
         if self.player_down is "W":
