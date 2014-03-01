@@ -179,6 +179,7 @@ class Math:
                     (piece.__class__ in (Knight, King)
                      and not last_item_invalid):
                 return moves
+            return False
 
         return wrapper
 
@@ -243,13 +244,10 @@ class GameEngine:
         return _possible_moves
 
     def _check_move(self, start: tuple, end: tuple, player: str):
-        try:
-            moved = self.move(start, end, player)
-            if moved:
-                self.undo()
-                return True
-        except Exception as e:
-            return False
+        moved = self.move(start, end, player)
+        if moved:
+            self.undo()
+            return True
         return False
 
     def _move(self, move):
@@ -266,6 +264,7 @@ class GameEngine:
             self.board.flip_color()
             self.board.moves.append(move)
             return True
+        return False
 
     @requires_turn(3)
     def move(self, start: tuple, end: tuple, player: str):
@@ -438,7 +437,7 @@ class Move(AbstractMove):
         board[self.end] = self.killed
         if board.killed:
             del board.killed[-1]
-        # self.piece.decrease_moves()
+            # self.piece.decrease_moves()
 
     def post_exec(self, board):
         if GameEngine.king_attacked(board):
@@ -691,9 +690,14 @@ class Queen(Piece):
     def find(self, x: int, y: int, board=None):
         return self._bishop.find(x, y).union(self._rook.find(x, y))
 
-    @Math.filter_line
     def check_move(self, end: tuple, board):
-        return self.find(*self.position)
+        bishop_moves = self._bishop.check_move(end, board)
+        if bishop_moves:
+            return bishop_moves
+        rook_moves = self._rook.check_move(end, board)
+        if rook_moves:
+            return rook_moves
+        return False
 
 
 class Board(OrderedDict):
@@ -718,9 +722,9 @@ class Board(OrderedDict):
         if not other or not isinstance(other, self.__class__):
             return False
         return self.get_pieces("W") == other.get_pieces("W") \
-            and self.get_pieces("B") == other.get_pieces("B") \
-            and self.killed == other.killed \
-            and self.player_down == other.player_down \
+                   and self.get_pieces("B") == other.get_pieces("B") \
+                   and self.killed == other.killed \
+                   and self.player_down == other.player_down \
             and self.turn == other.turn
 
     def json_dict(self):
