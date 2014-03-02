@@ -3,6 +3,11 @@ underscore.factory('_', function () {
     return window._;
 });
 
+var eventsource = angular.module('eventsource', []);
+underscore.factory('eventsource', function () {
+    return window.eventsource;
+});
+
 var kinetic = angular.module('kinetic', []);
 kinetic.factory('kinetic', function () {
     return window.kinetic;
@@ -102,6 +107,10 @@ myApp.controller('CanvasCtrl', ['$scope', '$log', '$http', '_', 'kinetic',
                         clearInterval(checkExists);
                     }
                 }, 100);
+                var sse = new EventSource('/stream');
+                sse.onmessage = function(message) {
+                    $log.info(message);
+                };
             });
             _.each(data, function (item) {
                 process_data(item, callback);
