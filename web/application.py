@@ -1,6 +1,4 @@
-from flask import render_template
-from flask import jsonify
-from flask import request
+from flask import jsonify, redirect, request, session
 from web import web_app
 from flask import send_file
 from flask import url_for
@@ -30,3 +28,16 @@ def about():
 @web_app.route("/eggs", methods=["GET"])
 def results_today():
     return jsonify(results={})
+
+
+@web_app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        session['username'] = request.form['username']
+        return redirect(url_for('.home'))
+    return '''
+        <form action="" method="post">
+            <p><input type=text name=username>
+            <p><input type=submit value=Login>
+        </form>
+    '''
