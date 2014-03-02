@@ -2,7 +2,7 @@ from flask import render_template
 from flask import jsonify
 from flask import request
 from api import api_app
-from flask import make_response, Response
+from flask import make_response, Response, session
 import game
 import json
 
