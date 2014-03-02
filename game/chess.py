@@ -170,15 +170,17 @@ class Math:
             if not moves or end not in moves:
                 return False
                 # check if no items block the way. last square can have an item from opposite team
-            blocked = len({i for i in moves if board[i] is None}) \
-                not in (len(moves), len(moves) - 1)
-            last_item_invalid = item_at_end is not None \
-                and piece.color is item_at_end.color
+            last_item_invalid = item_at_end is not None and piece.color is item_at_end.color
+            blocked = len({i for i in moves if board[i] is None}) - len(moves)
+            
             # Knight and king don't need blocked validation
-            if not (blocked or last_item_invalid) or \
-                    (piece.__class__ in (Knight, King)
-                     and not last_item_invalid):
+            if piece.__class__ in (Knight, King) and not last_item_invalid:
                 return moves
+            elif blocked == 0:
+                return moves
+            elif blocked == -1 and not last_item_invalid and item_at_end is not None:
+                return moves
+
             return False
 
         return wrapper
