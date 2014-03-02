@@ -10,4 +10,4 @@ application.wsgi_app = DispatcherMiddleware(web_app, {'/api': api_app})
 def page_not_found(e):
     return redirect("http://localhost:5000", code=301)
 
-application.run()
+application.run(threaded=True)
