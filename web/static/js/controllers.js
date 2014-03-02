@@ -107,10 +107,16 @@ myApp.controller('CanvasCtrl', ['$scope', '$log', '$http', '_', 'kinetic',
                         clearInterval(checkExists);
                     }
                 }, 100);
-                var sse = new EventSource('/stream');
-                sse.onmessage = function(message) {
-                    $log.info(message);
-                };
+                if(!$scope.sse){
+                    $scope.sse = new EventSource('/stream');
+                    $scope.sse.onmessage = function(message) {
+                        $log.info(message);
+                        if(message.data==="5"){
+                            $scope.sse.close();
+                            $scope.sse = null;
+                        }
+                    };
+                }
             });
             _.each(data, function (item) {
                 process_data(item, callback);
