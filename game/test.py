@@ -61,11 +61,12 @@ class TestModernDefence(unittest.TestCase):
     def setUp(self):
         self.board = Board(player_down="W", create=True)
         self.game_engine = GameEngine(self.board)
-        # TODO make a test for this it has wrong moves
-        self.game_engine.possible_moves()
 
     def test_moves(self):
         assert self.board.player_down is "W"
+
+        # all possible moves at start
+        assert len([k for i in self.game_engine.possible_moves().values() for k in i]) == 20
 
         assert self.game_engine.move((4, 6), (4, 4), "W")
         assert self.game_engine.move((6, 1), (6, 2), "B")
