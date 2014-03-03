@@ -107,16 +107,6 @@ myApp.controller('CanvasCtrl', ['$scope', '$log', '$http', '_', 'kinetic',
                         clearInterval(checkExists);
                     }
                 }, 100);
-                if(!$scope.sse){
-                    $scope.sse = new EventSource('/stream');
-                    $scope.sse.onmessage = function(message) {
-                        $log.info(message);
-                        if(message.data==="5"){
-                            $scope.sse.close();
-                            $scope.sse = null;
-                        }
-                    };
-                }
             });
             _.each(data, function (item) {
                 process_data(item, callback);
@@ -132,6 +122,27 @@ myApp.controller('CanvasCtrl', ['$scope', '$log', '$http', '_', 'kinetic',
                         callback();
                     }
                 });
+        };
+
+        $scope.startSSE = function () {
+            if (!$scope.sse) {
+                $scope.sse = new EventSource('/stream');
+                $scope.sse.onmessage = function (message) {
+                    $log.info(message.data);
+                    var _json = angular.fromJson(message.data);
+                    $log.info(_json);
+                    $log.info(_json["count"]);
+                    $log.info(_json["message"]);
+                    if (_json.count === 3) {
+                        $scope.sse.close();
+                        $scope.sse = null;
+                    }
+                };
+            }
+        };
+
+        $scope.startClicked = function () {
+             $scope.startSSE();
         };
 
         $scope._init = function () {

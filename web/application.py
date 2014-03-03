@@ -1,10 +1,11 @@
 from flask import jsonify, redirect, request, session
 from web import web_app
 from flask import send_file
-from flask import url_for, Response
+from flask import url_for, Response, jsonify
 from flask_login import flash, login_user, login_required, logout_user
 from web.models import User
 from time import sleep
+
 
 @web_app.route('/')
 def home():
@@ -48,16 +49,19 @@ def results_today():
 def event_stream():
     count = 0
     while True:
-        sleep(5)
-        yield 'data: %s\n\n' % count
+        sleep(1)
+        #'retry: 10000\n\ndata: %s\n\n' % event['data']
+        yield """
+            retry: 10000\ndata:{"count":%s, "message":%s}\n\n
+        """ % (count, '"it works!"')
         count += 1
 
 
 @web_app.route("/stream")
 def stream():
     return Response(
-            event_stream(),
-            mimetype='text/event-stream')
+        event_stream(),
+        mimetype='text/event-stream')
 
 
 @web_app.route("/login", methods=["GET", "POST"])
