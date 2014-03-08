@@ -11,6 +11,12 @@ from time import sleep
 def home():
     return send_file("templates/index.html")
 
+import os
+@web_app.route('/templates/<path:path>')
+def static_proxy(path):
+    # send_static_file will guess the correct MIME type
+    return send_file("templates/%s" % path)
+
 @web_app.route("/bar", methods=["GET"])
 def search():
     website = request.args.get('website')
@@ -35,17 +41,16 @@ def stream():
         mimetype='text/event-stream')
 
 
-@web_app.route("/login", methods=["GET", "POST"])
+@web_app.route("/login", methods=["POST"])
 def login():
     if request.method == 'POST':
-        # login and validate the user...
-        user = User(request.args.get['username'])
+        _json = request.get_json(force=True)
+        user = User(_json['username'])
         login_user(user)
         flash("Logged in successfully.")
         return make_response("OK", 200)
     else:
         return make_response("", 404)
-        #redirect(request.args.get("next") or url_for(".home"))
 
 
 @web_app.route("/logout")

@@ -1,4 +1,3 @@
-
 var image_type = ".png";
 var chess = angular.module('chess');
 chess.controller('CanvasCtrl', ['$scope', '$log', '$http', '_', 'kinetic',
@@ -130,10 +129,21 @@ chess.controller('CanvasCtrl', ['$scope', '$log', '$http', '_', 'kinetic',
             $scope.startSSE();
         };
 
-        $scope.login = function (username) {
-            $http({method: 'GET', url: '/web/login', params: {"username": username}}).
+        $scope.login = function (_username) {
+//            $http.post('/login',
+//                {data: {"username": username},
+//                    headers: {"Content-Type": "application/x-www-form-urlencoded"}}
+//            ).
+
+            var _data = angular.toJson({ username: _username});
+            $http({
+                method: 'POST',
+                url: "/login",
+                data: _data,
+                headers: { 'Content-Type': 'application/json' }
+            }).
                 success(function (data, status, headers, config) {
-                    $scope.logged_in = username;
+                    $scope.logged_in = _username;
                 });
         };
 
