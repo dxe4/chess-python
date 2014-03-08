@@ -1,7 +1,7 @@
 from flask import jsonify, redirect, request, session
 from web import web_app
 from flask import send_file
-from flask import url_for, Response, jsonify
+from flask import url_for, Response, jsonify, make_response
 from flask_login import flash, login_user, login_required, logout_user
 from web.models import User
 from time import sleep
@@ -39,16 +39,14 @@ def stream():
 def login():
     if request.method == 'POST':
         # login and validate the user...
-        user = User(request.form['username'])
+        user = User(request.args.get['username'])
         login_user(user)
         flash("Logged in successfully.")
-        return redirect(request.args.get("next") or url_for(".home"))
-    return '''
-        <form action="" method="post">
-            <p><input type=text name=username>
-            <p><input type=submit value=Login>
-        </form>
-    '''
+        return make_response("OK", 200)
+    else:
+        return make_response("", 404)
+        #redirect(request.args.get("next") or url_for(".home"))
+
 
 @web_app.route("/logout")
 @login_required

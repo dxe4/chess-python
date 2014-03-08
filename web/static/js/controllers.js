@@ -142,7 +142,14 @@ myApp.controller('CanvasCtrl', ['$scope', '$log', '$http', '_', 'kinetic',
         };
 
         $scope.startClicked = function () {
-             $scope.startSSE();
+            $scope.startSSE();
+        };
+
+        $scope.login = function (username) {
+            $http({method: 'GET', url: '/web/login', params: {"username": username}}).
+                success(function (data, status, headers, config) {
+                    $scope.logged_in = username;
+                });
         };
 
         $scope._init = function () {
