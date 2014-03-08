@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html ng-app="chess">
 <head>
     <title>%^£$%$£%£$</title>
@@ -7,8 +7,9 @@
     <script type=text/javascript src="static/lib/kinetic.js"></script>
     <script type=text/javascript src="static/lib/underscore.js"></script>
     <script type=text/javascript src="static/lib/eventsource.js"></script>
+    <script type=text/javascript src="static/js/app.js"></script>
     <script type=text/javascript src="static/js/controllers.js"></script>
-    <link rel="stylesheet" href='static/lib/bootstrap/css/bootstrap.css'/>
+    <link rel="stylesheet" href="static/lib/bootstrap/css/bootstrap.css"/>
     <link rel="stylesheet" type="text/css" href="static/css/home.css">
 
 </head>
@@ -17,10 +18,9 @@
 
 <div id="app" style="margin: 10px" ng-controller="CanvasCtrl" data-ng-init="init()">
     <div id="container"></div>
-
     <button id="start-button" type="button" ng-click="startClicked()" >Start</button>
-    <input id="username" type="text" name="username" ng-model="username"/>
-    <button id="login-button" type="button" ng-click="login(username)">Login</button>
+
+    <!--<div ng-include src="'templates/login.html'"></div>-->
 
 </div>
 

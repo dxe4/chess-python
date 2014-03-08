@@ -1,22 +1,7 @@
-var underscore = angular.module('underscore', []);
-underscore.factory('_', function () {
-    return window._;
-});
 
-var eventsource = angular.module('eventsource', []);
-underscore.factory('eventsource', function () {
-    return window.eventsource;
-});
-
-var kinetic = angular.module('kinetic', []);
-kinetic.factory('kinetic', function () {
-    return window.kinetic;
-});
-
-var myApp = angular.module('chess', ["underscore", "kinetic"]);
 var image_type = ".png";
-
-myApp.controller('CanvasCtrl', ['$scope', '$log', '$http', '_', 'kinetic',
+var chess = angular.module('chess');
+chess.controller('CanvasCtrl', ['$scope', '$log', '$http', '_', 'kinetic',
     function ($scope, $log, $http, _, kinetic) {
 
         var piece_size = 80;
@@ -173,8 +158,8 @@ myApp.controller('CanvasCtrl', ['$scope', '$log', '$http', '_', 'kinetic',
     }]);
 
 
-myApp.controller('TestCtrl', ['$scope', '$log', '$http',
-    function ($scope, $log, $http) {
-        //use only for testing
-    }]);
+//myApp.controller('TestCtrl', ['$scope', '$log', '$http',
+//    function ($scope, $log, $http) {
+//        //use only for testing
+//    }]);
 

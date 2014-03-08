@@ -9,7 +9,7 @@ from time import sleep
 
 @web_app.route('/')
 def home():
-    return send_file("templates/interface.html")
+    return send_file("templates/index.html")
 
 @web_app.route("/bar", methods=["GET"])
 def search():
