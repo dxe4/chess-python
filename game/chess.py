@@ -229,7 +229,7 @@ class GameEngine:
         king = board.get_king(board.turn)
         return GameEngine.square_attacked(king.position, board)
 
-    def possible_moves(self):
+    def possible_moves(self, json=False):
         # TODO refacator
         # At the moment its "brute forced"
         # Better performance would be to filter the squares processed
@@ -242,7 +242,8 @@ class GameEngine:
             for end in possible:
                 valid = self._check_move(start.position, end, self.board.turn)
                 if valid:
-                    _possible_moves[start].append(end)
+                    key = str(start.position) if json else start.position
+                    _possible_moves[key].append(end)
         return _possible_moves
 
     def _check_move(self, start: tuple, end: tuple, player: str):
