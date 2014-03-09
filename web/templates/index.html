@@ -14,13 +14,31 @@
 
 </head>
 
-<body>
+<body style="background-color:#f8f8f8;">
+
+<nav class="navbar navbar-default" role="navigation" >
+    <div class="navbar-header">
+        <a class="navbar-brand" href="/">fortune | cowsay</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+        <ul class="nav navbar-nav">
+            <li class="active"><a href="https://github.com/papaloizouc/chess-python" target="_blank">Github</a></li>
+            <li class="active" ng-show="logged_in">
+                ###
+            </li>
+        </ul>
+    </div>
+</nav>
+
 
 <div id="app" style="margin: 10px" ng-controller="CanvasCtrl" data-ng-init="init()">
     <div id="container"></div>
-    <button id="start-button" type="button" ng-click="startClicked()" >Start</button>
+    <button id="start-button" type="button" ng-click="startClicked()">Start</button>
 
-    <div ng-include src="'templates/login.html'"></div>
+    <div ng-if="!logged_in">
+        <div ng-include src="'templates/login.html'"></div>
+    </div>
 
 </div>
 
