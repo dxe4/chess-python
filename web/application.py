@@ -46,16 +46,20 @@ def login():
     if not request.method == 'POST':
         return make_response("", 404)
 
+    username = None
     if session and "user_id" in session:
-        user_id = session["user_id"]
-        if user_id:
-            return make_response(user_id, 200)
+        username = session["user_id"]
 
-    _json = request.get_json(force=True)
-    user = User(_json['username'])
-    login_user(user)
-    flash("Logged in successfully.")
-    return make_response(_json['username'], 200)
+    if not username:
+        _json = request.get_json(force=True)
+        username = _json['username']
+        user = User(username)
+        login_user(user)
+        flash("Logged in successfully.")
+
+    session["username"] = username
+    response = make_response(username, 200)
+    return response
 
 
 @web_app.route("/logout")
