@@ -148,7 +148,7 @@ class Math:
             moves = {
                 move for move in moves
                 if in_line(*move) and
-                   start_check(move) and end_check(move, end)}
+                   start_check(move) and end_check(move[1], end[1])}
             return moves
 
         return wrapper
@@ -172,7 +172,6 @@ class Math:
                 # check if no items block the way. last square can have an item from opposite team
             last_item_invalid = item_at_end is not None and piece.color is item_at_end.color
             blocked = len({i for i in moves if board[i] is None}) - len(moves)
-
             # Knight and king don't need blocked validation
             if piece.__class__ in (Knight, King) and not last_item_invalid:
                 return moves
