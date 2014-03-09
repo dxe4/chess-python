@@ -32,7 +32,9 @@
 <div id="app" style="margin: 10px" ng-controller="CanvasCtrl" data-ng-init="init()">
     <div id="container"></div>
     <button id="start-button" type="button" ng-click="startClicked()">Start</button>
-    <div ng-if="!logged_in" ng-include src="'templates/login.html'"></div>
+    <div ng-if="!logged_in">
+            <div ng-include src="'templates/login.html'"></div>
+    </div>
 </div>
 
 </body>
