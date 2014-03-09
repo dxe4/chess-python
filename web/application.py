@@ -47,8 +47,8 @@ def login():
         return make_response("", 404)
 
     username = None
-    if session and "user_id" in session:
-        username = session["user_id"]
+    if session and "username" in session:
+        username = session["username"]
 
     if not username:
         _json = request.get_json(force=True)
