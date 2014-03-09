@@ -15,25 +15,13 @@
 
 <body>
 
-<nav class="navbar navbar-default" role="navigation">
-    <div class="navbar-header">
-        <a class="navbar-brand" href="/">chess</a>
-    </div>
-    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-        <ul class="nav navbar-nav">
-            <li class="active"><a href="https://github.com/papaloizouc/chess-python" target="_blank">Github</a></li>
-            <li class="active" ng-show="logged_in">
-                <a href="" target="_blank">{{logged_in}}</a>
-            </li>
-        </ul>
-    </div>
-</nav>
+<ng-include src="'templates/navbar.html'"></ng-include>
 
 <div id="app" style="margin: 10px" ng-controller="CanvasCtrl" data-ng-init="init()">
     <div id="container"></div>
     <button id="start-button" type="button" ng-click="startClicked()">Start</button>
     <div ng-if="!logged_in" ng-show="!logged_in">
-            <div ng-include src="'templates/login.html'"></div>
+        <ng-include src="'templates/login.html'"></ng-include>
     </div>
 </div>
 
