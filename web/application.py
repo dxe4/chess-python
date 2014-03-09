@@ -47,7 +47,9 @@ def login():
         return make_response("", 404)
 
     if session and "user_id" in session:
-        return make_response(session["user_id"], 200)
+        user_id = session["user_id"]
+        if user_id:
+            return make_response(user_id, 200)
 
     _json = request.get_json(force=True)
     user = User(_json['username'])
