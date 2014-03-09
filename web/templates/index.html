@@ -13,16 +13,16 @@
     <link rel="stylesheet" type="text/css" href="static/css/home.css">
 </head>
 
-<body>
+<body ng-controller="CanvasCtrl">
 
 <ng-include src="'templates/navbar.html'"></ng-include>
 
-<div id="app" style="margin: 10px" ng-controller="CanvasCtrl" data-ng-init="init()">
+<div id="app" style="margin: 10px"  data-ng-init="init()">
     <div id="container"></div>
     <button id="start-button" type="button" ng-click="startClicked()">Start</button>
-    <div ng-if="!logged_in" ng-show="!logged_in">
-        <ng-include src="'templates/login.html'"></ng-include>
-    </div>
+    <!--<div ng-if="!logged_in" ng-show="!logged_in">-->
+        <!--<ng-include src="'templates/login.html'"></ng-include>-->
+    <!--</div>-->
 </div>
 
 </body>

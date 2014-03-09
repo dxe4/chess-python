@@ -8,6 +8,11 @@
             <li class="active" ng-show="logged_in">
                 <a href="" target="_blank">{{logged_in}}</a>
             </li>
+            <li ng-if="!logged_in" ng-show="!logged_in" class="navbar-search">
+                <input id="username" placeholder="Username" type="text" name="username" ng-model="username"/>
+                <input id="password" type="text" placeholder="Password">
+                <button id="login-button" type="button" ng-click="login(username)" class="btn">Login</button>
+            </li>
         </ul>
     </div>
 </nav>
