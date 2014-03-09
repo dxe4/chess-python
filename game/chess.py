@@ -86,13 +86,13 @@ class Math:
         return Math.safe_divide(x, fabs(x)), Math.safe_divide(y, fabs(y))
 
     @staticmethod
-    def end_point_check(diff: tuple) -> callable:
+    def end_point_check(diff_y: tuple) -> callable:
         """
             Return lambda to check the endpoint. If moving down the move must be >= than end point else <= than endpoint
-        @param diff: Difference of points as produced by _diff_points
+        @param diff_y: Difference of points in y axis as produced by _diff_points
         @return: lambda to check if endpoint is in range
         """
-        if -1 in (diff[0], diff[1]):
+        if diff_y == -1:
             return lambda move, end: move <= end
         else:
             return lambda move, end: move >= end
@@ -144,7 +144,7 @@ class Math:
             # start 3,3 end 5,5 -> 2,2 is not bigger than start 6,6 is not bigger
             # than end
             start_check = lambda _move: Math.diff_points(start, _move) == diff
-            end_check = Math.end_point_check(diff)
+            end_check = Math.end_point_check(diff[1])
             moves = {
                 move for move in moves
                 if in_line(*move) and

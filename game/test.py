@@ -6,7 +6,7 @@ import game
 
 class TestInitialState(unittest.TestCase):
     def setUp(self):
-        self.board = Board(player_down=game.player_down, create=True)
+        self.board = Board(player_down="B", create=True)
         self.black_knight = self.board[1, 7]
         self.black_knight_2 = self.board[6, 7]
 
@@ -126,6 +126,29 @@ class TestCastling(unittest.TestCase):
         assert isinstance(self.board[6, 0], King)
         assert isinstance(self.board[5, 0], Rook)
         assert isinstance(self.board[0, 0], Rook)
+
+
+class TestInitialPossibleMoves(unittest.TestCase):
+    """
+        Introduced after a bug in a move found
+    """
+
+    def test_white(self):
+        self.board = Board(player_down="W", create=True)
+        self.game_engine = GameEngine(self.board)
+        assert self.board.player_down is "W"
+
+        # all possible moves at start
+        assert len([k for i in self.game_engine.possible_moves().values() for k in i]) == 20
+
+    def test_black(self):
+        self.board = Board(player_down="B", create=True)
+        self.game_engine = GameEngine(self.board)
+        assert self.board.player_down is "B"
+
+        # all possible moves at start
+        assert len([k for i in self.game_engine.possible_moves().values() for k in i]) == 20
+
 
 
 if __name__ == '__main__':
