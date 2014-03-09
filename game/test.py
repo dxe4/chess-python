@@ -4,10 +4,7 @@ from game.chess import Board, GameEngine
 import game
 
 
-# Todo initial move is wrong -> "(5, 0)": [[3, 2], [1, 4], [2, 3], [0, 5]],
-
 class TestInitialState(unittest.TestCase):
-
     def setUp(self):
         self.board = Board(player_down=game.player_down, create=True)
         self.black_knight = self.board[1, 7]
@@ -55,7 +52,6 @@ class TestInitialState(unittest.TestCase):
 
 
 class TestModernDefence(unittest.TestCase):
-
     """
         http://www.chess.com/opening/eco/B06_Modern_Defense_Standard_Defense
     """
@@ -87,7 +83,7 @@ class TestModernDefence(unittest.TestCase):
         # undo all moves
         for i in range(0, len(self.board.moves)):
             self.game_engine.undo()
-        # assert undo was fine
+            # assert undo was fine
         assert self.board == Board(player_down="W", create=True)
         assert not self.board == Board(player_down="B", create=True)
         assert self.board.turn is "W"
@@ -99,7 +95,6 @@ class TestModernDefence(unittest.TestCase):
 
 
 class TestCastling(unittest.TestCase):
-
     def setUp(self):
         self.board = Board(player_down="W", create=False)
         self.game_engine = GameEngine(self.board)

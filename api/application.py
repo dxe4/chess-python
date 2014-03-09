@@ -12,7 +12,7 @@ def initial_board():
 #     key = request.form["key"]
 #     if not key:
 #         raise Exception
-    game_engine = game.make_game_engine(game.player_down)
+    game_engine = game.make_game_engine("W")
     json_dict = game_engine.board.json_dict()
     json_dict["moves"] = game_engine.possible_moves(json=True)
     return Response(json.dumps(json_dict),  mimetype='application/json')
