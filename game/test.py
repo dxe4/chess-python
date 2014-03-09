@@ -4,6 +4,8 @@ from game.chess import Board, GameEngine
 import game
 
 
+# Todo initial move is wrong -> "(5, 0)": [[3, 2], [1, 4], [2, 3], [0, 5]],
+
 class TestInitialState(unittest.TestCase):
 
     def setUp(self):
