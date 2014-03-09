@@ -1,5 +1,6 @@
+from datetime import timedelta
 from flask_sqlalchemy import SQLAlchemy
-from flask import Flask
+from flask import Flask, session
 from web import config
 from flask_login import LoginManager
 from web.models import User
@@ -19,6 +20,9 @@ def new_login(sender, **extra):
     print(sender)
     print(extra)
 user_logged_in.connect(new_login, web_app)
+
+session.permanent = True
+web_app.permanent_session_lifetime = timedelta(minutes=1)
 
 @login_manager.user_loader
 def load_user(userid):
