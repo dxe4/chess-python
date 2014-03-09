@@ -141,6 +141,7 @@ chess.controller('CanvasCtrl', ['$scope', '$log', '$http', '_', 'kinetic', 'Logi
         };
 
         $scope.init = function () {
+            LoginService.login("");
             $scope.stage = new Kinetic.Stage({
                 container: "container",
                 width: board_size,

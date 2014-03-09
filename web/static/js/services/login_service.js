@@ -1,6 +1,6 @@
 var chess = angular.module('chess');
 
-chess.service('LoginService', function ($http, $rootScope) {
+chess.service('LoginService', function ($http, $rootScope, $log) {
         return {
             login: function (_username) {
                 var _data = angular.toJson({ username: _username});
@@ -10,7 +10,7 @@ chess.service('LoginService', function ($http, $rootScope) {
                     data: _data,
                     headers: { 'Content-Type': 'application/json' }
                 }).success(function (data, status, headers, config) {
-                        $rootScope.logged_in = _username;
+                        $rootScope.logged_in = data;
                     });
             }
         }

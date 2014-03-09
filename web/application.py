@@ -1,6 +1,6 @@
 from flask import jsonify, redirect, request, session
 from web import web_app
-from flask import send_file
+from flask import send_file, session
 from flask import url_for, Response, jsonify, make_response
 from flask_login import flash, login_user, login_required, logout_user
 from web.models import User
@@ -11,11 +11,11 @@ from time import sleep
 def home():
     return send_file("templates/index.html")
 
-import os
+
 @web_app.route('/templates/<path:path>')
 def static_proxy(path):
-    # send_static_file will guess the correct MIME type
     return send_file("templates/%s" % path)
+
 
 @web_app.route("/bar", methods=["GET"])
 def search():
@@ -43,14 +43,17 @@ def stream():
 
 @web_app.route("/login", methods=["POST"])
 def login():
-    if request.method == 'POST':
-        _json = request.get_json(force=True)
-        user = User(_json['username'])
-        login_user(user)
-        flash("Logged in successfully.")
-        return make_response("OK", 200)
-    else:
+    if not request.method == 'POST':
         return make_response("", 404)
+
+    if session and "user_id" in session:
+        return make_response(session["user_id"], 200)
+
+    _json = request.get_json(force=True)
+    user = User(_json['username'])
+    login_user(user)
+    flash("Logged in successfully.")
+    return make_response(_json['username'], 200)
 
 
 @web_app.route("/logout")
