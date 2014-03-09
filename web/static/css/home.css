@@ -3,3 +3,7 @@ canvas {
     float: left;
     background-image: url(../img/chessboard.png);
 }
+
+body {
+    background-color: #f8f8f8;
+}
