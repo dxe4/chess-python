@@ -1,7 +1,7 @@
 var image_type = ".png";
 var chess = angular.module('chess');
-chess.controller('CanvasCtrl', ['$scope', '$log', '$http', '_', 'kinetic',
-    function ($scope, $log, $http, _, kinetic) {
+chess.controller('CanvasCtrl', ['$scope', '$log', '$http', '_', 'kinetic', 'LoginService',
+    function ($scope, $log, $http, _, kinetic, LoginService) {
 
         var piece_size = 80;
         var board_size = piece_size * 8;
@@ -130,21 +130,7 @@ chess.controller('CanvasCtrl', ['$scope', '$log', '$http', '_', 'kinetic',
         };
 
         $scope.login = function (_username) {
-//            $http.post('/login',
-//                {data: {"username": username},
-//                    headers: {"Content-Type": "application/x-www-form-urlencoded"}}
-//            ).
-
-            var _data = angular.toJson({ username: _username});
-            $http({
-                method: 'POST',
-                url: "/login",
-                data: _data,
-                headers: { 'Content-Type': 'application/json' }
-            }).
-                success(function (data, status, headers, config) {
-                    $scope.logged_in = _username;
-                });
+            LoginService.login(_username);
         };
 
         $scope._init = function () {
