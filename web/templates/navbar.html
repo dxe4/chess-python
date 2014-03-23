@@ -10,8 +10,9 @@
             </li>
             <li><a href="/users/sign_up">Sign Up</a></li>
             <li class="divider-vertical"></li>
-            <li class='dropdown' data-dropdown='dropdown' ng-if="!logged_in" ng-show="!logged_in" >
-                <a class="dropdown-toggle" href="#" data-target="#" data-toggle="dropdown">Sign In <strong class="caret"></strong></a>
+            <li class='dropdown' data-dropdown='dropdown' ng-if="!logged_in" ng-show="!logged_in">
+                <a class="dropdown-toggle" href="#" data-target="#" data-toggle="dropdown">Sign In <strong
+                        class="caret"></strong></a>
                 <ul class="dropdown-menu" role="menu" ng-click="dropdown_clicked($event)">
                     <li>
                         <input id="username" placeholder="Username" type="text" name="username"
@@ -19,10 +20,14 @@
                         <input id="password" type="text" placeholder="Password">
                     </li>
                     <li>
-                     <button id="login-button" type="button" ng-click="login(username)" class="btn">Login
+                        <button id="login-button" type="button" ng-click="login(username)" class="btn">Login
                         </button>
                     </li>
                 </ul>
+            </li>
+            <li ng-show="logged_in">
+                <a id="logout-button" ng-click="logout()" href="#">Log Out</a>
+
             </li>
         </ul>
     </div>

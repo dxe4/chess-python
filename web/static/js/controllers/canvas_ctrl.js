@@ -149,6 +149,10 @@ chess.controller('CanvasCtrl', ['$scope', '$log', '$http', '_', 'kinetic', 'Logi
             LoginService.login(_username);
         };
 
+        $scope.logout = function(){
+            LoginService.logout();
+        };
+
         $scope._init = function () {
             var callback = _.after(1, function () {
                 $scope._init_images($scope.data);

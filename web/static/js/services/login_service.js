@@ -12,6 +12,17 @@ chess.service('LoginService', function ($http, $rootScope, $log) {
                 }).success(function (data, status, headers, config) {
                         $rootScope.logged_in = data;
                     });
+            },
+            logout: function () {
+                $http({
+                    method: 'POST',
+                    url: "/logout",
+                    data: "",
+                    headers: { 'Content-Type': 'application/json' }
+                }).success(function (data, status, headers, config) {
+                        $log.info(data);
+                        $rootScope.logged_in = null;
+                    });
             }
         }
     });

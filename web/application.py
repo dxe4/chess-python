@@ -62,8 +62,10 @@ def login():
     return response
 
 
-@web_app.route("/logout")
+@web_app.route("/logout", methods=["POST"])
 @login_required
 def logout():
     logout_user()
-    return redirect(url_for('.home'))
+    session.clear()
+    return make_response("OK", 200)
+    #return redirect(url_for('.home'))
