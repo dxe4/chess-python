@@ -8,16 +8,24 @@
             <li class="active" ng-show="logged_in">
                 <a href="" target="_blank">{{logged_in}}</a>
             </li>
-        </ul>
-        <ul ng-if="!logged_in" ng-show="!logged_in" class="navbar-search">
-            <li>
-                <input id="username" placeholder="Username" type="text" name="username" ng-model="username"/>
-                <button id="login-button" type="button" ng-click="login(username)" class="btn">Login</button>
-            </li>
-            <li>
-                <input id="password" type="text" placeholder="Password">
-            </li>
+            <li><a href="/users/sign_up">Sign Up</a></li>
+            <li class="divider-vertical"></li>
+            <li class="dropdown">
+                <a class="dropdown-toggle" href="#" data-target="#" data-toggle="dropdown">Sign In <strong class="caret"></strong></a>
 
+
+                <ul ng-if="!logged_in" ng-show="!logged_in" class="dropdown-menu" role="menu">
+                    <li>
+                        <input id="username" placeholder="Username" type="text" name="username"
+                               ng-model="username"/>
+                        <input id="password" type="text" placeholder="Password">
+                    </li>
+                    <li>
+                     <button id="login-button" type="button" ng-click="login(username)" class="btn">Login
+                        </button>
+                    </li>
+                </ul>
+            </li>
         </ul>
     </div>
 </nav>

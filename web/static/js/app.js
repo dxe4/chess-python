@@ -15,4 +15,4 @@ kinetic.factory('kinetic', function () {
     return window.kinetic;
 });
 
-angular.module('chess', ["underscore", "kinetic", "eventsource"]);
+angular.module('chess', ["underscore", "kinetic", "eventsource", "ui.bootstrap"]);
