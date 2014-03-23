@@ -109,7 +109,7 @@ chess.controller('CanvasCtrl', ['$scope', '$log', '$http', '_', 'kinetic', 'Logi
 
         };
 
-        $scope.get_data = function (move, callback) {
+        $scope.get_initial_data = function (move, callback) {
 
             $scope.data = initial_board;
             if (callback) {
@@ -153,7 +153,7 @@ chess.controller('CanvasCtrl', ['$scope', '$log', '$http', '_', 'kinetic', 'Logi
             var callback = _.after(1, function () {
                 $scope._init_images($scope.data);
             });
-            $scope.get_data(null, callback);
+            $scope.get_initial_data(null, callback);
         };
 
         $scope.init = function () {
