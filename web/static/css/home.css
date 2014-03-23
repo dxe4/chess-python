@@ -5,7 +5,7 @@ canvas {
 }
 
 body {
-    background-color: #f8f8f8;
+    background-color: rgba(47, 30, 0, 0.35);
 }
 
 .navbar-custom {
@@ -26,7 +26,16 @@ body {
 }
 
 .dropdown-menu {
-    background-color: #6998b1;
+    background-color: rgba(160, 162, 177, 0.92);
+}
+
+.dropdown-menu input{
+    padding-bottom: 0.5em;
+    margin-bottom: 0.5em;
 }
 
 
+.dropdown-menu span{
+    padding-bottom: 0.5em;
+    margin-bottom: 0.5em;
+}

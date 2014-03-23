@@ -15,12 +15,13 @@
             <li class='dropdown' data-dropdown='dropdown' ng-if="!logged_in" ng-show="!logged_in">
                 <button class="dropdown-toggle btn navbar-btn btn-success " data-toggle="dropdown">Sign In <strong
                         class="caret"></strong></button>
-                <div id="login-dropdown" class="dropdown-menu" class="" role="menu">
-                    <span class="glyphicon glyphicon-user  col-sm-2"></span>
+
+                <div id="login-dropdown" class="dropdown-menu" class="well" role="menu">
+                    <span class="glyphicon glyphicon-user  col-md-2"></span>
                     <input id="username" class="input-md col-md-9" placeholder="Username" type="text"
                            name="username"
                            ng-model="username" ng-click="dropdown_clicked($event)">
-                    <span class="glyphicon glyphicon-lock  col-sm-2"></span>
+                    <span class="glyphicon glyphicon-lock  col-md-2"></span>
                     <input id="password" class="col-md-9 input-md" type="text" placeholder="Password"
                            ng-click="dropdown_clicked($event)">
                     <button id="login-button" type="button" ng-click="login(username)"
