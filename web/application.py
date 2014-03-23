@@ -59,6 +59,7 @@ def login():
 
     session["username"] = username
     response = make_response(username, 200)
+    response.set_cookie("username", username)
     return response
 
 

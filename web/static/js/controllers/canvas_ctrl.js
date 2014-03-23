@@ -1,7 +1,7 @@
 var image_type = ".png";
 var chess = angular.module('chess');
-chess.controller('CanvasCtrl', ['$scope', '$log', '$http', '_', 'kinetic', 'LoginService',
-    function ($scope, $log, $http, _, kinetic, LoginService) {
+chess.controller('CanvasCtrl', ['$scope', '$log', '$http','$cookies','$rootScope', '_', 'kinetic', 'LoginService',
+    function ($scope, $log, $http,$cookies,$rootScope, _, kinetic, LoginService) {
 
         var piece_size = 80;
         var board_size = piece_size * 8;
@@ -161,7 +161,9 @@ chess.controller('CanvasCtrl', ['$scope', '$log', '$http', '_', 'kinetic', 'Logi
         };
 
         $scope.init = function () {
-            LoginService.login("");
+            if ($cookies.username){
+                $rootScope.logged_in = $cookies.username;
+            }
             $scope.stage = new Kinetic.Stage({
                 container: "container",
                 width: board_size,
