@@ -10,14 +10,12 @@
             </li>
             <li><a href="/users/sign_up">Sign Up</a></li>
             <li class="divider-vertical"></li>
-            <li class="dropdown">
+            <li class='dropdown' data-dropdown='dropdown' ng-if="!logged_in" ng-show="!logged_in" >
                 <a class="dropdown-toggle" href="#" data-target="#" data-toggle="dropdown">Sign In <strong class="caret"></strong></a>
-
-
-                <ul ng-if="!logged_in" ng-show="!logged_in" class="dropdown-menu" role="menu">
+                <ul class="dropdown-menu" role="menu" ng-click="dropdown_clicked($event)">
                     <li>
                         <input id="username" placeholder="Username" type="text" name="username"
-                               ng-model="username"/>
+                               ng-model="username">
                         <input id="password" type="text" placeholder="Password">
                     </li>
                     <li>

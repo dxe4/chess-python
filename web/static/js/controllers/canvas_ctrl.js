@@ -167,6 +167,13 @@ chess.controller('CanvasCtrl', ['$scope', '$log', '$http', '_', 'kinetic', 'Logi
             $scope._init();
         };
 
+        $scope.dropdown_clicked = function (e) {
+            if(e.explicitOriginalTarget.id === "login-button"){
+                return;
+            }
+            e.preventDefault();
+            e.stopPropagation();
+        };
 
     }]);
 
