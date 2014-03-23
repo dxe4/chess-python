@@ -174,9 +174,6 @@ chess.controller('CanvasCtrl', ['$scope', '$log', '$http','$cookies','$rootScope
         };
 
         $scope.dropdown_clicked = function (e) {
-            if(e.explicitOriginalTarget.id === "login-button"){
-                return;
-            }
             e.preventDefault();
             e.stopPropagation();
         };
