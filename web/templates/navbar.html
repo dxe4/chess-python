@@ -5,14 +5,16 @@
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
         <ul class="nav navbar-nav">
             <li class="active"><a href="https://github.com/papaloizouc/chess-python" target="_blank">Github</a></li>
-            <li class="active" ng-show="logged_in">
+            <li class="active active" ng-show="logged_in">
                 <a href="" target="_blank">{{logged_in}}</a>
             </li>
-            <li><a href="/users/sign_up">Sign Up</a></li>
+            <li>
+                <button class="btn navbar-btn btn-primary" href="/users/sign_up">Sign Up</button>
+            </li>
             <li class="divider-vertical"></li>
             <li class='dropdown' data-dropdown='dropdown' ng-if="!logged_in" ng-show="!logged_in">
-                <a class="dropdown-toggle" href="#" data-target="#" data-toggle="dropdown">Sign In <strong
-                        class="caret"></strong></a>
+                <button class="dropdown-toggle btn navbar-btn btn-success " data-toggle="dropdown">Sign In <strong
+                        class="caret"></strong></button>
                 <ul class="dropdown-menu" role="menu" ng-click="dropdown_clicked($event)">
                     <li>
                         <input id="username" placeholder="Username" type="text" name="username"
@@ -20,14 +22,14 @@
                         <input id="password" type="text" placeholder="Password">
                     </li>
                     <li>
-                        <button id="login-button" type="button" ng-click="login(username)" class="btn">Login
+                        <button id="login-button" type="button" ng-click="login(username)"
+                                class="dropdown-toggle btn navbar-btn btn-success">Login
                         </button>
                     </li>
                 </ul>
             </li>
             <li ng-show="logged_in">
-                <a id="logout-button" ng-click="logout()" href="#">Log Out</a>
-
+                <button id="logout-button" ng-click="logout()" class="btn navbar-btn btn-danger">Log Out</button>
             </li>
         </ul>
     </div>
