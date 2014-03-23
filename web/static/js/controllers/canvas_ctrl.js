@@ -6,6 +6,17 @@ chess.controller('CanvasCtrl', ['$scope', '$log', '$http', '_', 'kinetic', 'Logi
         var piece_size = 80;
         var board_size = piece_size * 8;
         var images = [];
+        var initial_board = [
+            "wR", "wN", "wB", "wQ", "wK", "wB", "wN", "wR",
+            "wP", "wP", "wP", "wP", "wP", "wP", "wP", "wP",
+            null, null, null, null, null, null, null, null, null,
+            null, null, null, null, null, null, null, null, null,
+            null, null, null, null, null, null, null, null, null,
+            null, null, null, null, null,
+            "bP", "bP", "bP", "bP", "bP", "bP", "bP", "bP",
+            "bR", "bN", "bB", "bQ", "bK", "bB", "bN", "bR"
+        ];
+
         $scope.data = null;
         $scope.killed = null;
         $scope.moves = null;
@@ -99,13 +110,18 @@ chess.controller('CanvasCtrl', ['$scope', '$log', '$http', '_', 'kinetic', 'Logi
         };
 
         $scope.get_data = function (move, callback) {
-            $http({method: 'GET', url: '/api/initial_board'}).
-                success(function (data, status, headers, config) {
-                    $scope.data = data["values"];
-                    if (callback) {
-                        callback();
-                    }
-                });
+
+            $scope.data = initial_board;
+            if (callback) {
+                callback();
+            }
+//            $http({method: 'GET', url: '/api/initial_board'}).
+//                success(function (data, status, headers, config) {
+//                    $scope.data = data["values"];
+//                    if (callback) {
+//                        callback();
+//                    }
+//                });
         };
 
         $scope.startSSE = function () {
