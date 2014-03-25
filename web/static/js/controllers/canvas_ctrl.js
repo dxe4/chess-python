@@ -1,7 +1,7 @@
 var image_type = ".png";
 var chess = angular.module('chess');
 chess.controller('CanvasCtrl',
-    function ($scope, $log, $http,$cookies,$rootScope, _, kinetic, LoginService) {
+    function ($scope, $log, $http,$cookies,$rootScope, _, kinetic, UserService) {
 
         var piece_size = 80;
         var board_size = piece_size * 8;

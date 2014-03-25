@@ -1,14 +1,14 @@
 var chess = angular.module('chess');
 chess.controller('NavBarCtrl',
-    function ($scope, $cookies, $rootScope, $modal, LoginService) {
+    function ($scope, $cookies, $rootScope, $modal, UserService) {
 
 
         $scope.login = function (_username) {
-            LoginService.login(_username);
+            UserService.login(_username);
         };
 
         $scope.logout = function () {
-            LoginService.logout();
+            UserService.logout();
         };
 
 
