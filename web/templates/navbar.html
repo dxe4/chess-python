@@ -9,7 +9,7 @@
                 <p class="navbar-text navbar-right">Signed in as <a href="#" target="_blank">{{logged_in}}</a></p>
             </li>
             <li>
-                <button class="btn navbar-btn btn-primary" href="/users/sign_up">Sign Up</button>
+                <button class="btn navbar-btn btn-primary" ng-click="sign_in_clicked()">Sign Up</button>
             </li>
             <li class="divider-vertical"></li>
             <li class='dropdown' data-dropdown='dropdown' ng-if="!logged_in" ng-show="!logged_in">

@@ -29,13 +29,16 @@ body {
     background-color: rgba(160, 162, 177, 0.92);
 }
 
-.dropdown-menu input{
+.dropdown-menu input {
     padding-bottom: 0.5em;
     margin-bottom: 0.5em;
 }
 
-
-.dropdown-menu span{
+.dropdown-menu span {
     padding-bottom: 0.5em;
     margin-bottom: 0.5em;
+}
+
+.modal {
+    display: block;
 }
