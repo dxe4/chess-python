@@ -12,6 +12,7 @@
     <script type=text/javascript src="static/js/app.js"></script>
     <script type=text/javascript src="static/js/services/login_service.js"></script>
     <script type=text/javascript src="static/js/controllers/canvas_ctrl.js"></script>
+    <script type=text/javascript src="static/js/controllers/navbar_ctrl.js"></script>
 
     <script type=text/javascript src="static/js/directives/input.js"></script>
 
@@ -19,17 +20,22 @@
     <link rel="stylesheet" type="text/css" href="static/css/home.css">
 </head>
 
-<body ng-controller="CanvasCtrl">
+<body>
 
-<ng-include src="'templates/navbar.html'"></ng-include>
-
-<div id="app" style="margin: 10px" data-ng-init="init()">
-    <div id="container"></div>
-    <button id="start-button" type="button" ng-click="startClicked()" class="btn btn-success btn-lg">Start</button>
-    <!--<div ng-if="!logged_in" ng-show="!logged_in">-->
-    <!--<ng-include src="'templates/login.html'"></ng-include>-->
-    <!--</div>-->
+<div ng-controller="NavBarCtrl" data-ng-init="init()">
+    <ng-include src="'templates/navbar.html'"></ng-include>
 </div>
+
+<div ng-controller="CanvasCtrl" data-ng-init="init()">
+    <div style="margin: 10px">
+        <div id="container"></div>
+        <button id="start-button" type="button" ng-click="startClicked()" class="btn btn-success btn-lg">Start</button>
+        <!--<div ng-if="!logged_in" ng-show="!logged_in">-->
+        <!--<ng-include src="'templates/login.html'"></ng-include>-->
+        <!--</div>-->
+    </div>
+</div>
+
 
 </body>
 </html>

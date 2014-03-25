@@ -1,6 +1,6 @@
 var image_type = ".png";
 var chess = angular.module('chess');
-chess.controller('CanvasCtrl', ['$scope', '$log', '$http','$cookies','$rootScope', '_', 'kinetic', 'LoginService',
+chess.controller('CanvasCtrl',
     function ($scope, $log, $http,$cookies,$rootScope, _, kinetic, LoginService) {
 
         var piece_size = 80;
@@ -145,14 +145,6 @@ chess.controller('CanvasCtrl', ['$scope', '$log', '$http','$cookies','$rootScope
             $scope.startSSE();
         };
 
-        $scope.login = function (_username) {
-            LoginService.login(_username);
-        };
-
-        $scope.logout = function(){
-            LoginService.logout();
-        };
-
         $scope._init = function () {
             var callback = _.after(1, function () {
                 $scope._init_images($scope.data);
@@ -161,9 +153,6 @@ chess.controller('CanvasCtrl', ['$scope', '$log', '$http','$cookies','$rootScope
         };
 
         $scope.init = function () {
-            if ($cookies.username){
-                $rootScope.logged_in = $cookies.username;
-            }
             $scope.stage = new Kinetic.Stage({
                 container: "container",
                 width: board_size,
@@ -173,12 +162,7 @@ chess.controller('CanvasCtrl', ['$scope', '$log', '$http','$cookies','$rootScope
             $scope._init();
         };
 
-        $scope.dropdown_clicked = function (e) {
-            e.preventDefault();
-            e.stopPropagation();
-        };
-
-    }]);
+    });
 
 
 //myApp.controller('TestCtrl', ['$scope', '$log', '$http',
