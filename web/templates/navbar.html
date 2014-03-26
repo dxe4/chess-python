@@ -9,26 +9,11 @@
                 <p class="navbar-text navbar-right">Signed in as <a href="#" target="_blank">{{logged_in}}</a></p>
             </li>
             <li>
-                <button class="btn navbar-btn btn-primary" ng-click="sign_in_clicked()">Sign Up</button>
+                <button class="btn navbar-btn btn-primary" ng-click="sign_up_clicked()">Sign Up</button>
             </li>
             <li class="divider-vertical"></li>
-            <li class='dropdown' data-dropdown='dropdown' ng-if="!logged_in" ng-show="!logged_in">
-                <button class="dropdown-toggle btn navbar-btn btn-success " data-toggle="dropdown">Sign In <strong
-                        class="caret"></strong></button>
-
-                <div id="login-dropdown" class="dropdown-menu" class="well" role="menu">
-                    <span class="glyphicon glyphicon-user  col-md-2"></span>
-                    <input id="username" class="input-md col-md-9" placeholder="Username" type="text"
-                           name="username"
-                           ng-model="username" ng-click="dropdown_clicked($event)">
-                    <span class="glyphicon glyphicon-lock  col-md-2"></span>
-                    <input id="password" class="col-md-9 input-md" type="text" placeholder="Password"
-                           ng-click="dropdown_clicked($event)">
-                    <button id="login-button" type="button" ng-click="login(username)"
-                            class="center-block dropdown-toggle btn navbar-btn btn-success center">
-                        Login
-                    </button>
-                </div>
+            <li ng-if="!logged_in" ng-show="!logged_in">
+                <button class="btn navbar-btn btn-success" ng-click="sign_in_clicked()">Sign In</button>
             </li>
             <li ng-show="logged_in">
                 <button id="logout-button" ng-click="logout()" class="btn navbar-btn btn-danger">Log Out</button>
