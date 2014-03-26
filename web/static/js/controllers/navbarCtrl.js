@@ -23,15 +23,31 @@ chess.controller('NavBarCtrl',
         };
 
         $scope.sign_in_clicked = function () {
+            $scope.register = false;
+            $scope.sign_in = true;
             var modalInstance = $modal.open({
                 templateUrl: 'templates/modal.html',
-                //controller: ModalInstanceCtrl,
-                resolve: {
-                    items: function () {
-                        return $scope.items;
-                    }
-                }
+                controller: 'NavBarCtrl'
+//                resolve: { items: function () { return $scope.items; }}
             });
+        };
+
+        $scope.register_clicked = function () {
+            $scope.sign_in = false;
+            $scope.register = true;
+            var modalInstance = $modal.open({
+                templateUrl: 'templates/modal.html',
+                controller: 'NavBarCtrl'
+//                resolve: { items: function () { return $scope.items; }}
+            });
+        };
+
+        $scope.login = function (username) {
+
+        };
+
+        $scope.register = function (data) {
+
         };
 
     });
