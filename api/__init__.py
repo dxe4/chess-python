@@ -1,4 +1,4 @@
-from queue import Queue
+from collections import deque
 from flask_sqlalchemy import SQLAlchemy
 from flask import Flask
 from web import config
@@ -11,6 +11,8 @@ api_app.secret_key = "not secret"
 
 # from redis import Redis
 # redis = Redis(host='localhost', port=6379, db=0)
-start_queue = Queue()
+start_queue = deque()
+pending = {}
+games = {}
 
 from api import application

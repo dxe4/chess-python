@@ -134,7 +134,7 @@ chess.controller('CanvasCtrl',
                     $log.info(_json["count"]);
                     $log.info(_json["message"]);
                     $log.info(_json["game"]);
-                    if (_json.count === 3) {
+                    if (_json.count === 60 || _json.message === "done") {
                         $scope.sse.close();
                         $scope.sse = null;
                     }

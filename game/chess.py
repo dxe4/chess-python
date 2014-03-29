@@ -1,6 +1,7 @@
 from copy import deepcopy
 from itertools import product, chain
 from functools import wraps
+import uuid
 from math import fabs
 from abc import ABCMeta, abstractmethod
 from collections import OrderedDict, defaultdict
@@ -212,6 +213,7 @@ class GameEngine:
         @param board: Board
         """
         self.board = board
+        self.uuid = str(uuid.uuid4())
 
     @staticmethod
     def square_attacked(end: tuple, board):
