@@ -2,6 +2,11 @@ from web import web_app
 from api import api_app
 from flask import Flask, redirect, session, request, after_this_request, g
 from werkzeug.wsgi import DispatcherMiddleware
+from web.sessions import RedisSessionInterface
+
+session_interface = RedisSessionInterface()
+web_app.session_interface = session_interface
+api_app.session_interface = session_interface
 
 application = Flask(__name__)
 application.wsgi_app = DispatcherMiddleware(web_app, {'/api': api_app})
@@ -22,7 +27,4 @@ def renew_username_cookie():
         return response
     g.username = username
 
-
-from web.sessions import RedisSessionInterface
-application.session_interface = RedisSessionInterface()
 application.run(threaded=True)
