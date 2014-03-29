@@ -126,13 +126,14 @@ chess.controller('CanvasCtrl',
 
         $scope.startSSE = function () {
             if (!$scope.sse) {
-                $scope.sse = new EventSource('/stream');
+                $scope.sse = new EventSource('/api/join_queue');
                 $scope.sse.onmessage = function (message) {
                     $log.info(message.data);
                     var _json = angular.fromJson(message.data);
                     $log.info(_json);
                     $log.info(_json["count"]);
                     $log.info(_json["message"]);
+                    $log.info(_json["game"]);
                     if (_json.count === 3) {
                         $scope.sse.close();
                         $scope.sse = null;

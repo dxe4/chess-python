@@ -2,7 +2,6 @@ from datetime import timedelta
 from flask_sqlalchemy import SQLAlchemy
 from flask import Flask, session
 from web import config
-from web.sessions import RedisSessionInterface
 from flask_login import LoginManager
 from web.models import User
 from flask_login import user_logged_in, user_logged_out, current_user, session_protected
@@ -10,7 +9,7 @@ from flask_login import user_logged_in, user_logged_out, current_user, session_p
 web_app = Flask(__name__)
 web_app.config.from_object(config)
 
-web_app.session_interface = RedisSessionInterface()
+
 
 web_db = SQLAlchemy(web_app)
 web_app.secret_key = "not secret"

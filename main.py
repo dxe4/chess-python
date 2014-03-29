@@ -22,4 +22,7 @@ def renew_username_cookie():
         return response
     g.username = username
 
+
+from web.sessions import RedisSessionInterface
+application.session_interface = RedisSessionInterface()
 application.run(threaded=True)
