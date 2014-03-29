@@ -18,8 +18,7 @@ def make_game():
     games[game_engine.uuid] = game_engine
     return game_engine.uuid
 
-def event_stream():
-    id = session["_id"]
+def event_stream(id):
     count = 0
     msg = """
         retry: 10000\ndata:{"count":%s, "message":%s, "game":%s}\n\n
@@ -31,12 +30,14 @@ def event_stream():
             game_id = pending[id]
             del pending[id]
             yield msg % (count, '"done"', '"%s"' % game_id)
-        # Todo that won't do for big queue but for now its fine
-        elif len(start_queue) > 1 and id in start_queue[:2]:
-            game_id = make_game()
-            pending_id = next((i for i in start_queue[:2] if i != id))
-            pending[pending_id] = game_id
-            yield msg % (count, '"wait"', '"%s"' % game_id)
+        elif len(start_queue) > 1:
+           # TODO that won't do for big queue but for now its fine
+            first_ids = start_queue[0], start_queue[1]
+            if id in first_ids:
+                game_id = make_game()
+                pending_id = next((i for i in first_ids if i != id))
+                pending[pending_id] = game_id
+                yield msg % (count, '"done"', '"%s"' % game_id)
         else:
             yield msg % (count, '"wait"', '""')
         count += 1
@@ -44,5 +45,6 @@ def event_stream():
 
 @api_app.route("/join_queue", methods=["GET"])
 def join_queue():
-    start_queue.append(session["_id"])
-    return Response(event_stream(), mimetype='text/event-stream')
+    id = session["_id"]
+    start_queue.append(id)
+    return Response(event_stream(id), mimetype='text/event-stream')

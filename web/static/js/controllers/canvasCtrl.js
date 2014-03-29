@@ -1,7 +1,7 @@
 var image_type = ".png";
 var chess = angular.module('chess');
 chess.controller('CanvasCtrl',
-    function ($scope, $log, $http,$cookies,$rootScope, _, kinetic, UserService) {
+    function ($scope, $log, $http, $cookies, $rootScope, _, kinetic, UserService) {
 
         var piece_size = 80;
         var board_size = piece_size * 8;
@@ -124,20 +124,34 @@ chess.controller('CanvasCtrl',
 //                });
         };
 
+
+        $scope.close_sse = function (status) {
+            if ($scope.sse === null) {
+                alert("conflict in state, shouldn't happen :(");
+            }
+            $scope.sse.close();
+            $scope.sse = null;
+        };
+
+        $scope.check_sse = function (_json) {
+            if (_json.count === 60) {
+                $scope.close_sse("time-out");
+                return false;
+            }else if(_json.message === "done"){
+                $scope.close_sse("connected");
+                $scope.game_id = _json.game;
+                return false;
+            }
+            return true;
+        };
+
         $scope.startSSE = function () {
             if (!$scope.sse) {
                 $scope.sse = new EventSource('/api/join_queue');
                 $scope.sse.onmessage = function (message) {
                     $log.info(message.data);
                     var _json = angular.fromJson(message.data);
-                    $log.info(_json);
-                    $log.info(_json["count"]);
-                    $log.info(_json["message"]);
-                    $log.info(_json["game"]);
-                    if (_json.count === 60 || _json.message === "done") {
-                        $scope.sse.close();
-                        $scope.sse = null;
-                    }
+                    $scope.check_sse(_json);
                 };
             }
         };
