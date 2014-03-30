@@ -3,11 +3,8 @@ import websockets
 
 @asyncio.coroutine
 def hello(websocket, uri):
-    print("-----")
     name = yield from websocket.recv()
-    print("< {}".format(name))
     greeting = "Hello {}!".format(name)
-    print("> {}".format(greeting))
     yield from websocket.send(greeting)
 
 
