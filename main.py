@@ -26,5 +26,3 @@ def renew_username_cookie():
         response.set_cookie("username",username)
         return response
     g.username = username
-
-application.run(threaded=True)
