@@ -19,8 +19,7 @@ def static_proxy(path):
 
 @web_app.route("/bar", methods=["GET"])
 def search():
-    website = request.args.get('website')
-    return jsonify(results=list(filter(lambda x: website in x["name"], {})))
+    return jsonify(results=[])
 
 
 def event_stream():

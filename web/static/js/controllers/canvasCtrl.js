@@ -3,6 +3,7 @@ var chess = angular.module('chess');
 chess.controller('CanvasCtrl',
     function ($scope, $log, $http, $cookies, $rootScope, _, kinetic, UserService) {
 
+        var wsUri = "ws://localhost:8765";
         var piece_size = 80;
         var board_size = piece_size * 8;
         var images = [];
@@ -137,7 +138,7 @@ chess.controller('CanvasCtrl',
             if (_json.count === 60) {
                 $scope.close_sse("time-out");
                 return false;
-            }else if(_json.message === "done"){
+            } else if (_json.message === "done") {
                 $scope.close_sse("connected");
                 $scope.game_id = _json.game;
                 return false;
@@ -158,6 +159,34 @@ chess.controller('CanvasCtrl',
 
         $scope.startClicked = function () {
             $scope.startSSE();
+        };
+
+        $scope.openSocket = function () {
+
+            if (!$scope.websocket) {
+
+                $scope.websocket = new WebSocket("ws://localhost:8765");
+                console.log("init");
+                $scope.websocket.onopen = function (evt) {
+                    console.log(evt);
+                    $scope.websocket.send("eggs and spam");
+                };
+                $scope.websocket.onclose = function (evt) {
+                    console.log(evt);
+                    $scope.websocket = null;
+                };
+                $scope.websocket.onmessage = function (evt) {
+                    console.log(evt);
+                    alert(evt.data);
+                };
+                $scope.websocket.onerror = function (evt) {
+                    console.log(evt);
+                    $scope.websocket = null;
+                };
+            }
+//            console.log($scope.websocket);
+//            console.log("sending");
+
         };
 
         $scope._init = function () {
