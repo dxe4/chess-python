@@ -1,9 +1,10 @@
 import json
+from time import sleep
+from flask import Response, session
+from asyncio_redis import Pool
 from api import api_app
 from api import start_queue, games, pending
-from flask import Response, session
 import game
-from time import sleep
 
 
 @api_app.route("/initial_board", methods=["GET"])
