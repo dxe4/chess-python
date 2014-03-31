@@ -1,20 +1,15 @@
 import redis
 
-# Thx to Peter Hoffmann
-# http://peter-hoffmann.com/2012/python-simple-queue-redis-queue.html
-
 class RedisQueue(object):
     """Simple Queue with Redis Backend"""
-
     def __init__(self, name, namespace='queue', **redis_kwargs):
         """The default connection parameters are: host='localhost', port=6379, db=0"""
-
-        self.__db = redis.Redis(**redis_kwargs)
-        self.key = '%s:%s' % (namespace, name)
+        self.__db= redis.Redis(**redis_kwargs)
+        self.key = '%s:%s' %(namespace, name)
 
     def qsize(self):
         """Return the approximate size of the queue."""
-        self.__db.llen(self.key)
+        return self.__db.llen(self.key)
 
     def empty(self):
         """Return True if the queue is empty, False otherwise."""
@@ -24,11 +19,19 @@ class RedisQueue(object):
         """Put item into the queue."""
         self.__db.rpush(self.key, item)
 
-    def get(self, min=0, max=5, callback=None):
-        data = self.__db.lrange(self.key, min, max)
-        if callback:
-            return callback(data)
-        return data
+    def get(self, block=True, timeout=None):
+        """Remove and return an item from the queue. 
+
+        If optional args block is true and timeout is None (the default), block
+        if necessary until an item is available."""
+        if block:
+            item = self.__db.blpop(self.key, timeout=timeout)
+        else:
+            item = self.__db.lpop(self.key)
+
+        if item:
+            item = item[1]
+        return item
 
     def get_nowait(self):
         """Equivalent to get(False)."""
