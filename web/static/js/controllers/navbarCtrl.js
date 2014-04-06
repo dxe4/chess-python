@@ -34,7 +34,7 @@ chess.controller('NavBarCtrl',
 
         var popUp = function (_sign_up) {
             $modal.open({
-                templateUrl: 'templates/modal.html',
+                templateUrl: 'static/templates/modal.html',
                 controller: ModalInstanceCtrl,
                 resolve: {
                     sign_up: function () {
