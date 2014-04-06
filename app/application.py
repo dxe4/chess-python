@@ -48,7 +48,7 @@ if __name__ == '__main__':
         'section': '/',
         'dir': os.path.join(current_dir, 'static')
     }
-    static_handler = cherrypy.tools.staticdir.handler()
+    static_handler = cherrypy.tools.staticdir.handler(**kwargs)
     cherrypy.tree.mount(static_handler, '/static')
 
     hw = Home()
