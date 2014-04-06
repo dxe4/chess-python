@@ -1,0 +1,54 @@
+Keep track of patched files, there must be a better way
+
+ui-bootstrap-tpls.js
+
+/**
+ * A helper directive for the $modal service. It creates a backdrop element.
+ */
+  .directive('modalBackdrop', ['$timeout', function ($timeout) {
+    return {
+      restrict: 'EA',
+      replace: true,
+      templateUrl: 'static/templates/modal/backdrop.html',
+      link: function (scope) {
+
+        scope.animate = false;
+
+        //trigger CSS transitions
+        $timeout(function () {
+          scope.animate = true;
+        });
+      }
+    };
+  }])
+
+  .directive('modalWindow', ['$modalStack', '$timeout', function ($modalStack, $timeout) {
+    return {
+      restrict: 'EA',
+      scope: {
+        index: '@'
+      },
+      replace: true,
+      transclude: true,
+      templateUrl: 'static/templates/modal/window.html',
+      link: function (scope, element, attrs) {
+        scope.windowClass = attrs.windowClass || '';
+
+        $timeout(function () {
+          // trigger CSS transitions
+          scope.animate = true;
+          // focus a freshly-opened modal
+          element[0].focus();
+        });
+
+        scope.close = function (evt) {
+          var modal = $modalStack.getTop();
+          if (modal && modal.value.backdrop && modal.value.backdrop != 'static' && (evt.target === evt.currentTarget)) {
+            evt.preventDefault();
+            evt.stopPropagation();
+            $modalStack.dismiss(modal.key, 'backdrop click');
+          }
+        };
+      }
+    };
+  }])
