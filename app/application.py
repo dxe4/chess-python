@@ -1,18 +1,43 @@
 import os
 from cherrypy.lib.static import serve_file
+from cherrypy import expose
 import cherrypy
-from app import config
+from app import config, allow
 
 
 def _serve(*args):
-    print(os.path.join(config.current_dir, 'static', *args))
     return serve_file(os.path.join(config.current_dir, 'static', *args))
 
 
-class Home(object):
-    @cherrypy.expose
+class Root(object):
+    _cp_config = {
+        'tools.sessions.on': True,
+        'tools.auth.on': True
+    }
+
+    @allow(methods=["GET"])
+    @expose
     def index(self):
         return _serve("templates", "index.html")
+
+
+class Api(object):
+    @allow(methods=["GET"])
+    @expose
+    def join_queue(self):
+        pass
+
+
+    @allow(methods=["POST"])
+    @expose
+    def login(self):
+        pass
+
+
+    @allow(methods=["POST"])
+    @expose
+    def logout(self):
+        pass
 
 
 if __name__ == '__main__':
@@ -23,8 +48,9 @@ if __name__ == '__main__':
     static_handler = cherrypy.tools.staticdir.handler(**kwargs)
     cherrypy.tree.mount(static_handler, '/static')
 
-    hw = Home()
-    cherrypy.tree.mount(hw)
+    root = Root()
+    root.api = Api()
 
+    cherrypy.tree.mount(root)
     cherrypy.engine.start()
     cherrypy.engine.block()

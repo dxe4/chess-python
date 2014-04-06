@@ -18,8 +18,8 @@ config = {
         'tools.staticdir.root': current_dir,
         # sessions
         'tools.sessions.on': True,
-        # 'tools.sessions.storage_type': "file",
-        # 'tools.sessions.storage_path': "/tmp",
+        'tools.sessions.storage_type': "file",
+        'tools.sessions.storage_path': "/tmp",
         'tools.sessions.timeout': 60,
     },
     '/static': {
