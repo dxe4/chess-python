@@ -10,12 +10,7 @@ def _serve(*args):
 
 
 class Root(object):
-    _cp_config = {
-        'tools.sessions.on': True,
-        'tools.auth.on': True
-    }
-
-    @allow(methods=["GET"])
+    @allow(methods=["GET", "HEAD"])
     @expose
     def index(self):
         return _serve("templates", "index.html")
@@ -52,5 +47,12 @@ if __name__ == '__main__':
     root.api = Api()
 
     cherrypy.tree.mount(root)
+    cherrypy.tree.mount(None, '/static', config={
+        '/': {
+            'tools.staticdir.on': True,
+            'tools.staticdir.dir': config.static_dir,
+            'response.headers.connection': 'close'
+        },
+    })
     cherrypy.engine.start()
     cherrypy.engine.block()

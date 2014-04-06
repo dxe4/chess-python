@@ -8,7 +8,7 @@ chess.service('UserService', function ($http, $rootScope, $cookies, $log) {
             var _data = angular.toJson({ username: _username});
             $http({
                 method: 'POST',
-                url: "/login",
+                url: "/api/login",
                 data: _data,
                 headers: { 'Content-Type': 'application/json' }
             }).success(function (data, status, headers, config) {
@@ -18,7 +18,7 @@ chess.service('UserService', function ($http, $rootScope, $cookies, $log) {
         logout: function () {
             $http({
                 method: 'POST',
-                url: "/logout",
+                url: "/api/logout",
                 data: "",
                 headers: { 'Content-Type': 'application/json' }
             }).success(function (data, status, headers, config) {
