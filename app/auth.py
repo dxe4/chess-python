@@ -1,5 +1,5 @@
 import cherrypy
-
+# http://tools.cherrypy.org/wiki/AuthenticationAndAccessRestrictions
 SESSION_KEY = '8ffa7757-2452-49bd-a629-8d66dfeadd2f'
 
 def check_credentials(username, password):
