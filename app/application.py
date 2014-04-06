@@ -1,26 +1,28 @@
 import cherrypy
 from cherrypy.lib.static import serve_file
 import os
+
 current_dir = os.path.dirname(os.path.abspath(__file__))
 
 # static_handler = cherrypy.tools.staticdir.handler(section="/", dir=os.path.join(current_dir, 'static'))
 # cherrypy.tree.mount(static_handler, '/static')
 
-def _serve(fname):
-    return serve_file(os.path.join(current_dir, 'static', fname))
+def _serve(*args):
+    print(os.path.join(current_dir, 'static', *args))
+    return serve_file(os.path.join(current_dir, 'static', *args))
 
-class HelloWorld(object):
+
+class Home(object):
     @cherrypy.expose
     def index(self):
-        print("--")
-        return _serve("foo.html")
+        return _serve("templates", "index.html")
+
 
 class RR(object):
-
-
     @cherrypy.expose
     def index(self):
         return "The index of the root object"
+
 
 config = {
     'global': {
@@ -32,21 +34,24 @@ config = {
         'log.error_file': os.path.join(current_dir, 'errors.log'),
         'log.access_file': os.path.join(current_dir, 'access.log'),
     },
-    '/':{
-        'tools.staticdir.root' : current_dir,
+    '/': {
+        'tools.staticdir.root': current_dir,
     },
-    '/static':{
-        'tools.staticdir.on' : True,
-        'tools.staticdir.dir' : 'static',
+    '/static': {
+        'tools.staticdir.on': True,
+        'tools.staticdir.dir': 'static',
     },
 }
 
 if __name__ == '__main__':
-
-    static_handler = cherrypy.tools.staticdir.handler(section="/", dir=os.path.join(current_dir, 'static'))
+    kwargs = {
+        'section': '/',
+        'dir': os.path.join(current_dir, 'static')
+    }
+    static_handler = cherrypy.tools.staticdir.handler()
     cherrypy.tree.mount(static_handler, '/static')
 
-    hw = HelloWorld()
+    hw = Home()
     hw.rr = RR()
     cherrypy.tree.mount(hw, "/")
 
