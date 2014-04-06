@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html ng-app="chess">
+<head>
+    <title>%^£$%$£%£$</title>
+    <script type=text/javascript src="static/lib/angular.js"></script>
+    <script type=text/javascript src="static/lib/angular-cookies.js"></script>
+    <script type=text/javascript src="static/lib/kinetic.js"></script>
+    <script type=text/javascript src="static/lib/underscore.js"></script>
+    <script type=text/javascript src="static/lib/eventsource.js"></script>
+
+    <script type=text/javascript src="static/lib/ui-bootstrap-tpls-0.9.0.js"></script>
+    <script type=text/javascript src="static/js/app.js"></script>
+    <script type=text/javascript src="static/js/services/userService.js"></script>
+    <script type=text/javascript src="static/js/controllers/canvasCtrl.js"></script>
+    <script type=text/javascript src="static/js/controllers/navbarCtrl.js"></script>
+
+    <script type=text/javascript src="static/js/directives/input.js"></script>
+
+    <link rel="stylesheet" href="static/lib/bootstrap/css/bootstrap.css"/>
+    <link rel="stylesheet" type="text/css" href="static/css/home.css">
+</head>
+
+<body>
+
+<div ng-controller="NavBarCtrl" data-ng-init="init()">
+    <ng-include src="'templates/navbar.html'"></ng-include>
+</div>
+
+<div ng-controller="CanvasCtrl" data-ng-init="init()">
+    <div style="margin: 10px">
+        <div id="container"></div>
+        <button id="start-button" type="button" ng-click="startClicked()" class="btn btn-success btn-lg">Start</button>
+        <!--<div ng-if="!logged_in" ng-show="!logged_in">-->
+        <!--<ng-include src="'templates/login.html'"></ng-include>-->
+        <!--</div>-->
+
+<button type="button" ng-click="openSocket()" class="btn btn-success btn-lg">socket</button>
+
+    </div>
+</div>
+
+
+
+</body>
+</html>
