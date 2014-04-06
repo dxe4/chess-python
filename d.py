@@ -13,6 +13,11 @@ def example():
     x = yield from connection.lrange("foobar", 0, 5)
     d = yield from x.aslist()
     print(d)
+    while True:
+        _ = yield from connection.lpop("foobar")
+        print(_)
+        break
+    print("done")
 
 asyncio.get_event_loop().run_until_complete(example())
-asyncio.get_event_loop().run_forever()
+asyncio.get_event_loop().run_until_complete(example())

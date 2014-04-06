@@ -59,6 +59,7 @@ def login():
     session["username"] = username
     response = make_response(username, 200)
     response.set_cookie("username", username)
+    print("a", username)
     return response
 
 
@@ -67,5 +68,7 @@ def login():
 def logout():
     logout_user()
     session.clear()
+    response = make_response("OK", 200)
+    response.delete_cookie("username")
     return make_response("OK", 200)
     #return redirect(url_for('.home'))

@@ -23,7 +23,9 @@ def renew_username_cookie():
     username = session.get("username", "")
     @after_this_request
     def _renew_username_cookie(response):
-        response.set_cookie("username",username)
+        if username:
+            print(username)
+            response.set_cookie("username",username)
         return response
     g.username = username
 

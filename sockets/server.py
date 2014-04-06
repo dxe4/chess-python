@@ -14,7 +14,7 @@ def _websocket(websocket, uri):
         except:
             data = {"data":data, "type": "None"}
 
-        if data["type"] == "init":
+        if data["type"] == "join_queue":
             greeting = "Hello {}!".format("client")
             yield from websocket.send(greeting)
             websocket.initialized = True

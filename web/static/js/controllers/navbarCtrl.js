@@ -5,13 +5,11 @@ chess.controller('NavBarCtrl',
         var ModalInstanceCtrl = function ($scope, $modalInstance, sign_up) {
 
             var constructor = function () {
-
                 if (sign_up) {
                     $scope.modal_title = "Sign Up!";
                 } else {
                     $scope.modal_title = "Sign In!";
                 }
-
             };
             constructor();
 
