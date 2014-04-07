@@ -1,5 +1,6 @@
 import os
 
+SESSION_KEY = '8ffa7757-2452-49bd-a629-8d66dfeadd2f'
 current_dir = os.path.dirname(os.path.abspath(__file__))
 static_dir = os.path.join(current_dir, 'static')
 config = {
