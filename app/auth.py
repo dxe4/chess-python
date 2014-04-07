@@ -1,7 +1,7 @@
 import cherrypy
-from app import config
+from app.config import SESSION_KEY
 # http://tools.cherrypy.org/wiki/AuthenticationAndAccessRestrictions
-SESSION_KEY = config.SESSION_KEY
+
 
 def check_credentials(username, password):
     """Verifies credentials for username and password.

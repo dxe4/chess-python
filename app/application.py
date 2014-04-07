@@ -33,15 +33,25 @@ class Api(object):
 
     @allow(methods=["POST"])
     @expose
+    @cherrypy.tools.json_in()
     def login(self):
-        pass
+        input_json = cherrypy.request.json
+        username = input_json["username"]
+        cherrypy.session[config.SESSION_KEY] = cherrypy.request.login = username
+        cherrypy.response.cookie["username"] = username
+        cherrypy.response.cookie["username"]["path"] = "/"
+        return username
 
 
     @allow(methods=["POST"])
     @expose
     @require()
     def logout(self):
-        pass
+        sess = cherrypy.session
+        username = sess.get(config.SESSION_KEY, None)
+        sess[config.SESSION_KEY] = None
+        if username:
+            cherrypy.request.login = None
 
     @expose
     @cherrypy.tools.json_out()

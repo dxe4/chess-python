@@ -50,6 +50,7 @@ chess.controller('NavBarCtrl',
 
 
         $scope.init = function () {
+            console.log($cookies.username);
             if ($cookies.username) {
                 $rootScope.logged_in = $cookies.username;
             }
