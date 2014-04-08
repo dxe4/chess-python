@@ -1,4 +1,5 @@
 import os
+from app.sockets import CoolSocket
 
 SESSION_KEY = '8ffa7757-2452-49bd-a629-8d66dfeadd2f'
 current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -21,4 +22,9 @@ config = {
         'tools.sessions.timeout': 60,
         'tools.auth.on': True,
     },
+    '/ws': {
+        'tools.websocket.on': True,
+        'tools.websocket.handler_cls': CoolSocket
+    },
+    # 'server.socket_port': 9000,
 }

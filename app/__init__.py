@@ -19,3 +19,6 @@ class allow(object):
                 raise cherrypy.HTTPError(405)
 
         return f
+
+from app import application
+from app.application import root, socket_root

@@ -14,11 +14,11 @@ class Root(object):
     @allow(methods=["GET", "HEAD"])
     @expose
     def index(self):
+        print(cherrypy.request.cookie)
         return _serve("templates", "index.html")
 
 
 class Api(object):
-
     _cp_config = {
         'tools.sessions.on': True,
         'tools.auth.on': True
@@ -57,7 +57,6 @@ class Api(object):
     @cherrypy.tools.json_out()
     @cherrypy.tools.json_in()
     def my_route(self):
-
         result = {"operation": "request", "result": "success"}
 
         input_json = cherrypy.request.json
@@ -65,24 +64,14 @@ class Api(object):
         return result
 
 
-if __name__ == '__main__':
-    kwargs = {
-        'section': '/',
-        'dir': os.path.join(config.current_dir, 'static')
-    }
-    static_handler = cherrypy.tools.staticdir.handler(**kwargs)
-    cherrypy.tree.mount(static_handler, '/static')
+class SocketRoot(object):
+    @cherrypy.expose
+    @require()
+    def index(self):
+        cool_socket = cherrypy.request.ws_handler
+        print(cherrypy.request.cookie)
 
-    root = Root()
-    root.api = Api()
 
-    cherrypy.tree.mount(root)
-    cherrypy.tree.mount(None, '/static', config={
-        '/': {
-            'tools.staticdir.on': True,
-            'tools.staticdir.dir': config.static_dir,
-            'response.headers.connection': 'close'
-        },
-    })
-    cherrypy.engine.start()
-    cherrypy.engine.block()
+root = Root()
+root.api = Api()
+socket_root = SocketRoot()
