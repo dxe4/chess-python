@@ -3,7 +3,7 @@ var chess = angular.module('chess');
 chess.controller('CanvasCtrl',
     function ($scope, $log, $http, $cookies, $rootScope, _, kinetic, UserService) {
 
-        var wsUri = "ws://localhost:9000/ws/";
+        var wsUri = "ws://localhost:8081/ws/";
         var piece_size = 80;
         var board_size = piece_size * 8;
         var images = [];
@@ -165,7 +165,7 @@ chess.controller('CanvasCtrl',
 
             if (!$scope.websocket) {
 
-                $scope.websocket = new WebSocket("ws://localhost:9000/ws/");
+                $scope.websocket = new WebSocket("ws://localhost:8081/ws/");
                 console.log("init");
                 $scope.websocket.onopen = function (evt) {
                     console.log(evt);

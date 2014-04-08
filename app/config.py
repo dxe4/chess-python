@@ -22,9 +22,18 @@ config = {
         'tools.sessions.timeout': 60,
         'tools.auth.on': True,
     },
-    '/ws': {
-        'tools.websocket.on': True,
-        'tools.websocket.handler_cls': CoolSocket
-    },
     # 'server.socket_port': 9000,
+}
+ws_config = {
+    '/': {'tools.websocket.on': True,
+          'tools.websocket.handler_cls': CoolSocket,
+    }
+}
+
+static_config = {
+    '/': {
+        'tools.staticdir.on': True,
+        'tools.staticdir.dir': static_dir,
+        'response.headers.connection': 'close'
+    },
 }
