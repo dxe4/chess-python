@@ -1,4 +1,6 @@
 import json
+# TODO probably doesn't need a module?
+from common.redis_queue import RedisQueue
 
 from ws4py.websocket import WebSocket
 
