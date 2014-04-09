@@ -176,7 +176,8 @@ chess.controller('CanvasCtrl',
                     };
                     $scope.websocket.send(angular.toJson(data));
 
-                    $scope.websocket.send("second");
+                    data = {"second":true, "type":"game_operation"};
+                    $scope.websocket.send(angular.toJson(data));
                 };
                 $scope.websocket.onclose = function (evt) {
                     console.log(evt);
