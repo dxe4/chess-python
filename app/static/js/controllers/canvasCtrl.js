@@ -194,8 +194,6 @@ chess.controller('CanvasCtrl',
             }else{
                 $scope.websocket.close();
             }
-//            console.log($scope.websocket);
-//            console.log("sending");
 
         };
 

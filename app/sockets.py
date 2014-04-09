@@ -3,15 +3,15 @@ import json
 from ws4py.websocket import WebSocket
 
 
-def join_queue(_json):
+def join_queue(data):
     pass
 
 
-def move(_json):
+def move(data):
     pass
 
 
-def game_operation(_json):
+def game_operation(data):
     pass
 
 
@@ -23,13 +23,22 @@ type_funcs = {
 
 
 class CoolSocket(WebSocket):
-    def _process_message(self, _json):
-        type = _json["type"]
 
-        if not type in type_funcs.keys():
+    def _parse_input(self, _json):
+        _type = _json.get("type", None)
+        data = _json.get("data", None)
+
+        if _type not in type_funcs.keys():
             raise Exception("Unexpected type %s" % repr(type))
 
-        type_funcs[type](_json)
+        elif data is None:
+            raise Exception("No data provided")
+
+        return _type , data
+
+    def _process_message(self, _json):
+        _type, data = self._parse_input(_json)
+        type_funcs[_type](data)
 
     def opened(self):
         print("socket opened", self)
