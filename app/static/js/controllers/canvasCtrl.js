@@ -190,6 +190,8 @@ chess.controller('CanvasCtrl',
                     console.log(evt);
                     $scope.websocket = null;
                 };
+            }else{
+                $scope.websocket.close();
             }
 //            console.log($scope.websocket);
 //            console.log("sending");
