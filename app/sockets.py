@@ -8,35 +8,43 @@ from collections import deque, namedtuple
 
 r_queue = RedisQueue("all_players", **settings.REDIS_QUEUE_KWARGS)
 redis_client = StrictRedis(**settings.REDIS_QUEUE_KWARGS)
-PubSub = namedtuple("channel", "pubsub")
+PubSub = namedtuple("PubSub", ["channel", "pubsub"])
 
 
 class PubSubPool():
     def __init__(self, size=20):
-        self._free_pub_subs = deque(
-            (self._make_pub_sub(i) for i in range(0, 20)), maxlen=size)
-        self._occupied_pub_subs = deque(maxlen=size)
+        self._free_channels = deque(
+            ("queue_channel:{}".format(i) for i in range(0, 20)))
+        self._occupied_channels = deque(maxlen=size)
+        self._pub_subs = {
+            c: self._make_pub_sub(c) for c in self._free_channels}
+
 
     @property
     def pub_sub(self):
-        while len(self._free_pub_subs) == 0:
+        while len(self._free_channels) == 0:
             time.sleep(0.2)
 
-        pubsub = self._free_pub_subs.pop()
-        self._occupied_pub_subs.append(pubsub)
-        return pubsub
+        channel = self._free_channels.pop()
+        self._occupied_channels.append(channel)
+        return self._pub_subs[channel]
 
-    def _make_pub_sub(self, channel_number):
-        channel = "queue_channel:{}".format(channel_number)
+    def free_pub_sub(self, channel):
+        self._occupied_channels.remove(channel)
+        self._free_channels.remove(channel)
+
+    def _make_pub_sub(self, channel):
         pubsub = redis_client.pubsub()
         pubsub.subscribe(channel)
-        return PubSub(channel_number, pubsub)
+        return pubsub
+
 
 pub_sub_pool = PubSubPool()
 
+
 def join_queue(socket, data):
     _id = data["id"]
-    pub_sub = pub_sub_pool.pub_sub()
+    pub_sub = pub_sub_pool.pub_sub
     r_queue.put(pub_sub.channel)
     generator = pub_sub.pubsub.listen()
 
