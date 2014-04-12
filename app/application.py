@@ -1,4 +1,4 @@
-from app.settings import config
+from app import settings
 import os
 from cherrypy.lib.static import serve_file
 from cherrypy import expose
@@ -8,7 +8,7 @@ from app.auth import require
 
 
 def _serve(*args):
-    return serve_file(os.path.join(config.current_dir, 'static', *args))
+    return serve_file(os.path.join(settings.current_dir, 'static', *args))
 
 
 class Root(object):
@@ -38,7 +38,7 @@ class Api(object):
     def login(self):
         input_json = cherrypy.request.json
         username = input_json["username"]
-        cherrypy.session[config.SESSION_KEY] = cherrypy.request.login = username
+        cherrypy.session[settings.SESSION_KEY] = cherrypy.request.login = username
         cherrypy.response.cookie["username"] = username
         cherrypy.response.cookie["username"]["path"] = "/"
         return username
@@ -49,8 +49,8 @@ class Api(object):
     @require()
     def logout(self):
         sess = cherrypy.session
-        username = sess.get(config.SESSION_KEY, None)
-        sess[config.SESSION_KEY] = None
+        username = sess.get(settings.SESSION_KEY, None)
+        sess[settings.SESSION_KEY] = None
         if username:
             cherrypy.request.login = None
 
