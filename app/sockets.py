@@ -1,31 +1,53 @@
 import json
-# TODO probably doesn't need a module?
+import time
 from app import settings
 from common.redis_queue import RedisQueue
 from ws4py.websocket import WebSocket
 from redis import StrictRedis
+from collections import deque, namedtuple
 
 r_queue = RedisQueue("all_players", **settings.REDIS_QUEUE_KWARGS)
-r = StrictRedis(**settings.REDIS_QUEUE_KWARGS)
+redis_client = StrictRedis(**settings.REDIS_QUEUE_KWARGS)
+PubSub = namedtuple("channel", "pubsub")
 
+
+class PubSubPool():
+    def __init__(self, size=20):
+        self._free_pub_subs = deque(
+            (self._make_pub_sub(i) for i in range(0, 20)), maxlen=size)
+        self._occupied_pub_subs = deque(maxlen=size)
+
+    @property
+    def pub_sub(self):
+        while len(self._free_pub_subs) == 0:
+            time.sleep(0.2)
+
+        pubsub = self._free_pub_subs.pop()
+        self._occupied_pub_subs.append(pubsub)
+        return pubsub
+
+    def _make_pub_sub(self, channel_number):
+        channel = "queue_channel:{}".format(channel_number)
+        pubsub = redis_client.pubsub()
+        pubsub.subscribe(channel)
+        return PubSub(channel_number, pubsub)
+
+pub_sub_pool = PubSubPool()
 
 def join_queue(socket, data):
     _id = data["id"]
-    r_queue.put(_id)
-    pubsub = r.pubsub()
-    channel = "pending:{}".format(_id)
+    pub_sub = pub_sub_pool.pub_sub()
+    r_queue.put(pub_sub.channel)
+    generator = pub_sub.pubsub.listen()
 
     stop = False
-
-    pubsub.subscribe(channel)
-    generator = pubsub.listen()
-
     while not stop:
         msg = next(generator)
+        print("msg", msg)
         if msg["type"] == "message":
             stop = True
 
-    pubsub.unsubscribe(channel)
+    print("done")
 
 
 def move(socket, data):
@@ -44,7 +66,6 @@ type_funcs = {
 
 
 class CoolSocket(WebSocket):
-
     def _parse_input(self, _json):
         print(_json)
         _type = _json.get("type", None)
