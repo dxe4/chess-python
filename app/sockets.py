@@ -3,6 +3,7 @@ import json
 from app import settings
 from common.redis_queue import RedisQueue
 from ws4py.websocket import WebSocket
+from multiprocessing import Process
 
 
 r_queue = RedisQueue("all_players", settings.REDIS_QUEUE_KWARGS)
