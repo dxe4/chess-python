@@ -170,14 +170,15 @@ chess.controller('CanvasCtrl',
                 $scope.websocket.onopen = function (evt) {
                     console.log(evt);
                     var data = {
-                       "foo": "bar",
-                       "bar": "foo",
+                       "data": {
+                           "id" : 12345679
+                       },
                        "type": "join_queue"
                     };
                     $scope.websocket.send(angular.toJson(data));
 
-                    data = {"second":true, "type":"game_operation"};
-                    $scope.websocket.send(angular.toJson(data));
+//                    data = {"second":true, "type":"game_operation"};
+//                    $scope.websocket.send(angular.toJson(data));
                 };
                 $scope.websocket.onclose = function (evt) {
                     console.log(evt);

@@ -3,14 +3,30 @@ import json
 from app import settings
 from common.redis_queue import RedisQueue
 from ws4py.websocket import WebSocket
+from redis import StrictRedis
 
 r_queue = RedisQueue("all_players", **settings.REDIS_QUEUE_KWARGS)
-pending = {}
+r = StrictRedis(**settings.REDIS_QUEUE_KWARGS)
+
 
 def join_queue(socket, data):
-    id = data["id"]
-    r_queue.put(id)
-    pending[id] = socket
+    _id = data["id"]
+    r_queue.put(_id)
+    pubsub = r.pubsub()
+    channel = "pending:{}".format(_id)
+
+    stop = False
+
+    pubsub.subscribe(channel)
+    generator = pubsub.listen()
+
+    while not stop:
+        msg = next(generator)
+        if msg["type"] == "message":
+            stop = True
+
+    pubsub.unsubscribe(channel)
+
 
 def move(socket, data):
     pass
@@ -30,6 +46,7 @@ type_funcs = {
 class CoolSocket(WebSocket):
 
     def _parse_input(self, _json):
+        print(_json)
         _type = _json.get("type", None)
         data = _json.get("data", None)
 
