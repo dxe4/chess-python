@@ -1,14 +1,14 @@
 import json
 import time
-from app import settings
-from common.redis_queue import RedisQueue
+from collections import deque
 from ws4py.websocket import WebSocket
 from redis import StrictRedis
-from collections import deque, namedtuple
+from app import settings
+from common.redis_queue import RedisQueue
+
 
 r_queue = RedisQueue("all_players", **settings.REDIS_QUEUE_KWARGS)
 redis_client = StrictRedis(**settings.REDIS_QUEUE_KWARGS)
-PubSub = namedtuple("PubSub", ["channel", "pubsub"])
 
 
 class PubSubPool():
