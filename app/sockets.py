@@ -1,19 +1,27 @@
 import json
 # TODO probably doesn't need a module?
 from common.redis_queue import RedisQueue
-
+from app import config
 from ws4py.websocket import WebSocket
 
+kwargs = {
+    "host": config.REDIS_HOST,
+    "port": config.REDIS_PORT,
+    "db": config.REDIS_QUEUE_DB,
+}
+r_queue = RedisQueue("all_players", kwargs)
+pending = {}
 
-def join_queue(data):
+def join_queue(socket, data):
+    id = data["id"]
+    r_queue.put(id)
+    pending[id] = socket
+
+def move(socket, data):
     pass
 
 
-def move(data):
-    pass
-
-
-def game_operation(data):
+def game_operation(socket, data):
     pass
 
 
@@ -36,11 +44,11 @@ class CoolSocket(WebSocket):
         elif data is None:
             raise Exception("No data provided")
 
-        return _type , data
+        return _type, data
 
     def _process_message(self, _json):
         _type, data = self._parse_input(_json)
-        type_funcs[_type](data)
+        type_funcs[_type](self, data)
 
     def opened(self):
         print("socket opened", self)
