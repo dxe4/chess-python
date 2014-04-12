@@ -1,42 +1,9 @@
 import json
-import time
-from collections import deque
 from ws4py.websocket import WebSocket
-from redis import StrictRedis
-from app import settings
-from common.redis_queue import RedisQueue
+from common import RedisQueue, PubSubPool
 
 
-r_queue = RedisQueue("all_players", **settings.REDIS_QUEUE_KWARGS)
-redis_client = StrictRedis(**settings.REDIS_QUEUE_KWARGS)
-
-
-class PubSubPool():
-    def __init__(self, size=20):
-        self._free_channels = deque(
-            ("queue_channel:{}".format(i) for i in range(0, 20)))
-        self._occupied_channels = deque(maxlen=size)
-        self._pub_subs = {
-            c: self._make_pub_sub(c) for c in self._free_channels}
-
-    def join(self):
-        while len(self._free_channels) == 0:
-            time.sleep(0.2)
-
-        channel = self._free_channels.pop()
-        self._occupied_channels.append(channel)
-        return channel, self._pub_subs[channel]
-
-    def free_pub_sub(self, channel):
-        self._occupied_channels.remove(channel)
-        self._free_channels.remove(channel)
-
-    def _make_pub_sub(self, channel):
-        pubsub = redis_client.pubsub()
-        pubsub.subscribe(channel)
-        return pubsub
-
-
+r_queue = RedisQueue("all_players")
 pub_sub_pool = PubSubPool()
 
 
