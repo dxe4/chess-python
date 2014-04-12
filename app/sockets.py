@@ -4,7 +4,7 @@ from app import settings
 from common.redis_queue import RedisQueue
 from ws4py.websocket import WebSocket
 
-r_queue = RedisQueue("all_players", settings.REDIS_QUEUE_KWARGS)
+r_queue = RedisQueue("all_players", **settings.REDIS_QUEUE_KWARGS)
 pending = {}
 
 def join_queue(socket, data):
