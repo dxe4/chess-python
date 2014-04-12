@@ -1,5 +1,5 @@
+from app.settings import config
 import os
-from app import config
 from app import root, socket_root
 import cherrypy
 from ws4py.server.cherrypyserver import WebSocketPlugin, WebSocketTool

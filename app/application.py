@@ -1,8 +1,9 @@
+from app.settings import config
 import os
 from cherrypy.lib.static import serve_file
 from cherrypy import expose
 import cherrypy
-from app import config, allow
+from app import allow
 from app.auth import require
 
 

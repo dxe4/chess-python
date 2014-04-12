@@ -1,15 +1,11 @@
 import json
 # TODO probably doesn't need a module?
+from app import settings
 from common.redis_queue import RedisQueue
-from app import config
 from ws4py.websocket import WebSocket
 
-kwargs = {
-    "host": config.REDIS_HOST,
-    "port": config.REDIS_PORT,
-    "db": config.REDIS_QUEUE_DB,
-}
-r_queue = RedisQueue("all_players", kwargs)
+
+r_queue = RedisQueue("all_players", settings.REDIS_QUEUE_KWARGS)
 pending = {}
 
 def join_queue(socket, data):
