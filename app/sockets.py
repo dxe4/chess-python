@@ -19,15 +19,13 @@ class PubSubPool():
         self._pub_subs = {
             c: self._make_pub_sub(c) for c in self._free_channels}
 
-
-    @property
-    def pub_sub(self):
+    def join(self):
         while len(self._free_channels) == 0:
             time.sleep(0.2)
 
         channel = self._free_channels.pop()
         self._occupied_channels.append(channel)
-        return self._pub_subs[channel]
+        return channel, self._pub_subs[channel]
 
     def free_pub_sub(self, channel):
         self._occupied_channels.remove(channel)
@@ -44,9 +42,9 @@ pub_sub_pool = PubSubPool()
 
 def join_queue(socket, data):
     _id = data["id"]
-    pub_sub = pub_sub_pool.pub_sub
-    r_queue.put(pub_sub.channel)
-    generator = pub_sub.pubsub.listen()
+    channel, pubsub = pub_sub_pool.join()
+    r_queue.put(channel)
+    generator = pubsub.listen()
 
     stop = False
     while not stop:
