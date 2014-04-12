@@ -1,5 +1,6 @@
 import os
 from os.path import dirname, abspath, join
+from types import MappingProxyType
 
 STORAGE_PATH = os.environ.get("STORAGE_PATH", "/tmp")
 SESSION_KEY = os.environ.get('SESSION_KEY', '8ffa7757-2452-49bd-a629-8d66dfeadd2f')
@@ -16,8 +17,7 @@ _current_dir = dirname(abspath(__file__))
 current_dir = abspath(join(_current_dir, os.pardir))
 static_dir = abspath(join(current_dir, 'static'))
 
-REDIS_QUEUE_KWARGS = {
+REDIS_QUEUE_KWARGS = MappingProxyType({
     "host": REDIS_HOST,
     "port": REDIS_PORT,
-    "db": REDIS_QUEUE_DB,
-}
+    "db": REDIS_QUEUE_DB, })
