@@ -1,4 +1,5 @@
 import os
+from os.path import dirname, abspath, join
 
 STORAGE_PATH = os.environ.get("STORAGE_PATH", "/tmp")
 SESSION_KEY = os.environ.get('SESSION_KEY', '8ffa7757-2452-49bd-a629-8d66dfeadd2f')
@@ -11,8 +12,9 @@ REDIS_PORT = os.environ.get("REDIS_PORT", 6379)
 
 REDIS_QUEUE_DB = os.environ.get("REDIS_QUEUE_DB", 0)
 
-current_dir = os.path.dirname(os.path.abspath(__file__))
-static_dir = os.path.join(current_dir, '../static')
+_current_dir = dirname(abspath(__file__))
+current_dir = abspath(join(_current_dir, os.pardir))
+static_dir = abspath(join(current_dir, 'static'))
 
 REDIS_QUEUE_KWARGS = {
     "host": REDIS_HOST,

@@ -1,5 +1,5 @@
 import cherrypy
-from app.settings.config import SESSION_KEY
+from app.settings import SESSION_KEY
 # http://tools.cherrypy.org/wiki/AuthenticationAndAccessRestrictions
 
 

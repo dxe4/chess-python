@@ -1,3 +1,4 @@
+from app import settings
 from app.settings import config
 import os
 from app import root, socket_root
@@ -7,7 +8,7 @@ from ws4py.server.cherrypyserver import WebSocketPlugin, WebSocketTool
 if __name__ == "__main__":
     kwargs = {
         'section': '/',
-        'dir': os.path.join(config.current_dir, 'static')
+        'dir': os.path.join(settings.current_dir, 'static')
     }
     static_handler = cherrypy.tools.staticdir.handler(**kwargs)
     cherrypy.tree.mount(static_handler, '/static')
