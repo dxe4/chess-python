@@ -1,11 +1,11 @@
 import json
 from ws4py.websocket import WebSocket
 from common import RedisQueue, WebSocketPubSubPool
-
+from concurrent.futures import ThreadPoolExecutor
 
 r_queue = RedisQueue("all_players")
 pub_sub_pool = WebSocketPubSubPool()
-
+message_pool = ThreadPoolExecutor(10)
 
 def join_queue(socket:WebSocket, data):
     # keep this order to avoid state conflict
@@ -58,11 +58,12 @@ class CoolSocket(WebSocket):
         # security reasons
         if len(message.data) > 1000:
             self.close(1856, "message too long")
-        print(message.data)
+
         try:
             _json = json.loads(message.data.decode("utf-8"))
         except:
             # security reasons
             self.close(reason="Input is not json")
             raise
-        self._process_message(_json)
+        message_pool.submit(self._process_message, _json)
+        # self._process_message()
