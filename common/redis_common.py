@@ -8,14 +8,14 @@ class PubSubPool():
     def __init__(self, size=20):
         self.redis_client = redis.StrictRedis(**settings.REDIS_QUEUE_KWARGS)
         self._free_channels = deque(
-            ("queue_channel:{}".format(i) for i in range(0, 20)))
+            ("queue_channel:{}".format(i) for i in range(0, size)))
         self._occupied_channels = deque(maxlen=size)
         self._pub_subs = {
             c: self._make_pub_sub(c) for c in self._free_channels}
 
     def join(self):
         while len(self._free_channels) == 0:
-            time.sleep(0.2)
+            time.sleep(0.5)
 
         channel = self._free_channels.pop()
         self._occupied_channels.append(channel)

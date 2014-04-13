@@ -45,7 +45,7 @@ class CoolSocket(WebSocket):
         data = _json.get("data", None)
 
         if _type not in type_funcs.keys():
-            raise Exception("Unexpected type %s" % repr(type))
+            raise Exception("Unexpected type %s" % repr(_type))
 
         elif data is None:
             raise Exception("No data provided")
