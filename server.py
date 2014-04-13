@@ -1,9 +1,10 @@
-from app import settings
-from app.settings import config
 import os
-from app import root, socket_root
 import cherrypy
 from ws4py.server.cherrypyserver import WebSocketPlugin, WebSocketTool
+from app import settings
+from app.settings import config
+from app import root, socket_root
+from workers.queue import start_match_process
 
 if __name__ == "__main__":
     kwargs = {
@@ -35,6 +36,8 @@ if __name__ == "__main__":
     server2.socket_port = 8081
     server2.thread_pool = 30
     server2.subscribe()
+
+    start_match_process()
 
     cherrypy.engine.start()
     cherrypy.engine.block()
