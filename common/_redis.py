@@ -38,7 +38,6 @@ class WebSocketPubSubPool(PubSubPool):
 
         while True:
             msg = next(generator)
-            print("msg", msg)
             if msg["type"] == "message":
                 return msg
             time.sleep(0.5)

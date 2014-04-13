@@ -8,6 +8,7 @@ pub_sub_pool = WebSocketPubSubPool()
 
 
 def join_queue(socket:WebSocket, data):
+    # keep this order to avoid state conflict
     channel, pubsub = pub_sub_pool.join()
     r_queue.put(channel)
     msg = pub_sub_pool.next_message(channel, pubsub)
