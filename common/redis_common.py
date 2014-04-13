@@ -1,6 +1,7 @@
 from collections import deque
 import time
 import redis
+from redis.client import PubSub
 from app import settings
 
 
@@ -29,6 +30,18 @@ class PubSubPool():
         pubsub = self.redis_client.pubsub()
         pubsub.subscribe(channel)
         return pubsub
+
+
+class WebSocketPubSubPool(PubSubPool):
+    def next_message(self, channel:str, pub_sub:PubSub):
+        generator = pub_sub.listen()
+
+        while True:
+            msg = next(generator)
+            print("msg", msg)
+            if msg["type"] == "message":
+                return msg
+            time.sleep(0.5)
 
 
 class RedisQueue(object):

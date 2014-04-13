@@ -1,33 +1,24 @@
 import json
 from ws4py.websocket import WebSocket
-from common import RedisQueue, PubSubPool
+from common import RedisQueue, WebSocketPubSubPool
 
 
 r_queue = RedisQueue("all_players")
-pub_sub_pool = PubSubPool()
+pub_sub_pool = WebSocketPubSubPool()
 
 
-def join_queue(socket, data):
-    _id = data["id"]
+def join_queue(socket:WebSocket, data):
     channel, pubsub = pub_sub_pool.join()
     r_queue.put(channel)
-    generator = pubsub.listen()
-
-    stop = False
-    while not stop:
-        msg = next(generator)
-        print("msg", msg)
-        if msg["type"] == "message":
-            stop = True
-
-    print("done")
+    msg = pub_sub_pool.next_message(channel, pubsub)
+    print(msg)
 
 
-def move(socket, data):
+def move(socket:WebSocket, data):
     pass
 
 
-def game_operation(socket, data):
+def game_operation(socket:WebSocket, data):
     pass
 
 

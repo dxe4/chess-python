@@ -1,1 +1,1 @@
-from common.redis_common import RedisQueue, PubSubPool
+from common.redis_common import RedisQueue, PubSubPool, WebSocketPubSubPool
