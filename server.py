@@ -6,6 +6,19 @@ from app.settings import config
 from app import root, socket_root
 from workers.queue import start_match_process
 
+
+def make_servers(ports: list, pool_size:int):
+    def _make(port: int):
+        server = cherrypy._cpserver.Server()
+        server.socket_host = "127.0.0.1"
+        server.socket_port = port
+        server.thread_pool = pool_size
+        server.subscribe()
+        return server
+
+    return [_make(i) for i in ports]
+
+
 if __name__ == "__main__":
     kwargs = {
         'section': '/',
@@ -24,18 +37,7 @@ if __name__ == "__main__":
     cherrypy.tree.mount(root, "/")
 
     cherrypy.server.unsubscribe()
-    server = cherrypy._cpserver.Server()
-
-    server.socket_host = "127.0.0.1"
-    server.socket_port = 8080
-    server.thread_pool = 30
-    server.subscribe()
-
-    server2 = cherrypy._cpserver.Server()
-    server2.socket_host = "127.0.0.1"
-    server2.socket_port = 8081
-    server2.thread_pool = 30
-    server2.subscribe()
+    servers = make_servers([8080, 8081], 10)
 
     start_match_process()
 
