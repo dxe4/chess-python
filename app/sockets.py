@@ -75,5 +75,4 @@ class CoolSocket(WebSocket):
             # security reasons
             self.close(reason="Input is not json")
             raise
-        message_pool.submit(self._process_message, _json)
-        # self._process_message()
+        self._process_message(_json)
