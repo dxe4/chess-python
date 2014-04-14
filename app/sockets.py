@@ -5,7 +5,7 @@ from common import RedisQueue, WebSocketPubSubPool
 from concurrent.futures import ThreadPoolExecutor
 
 r_queue = RedisQueue("all_players")
-pub_sub_pool = WebSocketPubSubPool()
+pub_sub_pool = WebSocketPubSubPool("queue_channel", 20)
 message_pool = ThreadPoolExecutor(20)
 
 
