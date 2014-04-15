@@ -7,7 +7,7 @@ from common import PubSubPool, RedisQueue
 
 class TestRedis(unittest.TestCase):
     def setUp(self):
-        self.pool = PubSubPool(size=2)
+        self.pool = PubSubPool("channel", size=2)
         self.queue = RedisQueue("test_q")
 
     def test_board_init(self):
