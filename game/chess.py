@@ -213,7 +213,13 @@ class GameEngine:
         @param board: Board
         """
         self.board = board
-        self.uuid = str(uuid.uuid4())
+        self.players = {}
+
+    def join(self, color, player):
+        if len(self.players.keys()) >= 2:
+            raise Exception("Cant join game is full")
+        self.players[color] = player
+
 
     @staticmethod
     def square_attacked(end: tuple, board):
@@ -814,7 +820,7 @@ class Board(OrderedDict):
         return "".join(to_join)
 
 
-def make_game_engine(player_down: str):
+def make_game_engine(player_down: str="W"):
     board = Board(player_down=player_down, create=True)
     game_engine = GameEngine(board)
     return game_engine

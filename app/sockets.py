@@ -3,11 +3,13 @@ from functools import wraps
 from ws4py.websocket import WebSocket
 from common import RedisQueue, WebSocketPubSubPool
 from concurrent.futures import ThreadPoolExecutor
+from game.chess import make_game_engine
 
 r_queue = RedisQueue("all_players")
 pub_sub_pool = WebSocketPubSubPool("queue_channel", 20)
 message_pool = ThreadPoolExecutor(20)
 
+games = {}
 
 def run_in_pool(f):
     @wraps(f)
@@ -21,9 +23,13 @@ def join_queue(socket:WebSocket, data):
     # keep this order to avoid state conflict
     channel, pubsub = pub_sub_pool.join()
     r_queue.put(channel)
+    # {'pattern': None, 'type': 'message', 'data': b'30ae154a-2397-4945-aeed-48dad6c603b6', 'channel': 'queue_channel:19'}
     msg = pub_sub_pool.next_message(channel, pubsub)
-    print(msg)
-
+    uid = msg['data']
+    if not uid in games:
+        games[uid] = make_game_engine()
+    socket.send(uid)
+    # make_game_engine
 
 def move(socket:WebSocket, data):
     pass
