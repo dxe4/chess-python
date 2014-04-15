@@ -215,9 +215,17 @@ class GameEngine:
         self.board = board
         self.players = {}
 
-    def join(self, color, player):
-        if len(self.players.keys()) >= 2:
+    def join_game(self, player, color=None):
+        player_size = len(self.players.keys())
+        if player_size >= 2:
             raise Exception("Cant join game is full")
+
+        if color is None:
+            if player_size == 0:
+                color = "W"
+            else:
+                color = "B"
+
         self.players[color] = player
 
 
@@ -820,7 +828,7 @@ class Board(OrderedDict):
         return "".join(to_join)
 
 
-def make_game_engine(player_down: str="W"):
+def make_game_engine(player_down: str="W") -> GameEngine:
     board = Board(player_down=player_down, create=True)
     game_engine = GameEngine(board)
     return game_engine

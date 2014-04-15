@@ -11,12 +11,14 @@ message_pool = ThreadPoolExecutor(20)
 
 games = {}
 
+
 def run_in_pool(f):
     @wraps(f)
     def wrapper(*args, **kwargs):
         message_pool.submit(f, *args, **kwargs)
 
     return wrapper
+
 
 @run_in_pool
 def join_queue(socket:WebSocket, data):
@@ -28,8 +30,10 @@ def join_queue(socket:WebSocket, data):
     uid = msg['data']
     if not uid in games:
         games[uid] = make_game_engine()
+
+    games[uid].join_game(data["player"])
     socket.send(uid)
-    # make_game_engine
+
 
 def move(socket:WebSocket, data):
     pass

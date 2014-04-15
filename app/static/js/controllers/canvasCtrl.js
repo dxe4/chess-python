@@ -171,7 +171,8 @@ chess.controller('CanvasCtrl',
                     console.log(evt);
                     var data = {
                        "data": {
-                           "id" : 12345679
+                           "id" : 12345679,
+                           "player": "foo"
                        },
                        "type": "join_queue"
                     };
