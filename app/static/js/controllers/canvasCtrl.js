@@ -162,7 +162,8 @@ chess.controller('CanvasCtrl',
         };
 
         $scope.openSocket = function () {
-            SocketService.openSocket();
+            //only for debug
+            SocketService.openSocket("foo", "bar");
         };
 
         $scope._init = function () {
@@ -181,6 +182,14 @@ chess.controller('CanvasCtrl',
             $scope.layer = new Kinetic.Layer();
             $scope._init();
         };
+
+        $scope.$watch(function () {
+            return $cookies.session_id;
+        }, function () {
+            if ($cookies.session_id) {
+                SocketService.openSocket($cookies.session_id, $cookies.username);
+            }
+        });
 
     });
 

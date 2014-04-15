@@ -12,9 +12,9 @@ chess.service('SocketService', function ($http, $rootScope, $cookies, $log) {
     };
 
     return {
-        openSocket: function () {
+        openSocket: function (_id, user) {
             if (_socket === null) {
-                _socket = new WebSocket("ws://localhost:8081/ws/");
+                _socket = new WebSocket("ws://localhost:8081/ws/?" + "id=" + _id +"&u=" + user);
                 console.log("init");
                 _socket.onopen = function (evt) {
                     console.log(evt);

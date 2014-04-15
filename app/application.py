@@ -68,7 +68,10 @@ class Api(object):
 class SocketRoot(object):
     @cherrypy.expose
     @require()
-    def index(self):
+    def index(self, id, u):
+        print(id)
+        print(u)
+
         cool_socket = cherrypy.request.ws_handler
         print(cherrypy.request.cookie)
 
