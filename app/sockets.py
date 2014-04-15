@@ -51,6 +51,12 @@ type_funcs = {
 
 
 class CoolSocket(WebSocket):
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.session_id = None
+        self.username = None
+
     def _parse_input(self, _json):
         print(_json)
         _type = _json.get("type", None)
