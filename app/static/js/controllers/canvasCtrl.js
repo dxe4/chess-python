@@ -1,7 +1,7 @@
 var image_type = ".png";
 var chess = angular.module('chess');
 chess.controller('CanvasCtrl',
-    function ($scope, $log, $http, $cookies, $rootScope, _, kinetic, UserService) {
+    function ($scope, $log, $http, $cookies, $rootScope, _, kinetic, UserService, SocketService) {
 
         var wsUri = "ws://localhost:8081/ws/";
         var piece_size = 80;
@@ -162,41 +162,7 @@ chess.controller('CanvasCtrl',
         };
 
         $scope.openSocket = function () {
-
-            if (!$scope.websocket) {
-
-                $scope.websocket = new WebSocket("ws://localhost:8081/ws/");
-                console.log("init");
-                $scope.websocket.onopen = function (evt) {
-                    console.log(evt);
-                    var data = {
-                       "data": {
-                           "id" : 12345679,
-                           "player": "foo"
-                       },
-                       "type": "join_queue"
-                    };
-                    $scope.websocket.send(angular.toJson(data));
-
-//                    data = {"second":true, "type":"game_operation"};
-//                    $scope.websocket.send(angular.toJson(data));
-                };
-                $scope.websocket.onclose = function (evt) {
-                    console.log(evt);
-                    $scope.websocket = null;
-                };
-                $scope.websocket.onmessage = function (evt) {
-                    console.log(evt);
-                    alert(evt.data);
-                };
-                $scope.websocket.onerror = function (evt) {
-                    console.log(evt);
-                    $scope.websocket = null;
-                };
-            }else{
-                $scope.websocket.close();
-            }
-
+            SocketService.openSocket();
         };
 
         $scope._init = function () {
