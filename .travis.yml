@@ -12,3 +12,10 @@ script:
 
 services:
   -  "redis"
+  
+notifications:
+  email:
+    recipients:
+      - papaloizouc@gmail.com
+    on_success: change
+    on_failure: always
